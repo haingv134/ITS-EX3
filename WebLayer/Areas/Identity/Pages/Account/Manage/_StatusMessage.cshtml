@@ -1,0 +1,12 @@
+﻿@model string
+
+<script>
+    var message = '@Model';
+    var className = message.startsWith('Error') ? "error" : "success";
+    if (message.toString().length > 0) {
+        $.notify(message, {
+            globalPosition: "top center",
+            className: className
+        });
+    }
+</script>

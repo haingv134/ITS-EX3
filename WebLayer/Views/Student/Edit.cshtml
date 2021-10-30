@@ -1,0 +1,61 @@
+﻿@model WebLayer.EditModel.Student.EditEditModel
+
+@{ Layout = null; }
+
+<form class="form-group" asp-action="Edit" id="submitForm" onsubmit="return SubmitForm(this)">
+    <div class="modal fade" id="modal-id" aria-labelledby="modal-title" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="modal-title">Update Student</h5>
+                    <button class="btn btn-close" type="button" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div asp-validation-summary="All" style="color: red"></div>
+                    <input asp-for="@Model.OldClassId" type="hidden" />
+                    <input asp-for="@Model.StudentId" type="hidden" />
+                    <label asp-for="@Model.Name"> StudentName </label>
+                    <input asp-for="@Model.Name" class="form-control">
+                    <label asp-for="@Model.Birthday"> Birthday </label>
+                    <input asp-for="@Model.Birthday" class="form-control">
+                    <label asp-for="@Model.Gender"> Gender </label>
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" asp-for="@Model.Gender" value="true" id="male">
+                        <label class="form-check-label" for="male">
+                            Male
+                        </label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" asp-for="@Model.Gender" value="false" id="female"> 
+                        <label class="form-check-label" for="female">
+                            Female
+                        </label>
+                    </div>
+                    <div class="form-group">
+                        @if ((Model.OldClassId == 0))
+                        {
+                    <hr />
+                                    <span class="text-danger"> This student is not a member of any class </span>}
+
+                        <label asp-for="@Model.NewClassId">Class</label>
+                        <select class="form-control" asp-for="@Model.NewClassId">
+                            @{ foreach (var item in ViewBag.ClassList)
+                                {
+                                    if (item.ClassId == Model.OldClassId)
+                                    {
+                        <option value="@item.ClassId" selected>@item.Name</option> 
+                                    } else
+                                    {
+                                        <option value="@item.ClassId">@item.Name</option>
+                                        } } }
+                        </select>
+                        </div>                    
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-danger" type="button" data-bs-dismiss="modal">Close</button>
+                    <button class="btn btn-primary" type="submit">Update</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>

@@ -1,0 +1,37 @@
+﻿body{
+    position: relative;        
+}
+
+#wait {
+    display: block;
+    width: 69px;
+    height: 89px;
+    border: 1px solid dotted;
+    background-color: rgb(248, 248, 248);
+}
+
+#wait-container {
+    z-index: 1;
+    display: none;
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background-color: rgba(0,0,0,0.2);
+    /* giua theo chieu cao */
+    align-items: center;
+    /* giua theo chieu ngang */
+    justify-content: center;
+}
+/* #back-to-top{
+    display: none;
+    background: #00bfff;
+    position: fixed;
+    right: 20px;
+    bottom: 20px;
+    height: 40px;
+    width: 40px;
+    padding: 10px 10px;
+    cursor: pointer;
+} */

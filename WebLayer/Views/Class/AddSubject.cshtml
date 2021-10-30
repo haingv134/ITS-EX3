@@ -1,0 +1,48 @@
+﻿@model WebLayer.EditModel.Class.AddSubjectEditModel
+@{ 
+    Layout = null;
+}
+
+
+<form asp-action="AddSubject" id="submitForm" onsubmit="return SubmitForm(this)">
+    <div class="modal fade w-100" id="modal-id" aria-labelledby="modal-title" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="modal-title">Add subject to class</h5>
+                    <button class="btn btn-close" type="button" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div asp-validation-summary="All" style="color: red"></div>
+                    <div class="input-group">
+                        <div class="input-group-prepend">
+                            <label asp-for="@Model.ClassId" class="input-group-text"> Class </label>
+                        </div>
+                        <select asp-for="@Model.ClassId" class="form-select" id="inputGroupSelect01">
+                            @foreach (var item in ViewBag.ClassList)
+                            {
+                                <option value="@item.ClassId"> @item.Name </option>
+}
+                        </select>
+                    </div>
+
+                    <div class="input-group">
+                        <div class="input-group-prepend">
+                            <label asp-for="@Model.SubjectId" class="input-group-text"> Subjects </label>
+                        </div>
+                        <select asp-for="@Model.SubjectId" class="form-select ms-2" multiple="multiple" required>
+                            @foreach (var item in ViewBag.SubjectList)
+                            {
+                                <option value="@item.SubjectId"> @item.Name </option>
+}
+                        </select>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-danger" type="button" data-bs-dismiss="modal">Close</button>
+                    <button class="btn btn-primary" type="submit">Register</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>

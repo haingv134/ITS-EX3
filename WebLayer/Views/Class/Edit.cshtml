@@ -1,0 +1,94 @@
+﻿@model WebLayer.EditModel.Class.EditEditModel
+
+@{ Layout = null;
+    var studentList = (List<DatabaseLayer.Entity.Student>)ViewBag.StudentList; }
+
+<form class="form-group" asp-action="Edit" id="submitForm" onsubmit="return SubmitForm(this)">
+    @{ if (studentList.Count > 1)
+                    {
+
+        <div class="modal fade" id="modal-id" aria-labelledby="modal-title" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="modal-title">Update Class</h5>
+                        <button class="btn btn-close" type="button" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div asp-validation-summary="All" style="color: red"></div>
+
+                        <input asp-for="OldPresidentId" type="hidden" />
+                        <input asp-for="OldSecretaryId" type="hidden" />
+                        <input asp-for="ClassId" type="hidden" />
+
+                        <div class="form-group">
+                            <label asp-for="Name">Class Name </label>
+                            <input asp-for="Name" class="form-control" />
+
+                            @*SECRETARY PART *@
+                            <label asp-for="NewSecretaryId">Student SECRETARY</label>
+                            <select asp-for="NewSecretaryId" class="form-control">
+                                @foreach (var item in studentList)
+                                {
+                                    if (item.StudentId == Model.OldSecretaryId)
+                                    {
+                    <option value="@item.StudentId" selected> @item.Name </option>
+ }
+                else
+                {
+                    <option value="@item.StudentId"> @item.Name </option>}
+                                    }
+                                }
+                            </select>
+
+                            @*PRESIDENT PART*@
+                            <label asp-for="NewPresidentId">Student PRESIDENT</label>
+                            <select asp-for="NewPresidentId" class="form-control">
+                                @foreach (var item in studentList)
+                                {
+                                    if (item.StudentId == Model.OldPresidentId)
+                                    {
+                    <option value="@item.StudentId" selected> @item.Name </option>
+ }
+                else
+                {
+                    <option value="@item.StudentId"> @item.Name </option>}
+                                    }
+                                }
+                            </select>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button class="btn btn-danger" type="button" data-bs-dismiss="modal">Close</button>
+                        <button class="btn btn-primary" type="submit">Update</button>
+                    </div>
+                </div>
+            </div>
+        </div> }
+    else
+    {
+
+<div class="modal fade" id="modal-id" aria-labelledby="modal-title" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="modal-title">Rename class</h5>
+                <button class="btn btn-close" type="button" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div asp-validation-summary="All" style="color: red"></div>
+                <input asp-for="ClassId" type="hidden" />
+                <label asp-for="Name">Class Name </label>
+                <input asp-for="Name" class="form-control" />
+                <br />
+                <h5 style="color: red; font-style: initial; ">Class contains less than 2 students</h5>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-primary" type="submit">Rename class</button>
+                <button class="btn btn-danger" type="button" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>} }
+
+</form>    
