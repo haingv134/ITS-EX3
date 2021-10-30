@@ -1,0 +1,18 @@
+﻿@model WebLayer.ViewModel.Student.OldViewModel[]
+
+<h1> @ViewBag.Infor</h1>
+<ul>
+    @foreach (var item in Model)
+    {
+        <li> <a href="#" onclick="OpenPopup('@Url.Action("Edit", "Student", new { studentId = @item.StudentId })')"> Name: @item.Name
+            </a>
+        </li>
+        <li> Old: @item.Old </li>
+        <br />
+    }
+</ul>
+
+@section Scripts{
+@*Send validation to layout*@
+@{await Html.RenderPartialAsync("_ValidationScriptsPartial"); }
+}

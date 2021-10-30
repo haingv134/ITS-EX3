@@ -1,0 +1,52 @@
+﻿@{
+    Layout = "_MyParentLayout";
+}
+<h2 class="text-center">Manage your account</h2>
+<div>
+    <hr />
+    <div class="row">
+        <div class="col-md-3">
+            <partial name="_ManageNav" />
+        </div>
+        <div class="col-md-9">
+            <div class="card">
+                <div class="card-title">
+                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-sm-12 col-md-12 col-xl-12 col-lg-12 pb-3">
+                            <ul class="nav nav-tabs flex-column flex-sm-row">
+                                <li class="flex-sm-fill text-sm-center">
+                                    <a class="nav-link @ManageNavPages.IndexNavClass(@ViewContext)"
+                                        asp-page="./Index">Personal Details</a>
+                                </li>
+                                <li class="flex-sm-fill text-sm-center">
+                                    <a class="nav-link  @ManageNavPages.EmailNavClass(@ViewContext)"
+                                        asp-page="./Email">Update Email</a>
+                                </li>
+                                <li class="flex-sm-fill text-sm-center">
+                                    <a class="nav-link  @ManageNavPages.ChangePasswordNavClass(@ViewContext)"
+                                        asp-page="./ChangePassword">Change Password</a>
+                                </li>
+                                <li class="flex-sm-fill text-sm-center">
+                                    <a class="nav-link @ManageNavPages.TwoFactorAuthenticationNavClass(@ViewContext)"
+                                        asp-page="./TwoFactorAuthentication">Two Factor Authentication</a>
+                                </li>
+                                <li class="flex-sm-fill text-sm-center">
+                                    <a class="nav-link @ManageNavPages.PersonalDataNavClass(@ViewContext)"
+                                        asp-page="./PersonalData">Personal Data</a>
+                                </li>
+                            </ul>
+                        </div>
+                        @RenderBody()
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+@RenderSection("Scripts", required: false)
+}

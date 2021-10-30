@@ -1,0 +1,31 @@
+﻿@model WebLayer.ViewModel.Student.DetailViewModel[]
+
+<table class="table">
+    <caption> Search Result </caption>
+    <thead>
+        <tr>
+            <th scope="col">Name</th>
+            <th scope="col">Birthday </th>
+            <th scope="col">Gender</th>
+            <th scope="col">Class</th>
+            <th scope="col">Subject assigned</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>@item.Name</td>
+                <td>@item.Birthday</td>
+                <td>@item.Gender</td>
+                <td>@item.ClassName</td>
+                <td>
+                    @foreach (var sub in item.Subjects)
+                    {
+                        @sub
+                    }
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

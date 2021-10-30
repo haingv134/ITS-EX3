@@ -1,0 +1,154 @@
+﻿<body>
+
+    <div class="container border border-2 border-secondary p-2">
+        <div class="row">
+            <div class="col-sm-5">
+                <button class="btn btn-outline-primary btn-sm my-2 me-1" id="btnAddClass"
+                    onclick="OpenPopup('@Url.Action("Add", "Class")')"> <i class="ti-plus"></i> Add Class</button>
+                <button class="btn btn-outline-primary btn-sm my-2 me-1" id="btnAddSubjectToClass"
+                    onclick="OpenPopup('@Url.Action("AddSubject", "Class")')"> <i class="ti-book"></i> Register
+                    Subject</button>
+                <button class="btn btn-outline-primary btn-sm my-2" asp-action="MaxBoy"> <i class="ti-eye"></i> Max
+                    Boy</button>
+            </div>
+            <div class="col-sm-7">
+                <a class="btn btn-outline-primary btn-sm my-2" asp-controller="FileHandler" asp-action="ExportClassDetailToCSV"> => Export To CSV</a>
+            </div>
+        </div>
+        <div class="row row-cols-1 row-cols-sm-2 mb-2 ">
+            <div class="col">
+                <div class="input-group">
+                    <select class="form-select" id="quanityType">
+                        <option value="Quantity">Quanity</option>
+                        <option value="BoyQuantity">Boy Quanity</option>
+                        <option value="GirlQuantity">Girl Quanity</option>
+                    </select>
+                    <input type="text" aria-label="Min Value" id="minValue" class="form-control" placeholder="Min">
+                    <input type="text" aria-label="Max Value" id="maxValue" class="form-control" placeholder="Max">
+                </div>
+            </div>
+            <div class="col">
+                <div class="input-group">
+                    <input type="text" aria-label="Search Box" id="SearchBar" class="form-control"
+                        placeholder="Class, President, Secretary">
+                    <button class="btn btn-secondary border rounded ms-2" id="Reset"> Reset </button>
+                    <button class="btn btn-secondary border rounded" id="Search"> Search </button>
+                </div>
+            </div>
+
+        </div>
+        <div class="lead text-secondary fs-6">
+            <table id="example" class="table table-hover table-striped table-responsive table-bordered ">
+                <caption>Class Detail</caption>
+            </table>
+        </div>
+    </div>
+</body>
+
+@section Scripts{
+<link href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.0.1/css/bootstrap.min.css" rel="stylesheet" />
+<link href="https://cdn.datatables.net/1.11.3/css/dataTables.bootstrap5.min.css" rel="stylesheet" />
+<script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.11.3/js/jquery.dataTables.js"></script>
+<script src="https://cdn.datatables.net/1.11.3/js/dataTables.bootstrap5.min.js"></script>
+<script>
+
+    var datatable;
+    $(document).on('resize', function () {
+        $.debounce(500, function () {
+            datatable.columns.adjust();
+        })
+    })
+
+    function renderClass(data, type, row, meta) {
+        if (String(data).length !== 0) {
+            return '<a href="#" onclick=OpenPopup("' + '@Url.Action("Edit", "Class")?classId=' + row['classId'] + '") style="text-decoration: none;">' + data + ' </a>';
+        }
+    }
+    function renderPresidentStudent(data, type, row, meta) {
+        if (String(data).length !== 0) {
+            return '<a href="#" onclick=OpenPopup("' + '@Url.Action("Edit", "Student")?studentId=' + row["persidentId"] + '") style="text-decoration: none;">' + data + ' </a>';
+        }
+        return data;
+    }
+    function renderSecretaryStudent(data, type, row, meta) {
+        if (String(data).length !== 0) {
+            return '<a href="#" onclick=OpenPopup("' + '@Url.Action("Edit", "Student")?studentId=' + row['secretaryId'] + '") style="text-decoration: none;">' + data + ' </a>';
+        }
+        return data;
+    }
+
+    $('#Reset').click(function () {
+        if ($("#minValue").val().length > 0 && $("#maxValue").val().length > 0 || $("#SearchBar").val().length > 0) {
+            $('#minValue, #maxValue, #SearchBar').val('');
+            datatable.draw();
+        }
+    })
+
+    $('#Search').click(function () {
+        if ($("#minValue").val().length > 0 && $("#maxValue").val().length > 0 || $("#SearchBar").val().length > 0) {
+            datatable.search($(this).val()).draw();
+        }
+    })
+    $(document).ready(function () {
+        // default option for datatables
+        $.extend(true, $.fn.dataTable.defaults, {
+            processing: false, // showing "processing" message while ajax is executing
+            serverSide: true,  // handing request on server
+            searching: false, //
+            ordering: true, // allow order
+            paging: true, // phan trang
+            filter: false, // enable searching on input search
+            stateSave: true, // save state of last table (lost if accessing with orther url or no session)
+            autoWidth: true
+        });
+        datatable = $('#example').DataTable({
+            ajax:
+            {
+                url: '@Url.Action("Index", "Class")',
+                type: "POST",
+                "data": function (d) {
+                    return $.extend({}, d, {
+                        "quantityType": $("#quanityType").val(),
+                        "minValue": $("#minValue").val(),
+                        "maxValue": $("#maxValue").val(),
+                        "search": {
+                            "value": $("#SearchBar").val(),
+                            "regex": false
+                        }
+                    })
+                }
+            },
+                    @*columnDefs: [
+                {autoWidth: true, targets:'_all'}
+                ],*@
+            columns: [
+            { data: "className", name: "ClassName", title: "Class Name", render: renderClass },
+            { data: "persidentName", name: "PersidentName", title: "Persident Name", render: renderPresidentStudent },
+            { data: "secretaryName", name: "SecretaryName", title: "Secretary Name", render: renderSecretaryStudent },
+            { data: "quantity", name: "Quantity", title: "Quantity" },
+            { data: "boyQuantity", name: "BoyQuantity", title: "Boy Quantity" },
+            { data: "girlQuantity", name: "GirlQuantity", title: "Girl Quantity" },
+            { data: "subjects", name: "Subjects", title: "Subjects", orderable: false },
+            {
+                data: "classId", name: "ClassId", title: "Actions", render: function (cid) {
+                    return "<a class='btn btn-success btn-sm' onclick=OpenPopup('@Url.Action("Edit", "Class")?classId=" + cid + "')> <i class='ti-pencil'></i>  Edit </a> | <a class='btn btn-danger btn-sm' onclick=DoAction('@Url.Action("Delete", "Class")?classId=" + cid + "') > <i class='ti-trash'></i> Delete </a> ";
+                },
+                orderable: false,
+                visiable: false,
+                width: "200px"
+            }
+        ],
+
+            order: [[0, "asc"], [1, "asc"]],
+            language: {
+            emptyTable: "No record found, please <b> Add New Class </b> to show detail", // no data
+            infoEmpty: "No records avaiable",
+            zeroRecords: "Humm.... No result founded"
+        }
+        })
+    });
+
+</script>
+@*Send validation to layout*@
+@{await Html.RenderPartialAsync("_ValidationScriptsPartial"); }
+}

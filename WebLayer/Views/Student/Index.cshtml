@@ -1,0 +1,132 @@
+﻿<body>
+    <div class="container border border-2 border-secondary p-2">
+        <div class="row my-2">
+            <div class="col-sm-5">
+                <a class="btn btn-outline-primary btn-sm" onclick="OpenPopup('@Url.Action("Add", "Student")')"> Add Student </a>
+                <a class="btn btn-outline-primary btn-sm" asp-action="youngest"> Youngest student</a>
+                <a class="btn btn-outline-primary btn-sm" asp-action="Oldest"> Oldest student</a>
+            </div>
+            <div class="col-sm-7">
+                <a class="btn btn-outline-primary btn-sm" asp-controller="FileHandler"
+                    asp-action="ExportStudentDetailToCSV"> => Export To CSV</a>
+            </div>
+        </div>
+        <div class="row row-cols-1 row-cols-sm-2 mb-2 ">
+            <div class="col-sm-3">
+                <div class="input-group">
+                    <span class="input-group-text">Gender </span>
+                    <select class="form-select" id="Gender">
+                        <option value="male">Male</option>
+                        <option value="female">Female</option>
+                    </select>
+                </div>
+            </div>
+            <div class="col-sm-9">
+                <div class="input-group">
+                    <input type="text" aria-label="Search Box" id="SearchBar" class="form-control"
+                        placeholder="Class, President, Secretary">
+                    <button class="btn btn-secondary border rounded ms-2" id="Reset"> Reset </button>
+                    <button class="btn btn-secondary border rounded" id="Search"> Search </button>
+                </div>
+            </div>
+
+        </div>
+        <div class="lead fs-6">
+            <table id="StudentTable" class="table table-hover table-striped table-responsive table-bordered ">
+                <caption>Student Detail</caption>
+            </table>
+        </div>
+    </div>
+</body>
+
+@section Scripts{
+
+<link href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.0.1/css/bootstrap.min.css" rel="stylesheet" />
+<link href="https://cdn.datatables.net/1.11.3/css/dataTables.bootstrap5.min.css" rel="stylesheet" />
+<script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.11.3/js/jquery.dataTables.js"></script>
+<script src="https://cdn.datatables.net/1.11.3/js/dataTables.bootstrap5.min.js"></script>
+<script>
+
+    $('#Reset').click(function () {
+        if ($("#SearchBar").val().length > 0) {
+            $('#SearchBar').val('');
+            datatable.draw();
+        }
+    })
+    $('#Search').click(function () {
+        if ($("#SearchBar").val().length > 0) {
+            datatable.search($(this).val()).draw();
+        }
+    })
+
+    var datatable;
+
+    function renderGender(data, type, row, meta) {
+        if (data === true) return "Male";
+        else return 'Female';
+    }
+    function renderDate(data, type, row, meta) {
+        let date = new Date(data);
+        return date.toDateString("dd/MM/yyyy");
+    }
+
+    $(document).ready(function () {
+        // default option for datatables
+        $.extend(true, $.fn.dataTable.defaults, {
+            processing: false, // showing "processing" message while ajax is executing
+            serverSide: true,  // handing request on server
+            searching: false, //
+            ordering: true, // allow order
+            paging: true, // phan trang
+            filter: false, // enable searching on input search
+            stateSave: true, // save state of last table (lost if accessing with orther url or no session)
+            autoWidth: true
+        });
+        datatable = $('#StudentTable').DataTable({
+            ajax:
+            {
+                url: '@Url.Action("Index", "Student")',
+                type: "POST",
+                data: function (d) {
+                    return $.extend({}, d, {
+                        "gender": $("#Gender").val(),
+                        "search": {
+                            "value": $("#SearchBar").val(),
+                            "regex": false
+                        }
+                    });
+                }
+            },
+            columnDefs: [
+                { orderable: false, targets: [2, 4] }
+            ],
+            columns: [
+                { data: "name", name: "Name", title: "Student Name" },
+                { data: "birthday", name: "Birthday", title: "Birthday", render: renderDate },
+                { data: "gender", name: "Gender", title: "Gender ", render: renderGender },
+                { data: "className", name: "ClassName", title: "Class Name" },
+                { data: "subjects", name: "Subjects", title: "Subjects" },
+                {
+                    data: "studentId", name: "StudentId", title: "Actions", render: function (sid) {
+                        return "<a class='btn btn-success btn-sm' onclick=OpenPopup('@Url.Action("Edit", "Student")?studentId=" + sid + "')> <i class='ti-pencil'></i>  Edit </a> | <a class='btn btn-danger btn-sm' onclick=DoAction('@Url.Action("Delete", "Student")?studentId=" + sid + "') > <i class='ti-trash'></i> Delete </a> ";
+                    },
+                    orderable: false,
+                    visiable: false,
+                    width: "200px"
+                }
+            ],
+
+            order: [[0, "asc"], [1, "asc"]],
+            language: {
+                emptyTable: "No class found, please <b> Add New Class </b> to show detail", // no data
+                infoEmpty: "No records avaiable",
+                zeroRecords: "Humm.... No result founded"
+            }
+        });
+    })
+
+
+</script>
+@*Send validation to layout*@
+@{await Html.RenderPartialAsync("_ValidationScriptsPartial"); }
+}
