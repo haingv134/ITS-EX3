@@ -2,7 +2,8 @@
     <div class="container border border-2 border-secondary p-2">
         <div class="row my-2">
             <div class="col-sm-5">
-                <a class="btn btn-outline-primary btn-sm" onclick="OpenPopup('@Url.Action("Add", "Student")')"> Add Student </a>
+                <a class="btn btn-outline-primary btn-sm" onclick="OpenPopup('@Url.Action("Add", "Student")')"> Add
+                    Student </a>
                 <a class="btn btn-outline-primary btn-sm" asp-action="youngest"> Youngest student</a>
                 <a class="btn btn-outline-primary btn-sm" asp-action="Oldest"> Oldest student</a>
             </div>
@@ -40,93 +41,21 @@
 </body>
 
 @section Scripts{
-
-<link href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.0.1/css/bootstrap.min.css" rel="stylesheet" />
-<link href="https://cdn.datatables.net/1.11.3/css/dataTables.bootstrap5.min.css" rel="stylesheet" />
-<script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.11.3/js/jquery.dataTables.js"></script>
-<script src="https://cdn.datatables.net/1.11.3/js/dataTables.bootstrap5.min.js"></script>
 <script>
-
-    $('#Reset').click(function () {
-        if ($("#SearchBar").val().length > 0) {
-            $('#SearchBar').val('');
-            datatable.draw();
-        }
-    })
-    $('#Search').click(function () {
-        if ($("#SearchBar").val().length > 0) {
-            datatable.search($(this).val()).draw();
-        }
-    })
-
-    var datatable;
-
-    function renderGender(data, type, row, meta) {
-        if (data === true) return "Male";
-        else return 'Female';
+    function urlIndexStudent() {
+        return '@Url.Action("Index", "Student")';
     }
-    function renderDate(data, type, row, meta) {
-        let date = new Date(data);
-        return date.toDateString("dd/MM/yyyy");
+    function urlAddStudent() {
+        return '@Url.Action("Add", "Student")';
     }
-
-    $(document).ready(function () {
-        // default option for datatables
-        $.extend(true, $.fn.dataTable.defaults, {
-            processing: false, // showing "processing" message while ajax is executing
-            serverSide: true,  // handing request on server
-            searching: false, //
-            ordering: true, // allow order
-            paging: true, // phan trang
-            filter: false, // enable searching on input search
-            stateSave: true, // save state of last table (lost if accessing with orther url or no session)
-            autoWidth: true
-        });
-        datatable = $('#StudentTable').DataTable({
-            ajax:
-            {
-                url: '@Url.Action("Index", "Student")',
-                type: "POST",
-                data: function (d) {
-                    return $.extend({}, d, {
-                        "gender": $("#Gender").val(),
-                        "search": {
-                            "value": $("#SearchBar").val(),
-                            "regex": false
-                        }
-                    });
-                }
-            },
-            columnDefs: [
-                { orderable: false, targets: [2, 4] }
-            ],
-            columns: [
-                { data: "name", name: "Name", title: "Student Name" },
-                { data: "birthday", name: "Birthday", title: "Birthday", render: renderDate },
-                { data: "gender", name: "Gender", title: "Gender ", render: renderGender },
-                { data: "className", name: "ClassName", title: "Class Name" },
-                { data: "subjects", name: "Subjects", title: "Subjects" },
-                {
-                    data: "studentId", name: "StudentId", title: "Actions", render: function (sid) {
-                        return "<a class='btn btn-success btn-sm' onclick=OpenPopup('@Url.Action("Edit", "Student")?studentId=" + sid + "')> <i class='ti-pencil'></i>  Edit </a> | <a class='btn btn-danger btn-sm' onclick=DoAction('@Url.Action("Delete", "Student")?studentId=" + sid + "') > <i class='ti-trash'></i> Delete </a> ";
-                    },
-                    orderable: false,
-                    visiable: false,
-                    width: "200px"
-                }
-            ],
-
-            order: [[0, "asc"], [1, "asc"]],
-            language: {
-                emptyTable: "No class found, please <b> Add New Class </b> to show detail", // no data
-                infoEmpty: "No records avaiable",
-                zeroRecords: "Humm.... No result founded"
-            }
-        });
-    })
-
-
+    function urlEditStudent(studentId) {
+        return '\'@Url.Action("Edit", "Student")?studentId=' + studentId + '\'';
+    }
+    function urlDeleteStudent(studentId) {
+        return '\'@Url.Action("Delete", "Student")?studentId=' + studentId + '\'';
+    }
 </script>
+<script src="~/js/student_index.js"></script>
 @*Send validation to layout*@
 @{await Html.RenderPartialAsync("_ValidationScriptsPartial"); }
 }

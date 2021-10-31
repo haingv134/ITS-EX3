@@ -28,11 +28,13 @@ namespace WebLayer.Controllers
             this.logger = logger;
             this.mapper = mapper;
         }
+        [HttpGet]
         public IActionResult Index() => View();
         [HttpPost]
         public IActionResult SubjectList()
         {
-            var des = mapper.Map<Subject[], IndexViewModel[]>(subjectServices.GetAll().ToArray());
+            var des = subjectServices.GetAll();
+
             return Json(new { success = true, data = des });
         }
         [HttpGet]
@@ -73,7 +75,7 @@ namespace WebLayer.Controllers
             {
                 errorMessages = e.Messages;
             }
-            return Json(new { success = isSuccess, message = (isSuccess)? "Add successfull" : errorMessages});
+            return Json(new { success = isSuccess, message = (isSuccess) ? "Delete successfull" : errorMessages });
         }
     }
 }

@@ -6,9 +6,9 @@ using DatabaseLayer.Entity;
 
 namespace WebLayer.ViewModel.Subject
 {
-    public class IndexViewModel
+    public class TableFormat
     {
-        public int SubjectId { get; set; }
-        public string Name { get; set; }
+        public int Start { get; set; }
+        public int Length {get; set;}
     }
 }
