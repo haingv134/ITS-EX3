@@ -1,14 +1,22 @@
 ﻿<div id="subject-container">
-    <button class="btn btn-primary mb-3" onclick="OpenPopup('@Url.Action("Add", "Subject")')"> Add Subject </button>
+    <button class="btn btn-primary mb-3" id="btnAddSubject"> Add Subject </button>
+
+
     <div class="list-group list-group-flush">
-        <div class="row border-0" id="parentNode">
+        <div class="overflow-auto row border-0" id="parentNode" style="max-height: 50vh;">
             @* new element will added here *@
         </div>
     </div>
+    <div class="d-flex flex-row justify-content-end pt-2 ">
+        <div class="pagination">
+            <div class="page-item" id="previous-page"><a class="page-link" href="#">Previous</a></div>
+            <div class="page-item" id="next-page"><a class="page-link" href="#">Next</a></div>
+        </div>
+    </div>
 </div>
-
 @section Scripts {
 <script>
+    
     function urlListSubject() {
         return '@Url.Action("SubjectList", "Subject")';
     }

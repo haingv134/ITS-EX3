@@ -20,7 +20,9 @@ namespace ServicesLayer.Implementation
             this.unitOfWork = unitOfWork;
         }
         public Subject Get(int id) => unitOfWork.SubjectRepository.Get(id) ?? throw new CustomeException("Subject Null Object");
+        public int GetCounting() => unitOfWork.SubjectRepository.GetCounting();
         public List<Subject> GetAll() => unitOfWork.SubjectRepository.GetAll().ToList();
+        public List<Subject> GetAll(int skip, int take) => unitOfWork.SubjectRepository.GetAll().Skip(skip).Take(take).ToList();
         public List<Subject> GetAllDetail() => unitOfWork.SubjectRepository.GetAllDetails().ToList();
         public void AddSubject(Subject subject)
         {            
@@ -58,6 +60,21 @@ namespace ServicesLayer.Implementation
             {
                 var subjectModel = Get(id);
                 unitOfWork.SubjectRepository.Remove(subjectModel);
+                int roweffected = await unitOfWork.SaveChange();
+                if (roweffected == 0) throw new CustomeException("No record effected in database");
+            }
+            catch (CustomeException e)
+            {
+                throw new CustomeException(e.Messages);
+            }
+        }
+        public async Task Update(Subject subjectModel)
+        {
+            try
+            {
+                var  model = Get(subjectModel.SubjectId);
+                model.Name = subjectModel.Name;
+                unitOfWork.SubjectRepository.Update(model);
                 int roweffected = await unitOfWork.SaveChange();
                 if (roweffected == 0) throw new CustomeException("No record effected in database");
             }

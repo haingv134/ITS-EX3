@@ -11,10 +11,13 @@ namespace ServicesLayer.Interface
     public interface ISubjectServices
     {
         public Subject Get(int id);
+        public int GetCounting();
         public List<Subject> GetAll();
+        public List<Subject> GetAll(int skip, int take);
         public List<Subject> GetAllDetail(); // for greate json file
         public void AddSubject(Subject subject);
         public Task AddClassSubject(ClassAddSubjectServicesModel csModel);
         public Task Delete(int id);
+        public Task Update(Subject subjectModel);
     }
 }

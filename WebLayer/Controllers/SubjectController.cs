@@ -11,6 +11,7 @@ using WebLayer.ViewModel.Subject;
 using WebLayer.EditModel.Subject;
 using AutoMapper;
 using DatabaseLayer.ExceptionHandling;
+using ServicesLayer.ViewModel;
 
 namespace WebLayer.Controllers
 {
@@ -31,11 +32,11 @@ namespace WebLayer.Controllers
         [HttpGet]
         public IActionResult Index() => View();
         [HttpPost]
-        public IActionResult SubjectList()
+        public IActionResult SubjectList(int skip, int take)
         {
-            var des = subjectServices.GetAll();
-
-            return Json(new { success = true, data = des });
+            var des = subjectServices.GetAll(skip, take);
+            var count = subjectServices.GetCounting();
+            return Json(new { success = true, data = des, totalRecords = count });
         }
         [HttpGet]
         public IActionResult Add() => View();
@@ -63,12 +64,12 @@ namespace WebLayer.Controllers
             return Json(new { success = isSuccess, message = (isSuccess) ? "Add successfull" : errorMessages });
         }
         [HttpPost]
-        public IActionResult Delete(int subjectId)
+        public async Task<IActionResult> Delete(int subjectId)
         {
             bool isSuccess = false;
             try
             {
-                subjectServices.Delete(subjectId);
+                await subjectServices.Delete(subjectId);
                 isSuccess = true;
             }
             catch (CustomeException e)
@@ -76,6 +77,36 @@ namespace WebLayer.Controllers
                 errorMessages = e.Messages;
             }
             return Json(new { success = isSuccess, message = (isSuccess) ? "Delete successfull" : errorMessages });
+        }
+        [HttpGet]
+        public IActionResult Edit(int subjectId)
+        {
+            try
+            {
+                var subjectModel = subjectServices.Get(subjectId);
+                var subjectEditModel = mapper.Map<Subject, AddEditModel>(subjectModel);
+                return View(subjectEditModel);
+            }
+            catch (CustomeException e)
+            {
+                return Content(e.Messages);
+            }
+        }
+        [HttpPost]
+        public async Task<IActionResult> Edit(AddEditModel subjectEditModel)
+        {
+            bool isSuccess = false;
+            try
+            {
+                var subjectEdit = mapper.Map<AddEditModel, Subject>(subjectEditModel);
+                await subjectServices.Update(subjectEdit);
+                isSuccess = true;
+            }
+            catch (CustomeException e)
+            {
+                errorMessages = e.Messages;
+            }
+            return Json(new { success = isSuccess, message = (isSuccess) ? "Update successfull" : errorMessages });
         }
     }
 }

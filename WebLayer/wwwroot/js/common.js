@@ -8,6 +8,7 @@ function RenderBody(url) {
 function OpenPopup(url) {
     $.get(url)
         .done(function (response) {
+            console.log(response);
             $('#popup').html(response);
             // if response has model -> show it and processing, if not: push error nontification
             if ($('.modal').length) {
@@ -19,6 +20,7 @@ function OpenPopup(url) {
                 ClosePopup();
             } else {
                 $('#popup').hide();
+                console.log('hide');
                 notify(response, 'error');
             }
         });
@@ -97,7 +99,7 @@ function HanderAjaxResponse(data) {
         }
         // if form inside subject part
         if (typeof (subjectList) != 'undefined') {
-            ajaxLoadSubject();
+            ajaxLoadSubject(0,6);
         }
         notify(data.message, 'success');
     } else {

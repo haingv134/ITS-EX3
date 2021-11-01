@@ -1,0 +1,28 @@
+@model WebLayer.EditModel.Subject.AddEditModel
+
+@{
+    Layout = null;
+}
+
+<form class="form-group" asp-action="Edit" id="submitForm" onsubmit=" return SubmitForm(this)">
+    <div class="modal fade" id="modal-id" aria-labelledby="modal-title" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="modal-title">Update subject</h5>
+                    <button class="btn btn-close" type="button" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div asp-validation-summary="All" style="color: red"></div>
+                    <input asp-for="@Model.SubjectId" class="form-control" hidden>
+                    <label asp-for="@Model.Name"> Subject Name </label>
+                    <input asp-for="@Model.Name" class="form-control">
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-danger" type="button" data-bs-dismiss="modal">Close</button>
+                    <button class="btn btn-primary" type="submit">Update</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>

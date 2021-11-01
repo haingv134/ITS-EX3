@@ -24,7 +24,8 @@ namespace WebLayer.AutoMapper
             CreateMap<EditModel.Class.EditEditModel, ClassEditServicesModel>();
             CreateMap<AddSubjectEditModel, ClassAddSubjectServicesModel>();
             // Subject
-            CreateMap<EditModel.Subject.AddEditModel, Subject>();                        
+            CreateMap<EditModel.Subject.AddEditModel, Subject>();    
+            CreateMap<Subject, EditModel.Subject.AddEditModel>();                          
             // Student //
             CreateMap<EditModel.Student.AddEditModel, StudentAddServicesModel>(); // services
             CreateMap<StudentEditServicesModel, EditModel.Student.EditEditModel>();
