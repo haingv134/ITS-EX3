@@ -1,29 +1,27 @@
-function RenderBody(url) {
-    $.get('/Lop/Index')
-        .done(function (response) {
-            $('#RenderBody').html(response);
-        })
-}
+function OpenPopup(URL, ...args) {
 
-function OpenPopup(url) {
-    $.get(url)
-        .done(function (response) {
-            console.log(response);
-            $('#popup').html(response);
-            // if response has model -> show it and processing, if not: push error nontification
-            if ($('.modal').length) {
-                $('.modal').modal('show');
-                var form = $('#popup form');
-                if (form.length) {
-                    $.validator.unobtrusive.parse(form);
-                }
-                ClosePopup();
-            } else {
-                $('#popup').hide();
-                console.log('hide');
-                notify(response, 'error');
+    // call URL and including array data if have
+    $.ajax({
+        type: 'GET',
+        url: URL,
+        traditional: true,
+        data: { 'classList': args }
+    }).done(function (response) {
+        $('#popup').html(response);
+        // if response has model -> show it and processing, if not: push error nontification
+        if ($('.modal').length) {
+            $('.modal').modal('show');
+            var form = $('#popup form');
+            if (form.length) {
+                $.validator.unobtrusive.parse(form);
             }
-        });
+            ClosePopup();
+        } else {
+            $('#popup').hide();
+            console.log('hide');
+            notify(response, 'error');
+        }
+    })
 }
 
 function ClosePopup() {
@@ -92,18 +90,18 @@ function DoAction(url) {
 }
 
 function HanderAjaxResponse(data) {
-    if (data.success) {        
+    if (data.success) {
         // if form is proccessing to datatable
         if (typeof (datatable) != 'undefined') {
             datatable.ajax.reload();
         }
         // if form inside subject part
         if (typeof (subjectList) != 'undefined') {
-            ajaxLoadSubject(0,6);
+            ajaxLoadSubject(0, 6);
         }
         notify(data.message, 'success');
     } else {
-        notify(data.message, 'error');        
+        notify(data.message, 'error');
     }
     // if form inside a popup modal
     if ($('.modal').length) {
@@ -113,7 +111,7 @@ function HanderAjaxResponse(data) {
 
 // intetnet status (online or offline)
 $(document).ready(function () {
-    var showSwal = true;    
+    var showSwal = true;
     window.setInterval(function () {
         var description = document.querySelector('#status-description');
         var status = document.querySelector('#internet-status');
@@ -169,20 +167,26 @@ function notify(msg, typeMsg) {
         panel.style.display = 'none';
     }, 2000);
 }
+var ajaxStartTime, ajaxEndTime;
+$(document).ready(function () {    
+    var loadingStatus = true;
+    $(document).ajaxStart(function () {
+        loadingStatus = true;
+        loadingInterval = setInterval(function () {
+            loadingAction();
+            if (!loadingStatus) clearInterval(loadingInterval);
+        }, 250);
+        ajaxStartTime = new Date().getTime();
+    });
 
-var loadingStatus = true;
-$(document).ajaxStart(function () {
-    loadingStatus = true;
-    loadingInterval = setInterval(function () {
-        loadingAction();
-        if (!loadingStatus) clearInterval(loadingInterval);
-    }, 250);
-});
+    $(document).ajaxComplete(function () {
+        $('#loading-1, #loading-2, #loading-3').css('display', 'none');
+        loadingStatus = false;
+        ajaxEndTime = new Date().getTime();        
+        document.querySelector('#ajax-time-execute').innerText = 'request took ' + (ajaxEndTime - ajaxStartTime) + 'ms';
+    });
+})
 
-$(document).ajaxComplete(function () {
-    $('#loading-1, #loading-2, #loading-3').css('display', 'none');
-    loadingStatus = false;
-});
 
 function loadingAction() {
     let timer = 0;

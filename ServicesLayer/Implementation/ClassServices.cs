@@ -21,6 +21,7 @@ namespace ServicesLayer.Implementation
             this.unitOfWork = unitOfWork;
         }
 
+        public List<ClassModel> GetWithIDList(int[] idList) => unitOfWork.ClassRepository.GetWithIDList(idList).ToList();
         public List<ClassModel> GetAll() => unitOfWork.ClassRepository.GetAll().ToList();
         public List<ClassModel> GetAllDetail() => unitOfWork.ClassRepository.GetAllDetail().ToList(); // for greate json file
         public int GetCounting() => unitOfWork.ClassRepository.GetCounting();
@@ -50,84 +51,41 @@ namespace ServicesLayer.Implementation
                 throw new CustomeException(e.Messages);
             }
         }
+        public List<ClassDetailServicesModel> GetClassListDetail(string text, int skip, int take, int min, int max, params string[] properties)
+        {
+            try
+            {
+                var baseQuery = unitOfWork.ClassRepository.GetAllDetail();
+                var query = unitOfWork.ClassRepository.FilterByText(baseQuery, text);
+                query = unitOfWork.ClassRepository.GetPaging(query, skip, take);
 
-        public ClassDetailServicesModel GetClassDetail(int classId)
-        {
-            try
-            {
-                var classModel = unitOfWork.ClassRepository.GetClassDetail(classId) ?? throw new CustomeException("Null class object"); ;
-                var classDetailServicesModel = new ClassDetailServicesModel();
-                var president = unitOfWork.ClassStudentRepository.GetStudentByRole(classId, (int)Role.PRESIDENT).ToList();
-                var secreatary = unitOfWork.ClassStudentRepository.GetStudentByRole(classId, (int)Role.SECRETARY).ToList();
-                // assign value for services modal
-                classDetailServicesModel.ClassId = classModel.ClassId;
-                classDetailServicesModel.ClassName = classModel.Name;
-                classDetailServicesModel.PersidentId = (president.Any()) ? president[0].StudentId : 0;
-                classDetailServicesModel.PersidentName = (president.Any()) ? president[0].Name : string.Empty;
-                classDetailServicesModel.SecretaryId = (secreatary.Any()) ? secreatary[0].StudentId : 0;
-                classDetailServicesModel.SecretaryName = (secreatary.Any()) ? secreatary[0].Name : string.Empty;
-                classDetailServicesModel.Quantity = unitOfWork.StudentRepository.Count(classId);
-                classDetailServicesModel.BoyQuantity = unitOfWork.StudentRepository.CountGender(classId, true);
-                classDetailServicesModel.GirlQuantity = unitOfWork.StudentRepository.CountGender(classId, false);
-                classDetailServicesModel.Subjects = string.Join("|", classModel.ClassSubject.Select(cs => cs.Subject.Name).ToArray());
-                return classDetailServicesModel;
-            }
-            catch (CustomeException e)
-            {
-                throw new CustomeException(e.Messages);
-            }
-        }
+                var result = query.Select(q => new ClassDetailServicesModel()
+                {
+                    ClassId = q.ClassId,
+                    ClassName = q.Name,
+                    PersidentId = q.ClassStudent.Where(cs => cs.Role == (int)Role.PRESIDENT).DefaultIfEmpty().First().StudentId,
+                    PersidentName = q.ClassStudent.Where(cs => cs.Role == (int)Role.PRESIDENT).DefaultIfEmpty().First().Student.Name??"",
+                    SecretaryId = q.ClassStudent.Where(cs => cs.Role == (int)Role.SECRETARY).DefaultIfEmpty().First().StudentId,
+                    SecretaryName = q.ClassStudent.Where(cs => cs.Role == (int)Role.SECRETARY).DefaultIfEmpty().First().Student.Name??"",
+                    Quantity = q.ClassStudent.Count(),
+                    GirlQuantity = q.ClassStudent.Count(cs => cs.Student.Gender == true),
+                    BoyQuantity = q.ClassStudent.Count(cs => cs.Student.Gender == false),
+                    Subjects = string.Join("|", q.ClassSubject.Select(cs => cs.Subject.Name).ToArray())
+                });
 
-        public List<ClassDetailServicesModel> GetClassListDetail()
-        {
-            try
-            {
-                return unitOfWork.ClassRepository.GetAll().ToList().Select(_class => GetClassDetail(_class.ClassId)).ToList();
+                return result.ToList();
             }
             catch (CustomeException e)
             {
                 throw new CustomeException(e.Messages);
             }
         }
-        public List<ClassDetailServicesModel> GetClassListDetail(int skip, int take)
-        {
-            try
-            {
-                return unitOfWork.ClassRepository.GetPaging(skip, take).Select(_class => GetClassDetail(_class.ClassId)).ToList();
-            }
-            catch (CustomeException e)
-            {
-                throw new CustomeException(e.Messages);
-            }
-        }
-        public List<ClassDetailServicesModel> GetClassListDetail(List<ClassModel> list, int skip, int take)
-        {
-            try
-            {
-                return list.Skip(skip).Take(take).Select(_class => GetClassDetail(_class.ClassId)).ToList();
-            }
-            catch (CustomeException e)
-            {
-                throw new CustomeException(e.Messages);
-            }
-        }
-        public List<ClassDetailServicesModel> GetClassListDetailWithRangeCondition(List<ClassModel> list, int min, int max, int skip, int take, params string[] propertiesName)
-        {
-            try
-            {
-                return list.Select(_class => GetClassDetail(_class.ClassId)).AsQueryable().FilterWithRange(min, max, propertiesName).Skip(skip).Take(take).ToList();
-            }
-            catch (CustomeException e)
-            {
-                throw new CustomeException(e.Messages);
-            }
-        }
-
         public List<ClassDetailServicesModel> GetClassMaxBoy()
         {
             try
             {
-                return unitOfWork.ClassRepository.GetClassMaxBoy().Select(_class => GetClassDetail(_class.ClassId)).ToList();
+                return null;
+                //return unitOfWork.ClassRepository.GetClassMaxBoy().Select(_class => GetClassDetail(_class.ClassId)).ToList();
             }
             catch (CustomeException e)
             {
@@ -141,7 +99,7 @@ namespace ServicesLayer.Implementation
             var model = new ClassEditServicesModel();
             try
             {
-                var classModel = unitOfWork.ClassRepository.GetClassDetail(classId)??throw new CustomeException("Class null object");
+                var classModel = unitOfWork.ClassRepository.Get(classId) ?? throw new CustomeException("Class null object");
                 var president = unitOfWork.ClassStudentRepository.GetStudentByRole(classId, (int)Role.PRESIDENT).ToList();
                 var secreatary = unitOfWork.ClassStudentRepository.GetStudentByRole(classId, (int)Role.SECRETARY).ToList();
                 // getting requre information to view
@@ -207,11 +165,5 @@ namespace ServicesLayer.Implementation
                 throw new CustomeException(e.Messages);
             }
         }
-        public List<ClassModel> FilterByText(IQueryable<ClassModel> source, string text, params string[] propertiesName)
-        {
-            return unitOfWork.ClassRepository.FilterByText(source, text, propertiesName).ToList();
-        }
-        public List<ClassModel> FilterByText(string text) => unitOfWork.ClassRepository.FilterByText(text).ToList();
-
     }
 }

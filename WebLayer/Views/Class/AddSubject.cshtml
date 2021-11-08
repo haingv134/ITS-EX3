@@ -1,8 +1,7 @@
 ﻿@model WebLayer.EditModel.Class.AddSubjectEditModel
-@{ 
+@{
     Layout = null;
 }
-
 
 <form asp-action="AddSubject" id="submitForm" onsubmit="return SubmitForm(this)">
     <div class="modal fade w-100" id="modal-id" aria-labelledby="modal-title" aria-hidden="true">
@@ -14,29 +13,35 @@
                 </div>
                 <div class="modal-body">
                     <div asp-validation-summary="All" style="color: red"></div>
-                    <div class="input-group">
-                        <div class="input-group-prepend">
-                            <label asp-for="@Model.ClassId" class="input-group-text"> Class </label>
-                        </div>
-                        <select asp-for="@Model.ClassId" class="form-select" id="inputGroupSelect01">
-                            @foreach (var item in ViewBag.ClassList)
-                            {
-                                <option value="@item.ClassId"> @item.Name </option>
-}
-                        </select>
-                    </div>
-
-                    <div class="input-group">
-                        <div class="input-group-prepend">
-                            <label asp-for="@Model.SubjectId" class="input-group-text"> Subjects </label>
-                        </div>
-                        <select asp-for="@Model.SubjectId" class="form-select ms-2" multiple="multiple" required>
-                            @foreach (var item in ViewBag.SubjectList)
-                            {
-                                <option value="@item.SubjectId"> @item.Name </option>
-}
-                        </select>
-                    </div>
+                    <table>
+                        <tr style="width: 100%;">
+                            <td>
+                                <span class="input-group-text me-2">Class</span>
+                            </td>
+                            <td>
+                                @Html.ListBox("ClassId", Model.ClassList, new {
+                                @class = "form-control",
+                                id = "ClassListId",
+                                multiple="multiple",
+                                style="width: 100%"
+                                })
+                            </td>
+                        </tr>
+                        <tr style="width: 100%;">
+                            <td>
+                                <span class="input-group-text"> Subjects </span>
+                            </td>
+                            <td>
+                                <select asp-for="@Model.SubjectId" class="form-select ms-2" id="SubjectListId"
+                                    multiple="multiple" required>
+                                    @foreach (var item in ViewBag.SubjectList)
+                                    {
+                                        <option value="@item.SubjectId"> @item.Name </option>
+                                    }
+                                </select>
+                            </td>
+                        </tr>
+                    </table>
                 </div>
                 <div class="modal-footer">
                     <button class="btn btn-danger" type="button" data-bs-dismiss="modal">Close</button>
@@ -46,3 +51,20 @@
         </div>
     </div>
 </form>
+
+<script>
+    $(document).ready(function () {
+        $('#ClassListId').select2({
+            dropdownParent: $('.modal'),
+            width: 'resolve',
+            theme: "classic"
+        });
+    })
+    $(document).ready(function () {
+        $('#SubjectListId').select2({
+            dropdownParent: $('.modal'),
+            width: 'resolve',
+            theme: "classic"
+        });
+    })
+</script>

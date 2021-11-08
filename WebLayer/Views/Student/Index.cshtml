@@ -1,4 +1,6 @@
-﻿<body>
+﻿@model string
+
+<body>
     <div class="container border border-2 border-secondary p-2">
         <div class="row my-2">
             <div class="col-sm-5">
@@ -6,26 +8,37 @@
                     Student </a>
                 <a class="btn btn-outline-primary btn-sm" asp-action="youngest"> Youngest student</a>
                 <a class="btn btn-outline-primary btn-sm" asp-action="Oldest"> Oldest student</a>
-            </div>
-            <div class="col-sm-7">
-                <a class="btn btn-outline-primary btn-sm" asp-controller="FileHandler"
-                    asp-action="ExportStudentDetailToCSV"> => Export To CSV</a>
+                <a class="btn btn-outline-primary btn-sm" asp-controller="FileHandler" asp-action="ExportStudentDetailToCSV"> Export To CSV</a>
             </div>
         </div>
         <div class="row row-cols-1 row-cols-sm-2 mb-2 ">
+            <div class="col-sm-2">
+                <div class="input-group">
+                    <span class="input-group-text">Class</span>
+                    <select class="form-select" id="ClassId">
+                        <option value="0">-- All --</option>
+                        @foreach (var item in ViewBag.ClassList)
+                        {
+                            <option value="@item.ClassId">@item.Name</option>
+
+                        }
+                    </select>
+                </div>
+            </div>
             <div class="col-sm-3">
                 <div class="input-group">
-                    <span class="input-group-text">Gender </span>
+                    <span class="input-group-text">Gender</span>
                     <select class="form-select" id="Gender">
+                        <option value="">-- All --</option>
                         <option value="male">Male</option>
                         <option value="female">Female</option>
                     </select>
                 </div>
             </div>
-            <div class="col-sm-9">
+            <div class="col-sm-7">
                 <div class="input-group">
                     <input type="text" aria-label="Search Box" id="SearchBar" class="form-control"
-                        placeholder="Class, President, Secretary">
+                        placeholder="Student Code, Name ... ">
                     <button class="btn btn-secondary border rounded ms-2" id="Reset"> Reset </button>
                     <button class="btn btn-secondary border rounded" id="Search"> Search </button>
                 </div>
@@ -42,6 +55,11 @@
 
 @section Scripts{
 <script>
+    $('#SearchBar').val(getNavbarSearch());
+    function getNavbarSearch() {
+        let search = '@Model';
+        return search;
+    }
     function urlIndexStudent() {
         return '@Url.Action("Index", "Student")';
     }

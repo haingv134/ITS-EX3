@@ -11,8 +11,15 @@ using System.Linq;
 using System.Threading.Tasks;
 using WebLayer.EditModel.Class;
 using System.Text;
+using Microsoft.AspNetCore.Authorization;
+using System.Collections.Generic;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using System;
+
 namespace WebLayer.Controllers
 {
+    // [Authorize(Roles = "SystemAdmin")]
+
     [Route("lop/[action]")]
     public class ClassController : Controller
     {
@@ -123,11 +130,30 @@ namespace WebLayer.Controllers
         }
 
         [HttpGet]
-        public IActionResult AddSubject()
+        public IActionResult AddSubject(string classList)
         {
-            ViewBag.ClassList = classServices.GetAll().ToList();
+            List<int> classIdList = new List<int>();
+            foreach (var classId in classList.Split(","))
+            {
+                var id = Convert.ToInt32(classId);
+                classIdList.Add(id);
+            }
+            var classListModel = classServices.GetWithIDList(classIdList.ToArray());
+            logger.LogInformation("Number of class selected: " + classListModel.Count);
+
+            var classListItem = classListModel.Select(cl => new SelectListItem()
+            {
+                Text = cl.Name,
+                Value = cl.ClassId.ToString(),
+                Selected = true
+            });
+
             ViewBag.SubjectList = subjectServices.GetAll().ToList();
-            return View();
+            
+            var addSubjectModel = new AddSubjectEditModel();
+            addSubjectModel.ClassList = classListItem.ToList();
+
+            return View(addSubjectModel);
         }
 
         [HttpPost]
@@ -146,7 +172,8 @@ namespace WebLayer.Controllers
                 {
                     errorMessages = e.Messages;
                 }
-            } else errorMessages = "Modal Invalid";
+            }
+            else errorMessages = "Modal Invalid";
 
             return Json(new { success = isSuccess, message = (isSuccess) ? "Update subject Successull" : errorMessages });
         }

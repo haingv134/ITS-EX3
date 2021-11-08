@@ -46,6 +46,26 @@ namespace ServicesLayer.ExtensionMethod
             }
             return null;
         }
+        public static IQueryable<T> FilterByText<T>(this IQueryable<T> source, string text, params string[] propertiesName)
+        {
+            var type = typeof(T);
+            var list = type.GetProperties();
+            var parameter = Expression.Parameter(type); // x
+            var propertyList = type.GetProperties().Where(p => propertiesName.Contains(p.Name)); // x.[Property]
+            var methodInfor = typeof(string).GetMethod("Contains", new Type[] { typeof(string), typeof(StringComparison) });
+            var expressions = propertyList.ToList().Select(property => Expression.Call(
+                Expression.Property(parameter, property),
+                methodInfor,
+                Expression.Constant(text, typeof(string)),
+                Expression.Constant(StringComparison.InvariantCultureIgnoreCase, typeof(StringComparison))
+            )).ToList();
+            // wrap expression list into a body             
+            var body = expressions[0];
+            //for (int index = 1; index < expressions.Count; index++) body = Expression.Or(body, expressions[index]);
+            var lambda = Expression.Lambda<Func<T, bool>>(body, parameter);
+            ///--------------------------------------------------------------------/
+            return source.Where(lambda);
+        }
         public static IQueryable<T> OrderHelper<T>(IQueryable<T> source, string propertyName, bool orderAscendingDirection, bool subLevel)
         {
             if (string.IsNullOrEmpty(propertyName)) return source;

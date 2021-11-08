@@ -9,31 +9,41 @@
 
 @if (SignInManager.IsSignedIn(this.User))
 {
-    <ul class="navbar-nav">
 
-        <li class="nav-item">
-            @* <a class="nav-link text-dark" asp-area="Identity" asp-page="/Account/Manage"> Xin chào
-                @UserManager.GetUserName(this.User) </a> *@
-            <a class="nav-link text-dark" href="/Identity/Account/Manage"> Xin chào @UserManager.GetUserName(this.User) </a>
+    <a href="#" class="nav-link dropdown-toggle" id="dropdown-navbar" data-bs-toggle="dropdown" aria-expanded="false">
+        Xin chào @UserManager.GetUserName(this.User) </a>
+    <ul class="dropdown-menu" aria-labelledby="dropdown-navbar">
+        <li class="dropdown-item">
+            <a class="nav-link text-dark" asp-area="Identity" asp-action="Index" asp-controller="Manage"> Account
+            </a>
         </li>
-
-        <li class="nav-item">
-            <form class="form-inline" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@returnUrl"
-            method="post">
-                <button type="submit" class="btn btn-link text-dark">Đăng xuất</button>
+        <li class="dropdown-item">
+            <a class="nav-link text-dark" asp-area="Identity" asp-action="Index" asp-controller="Role"> Role Manager
+            </a>
+        </li>
+        <li class="dropdown-item">
+            <form class="form-inline" asp-area="Identity" asp-action="Logout" asp-controller="Account"
+            asp-route-returnUrl="@returnUrl" method="post">
+                <button type="submit" class="nav-link btn btn-link text-dark">Đăng xuất</button>
             </form>
-
         </li>
     </ul>
 }
 else
 {
-    <ul class="navbar-nav">
-        <li class="nav-item">
-            <a class="nav-link text-dark" asp-area="Identity" asp-page="/Account/Register" > Đăng Ký </a>
+    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown"
+    aria-expanded="false">
+        Login
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+        <li class="dropdown-item">
+            <a class="nav-link text-dark" asp-area="Identity" asp-action="Register" asp-controller="Account"> Đăng
+                Ký </a>
         </li>
-        <li class="nav-item">
-            <a class="nav-link text-dark" asp-area="Identity" asp-page="/Account/Login"> Đăng Nhập </a>
+        <li class="dropdown-item">
+            <a class="nav-link text-dark" asp-area="Identity" asp-action="Login" asp-controller="Account"> Đăng
+                Nhập </a>
         </li>
     </ul>
+
 }

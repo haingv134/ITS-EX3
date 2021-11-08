@@ -12,9 +12,13 @@ namespace WebLayer.EditModel.Student
         public int NewClassId { get; set; }
         public int StudentId { get; set; }
         [Required]
-        [Display(Name = "Ten sinh vien")]
-        [StringLength(50, MinimumLength = 2, ErrorMessage = "Ban phai nhap ten co do dai tu 2 -> 50")]
+        [Display(Name = "Tên sinh viên")]
+        [StringLength(50, MinimumLength = 2, ErrorMessage = "Chiều dài phải nhập là từ 2 -> 50")]
         public string Name { get; set; }
+        [Required]
+        [Display(Name = "Mã sinh viên")]
+        [StringLength(50, MinimumLength = 2, ErrorMessage = "Chiều dài phải nhập là từ 2 -> 50")]
+        public string StudentCode { get; set; }
         public DateTime Birthday { get; set; }
         public bool Gender { get; set; }
     }

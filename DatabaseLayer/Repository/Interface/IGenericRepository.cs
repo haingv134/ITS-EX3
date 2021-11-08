@@ -19,9 +19,5 @@ namespace DatabaseLayer.Repository.Interface
         void RemoveRange(TEntity[] entities);
         public TEntity Insert(TEntity entity, bool SaveChange);
         void InsertRange(TEntity[] entities);
-        IQueryable<TEntity> GetPaging(int skip, int take);
-        PropertyInfo[] GetPropertiesInfor(TEntity entity);
-        PropertyInfo[] GetPropertiesInforByName(TEntity entity, params string[] name);
-        IQueryable<TEntity> FilterByText(IQueryable<TEntity> source, string text, params string[] propertiesName);        
     }
 }

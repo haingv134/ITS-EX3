@@ -12,7 +12,7 @@
             </div>
             <div class="col-sm-7">
                 <a class="btn btn-outline-primary btn-sm my-2" asp-controller="FileHandler"
-                    asp-action="ExportClassDetailToCSV"> => Export To CSV</a>
+                    asp-action="ExportClassDetailToCSV"> Export To CSV</a>
             </div>
         </div>
         <div class="row row-cols-1 row-cols-sm-2 mb-2 ">
@@ -48,13 +48,6 @@
 @section Scripts{
 @* script process for datatable *@
 <script>
-    $('#btnAddClass').click(function () {
-        OpenPopup(urlAddClass());
-    })
-    $('#btnAddSubjectToClass').click(function () {
-        OpenPopup(urlRegisterSubject());
-    })
-
     function urlIndexClass() {
         return '@Url.Action("Index", "Class")';
     }

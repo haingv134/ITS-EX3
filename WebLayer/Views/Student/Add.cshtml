@@ -12,8 +12,10 @@
                 </div>
                 <div class="modal-body">
                     <div asp-validation-summary="All" style="color: red"></div>
-                    <label asp-for="@Model.Name"> StudentName </label>
+                    <label asp-for="@Model.Name"></label>
                     <input asp-for="@Model.Name" class="form-control">
+                    <label asp-for="@Model.StudentCode"></label>
+                    <input asp-for="@Model.StudentCode" class="form-control">
                     <label asp-for="@Model.Birthday"> Birthday </label>
                     <input asp-for="@Model.Birthday" class="form-control" type="date">
                     <label asp-for="@Model.Gender"> Gender </label>

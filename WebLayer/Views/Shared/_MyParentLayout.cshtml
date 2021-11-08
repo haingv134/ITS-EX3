@@ -12,16 +12,25 @@
         integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
         crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.1.9/dist/sweetalert2.all.min.js"></script>
+    @* datatable lib *@
     <link href="https://cdn.datatables.net/1.11.3/css/dataTables.bootstrap5.min.css" rel="stylesheet" />
+    <link href="https://cdn.datatables.net/select/1.3.3/css/select.dataTables.min.css" rel="stylesheet" />
+    <link href="https://cdn.datatables.net/buttons/2.0.1/css/buttons.dataTables.min.css" rel="stylesheet" />
     <script type="text/javascript" charset="utf8"
         src="https://cdn.datatables.net/1.11.3/js/jquery.dataTables.js"></script>
+    <script type="text/javascript" charset="utf8"
+        src="https://cdn.datatables.net/select/1.3.3/js/dataTables.select.min.js"></script>
     <script src="https://cdn.datatables.net/1.11.3/js/dataTables.bootstrap5.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/2.0.1/js/dataTables.buttons.min.js"></script>
     @* cdn css *@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.0.1/css/bootstrap.min.css"
         rel="stylesheet" />
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
-    @* external *@
+    @* External *@
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+    @* internal *@
     <script src="~/js/notify.js"></script>
     <link rel="stylesheet" href="~/css/site.css" />
     <link href="~/themify-icons/themify-icons.css" rel="stylesheet" />
@@ -38,6 +47,7 @@
                     <span class="fw-bold text-secondary">Student Management</span>
                     <span class="ms-2" id="internet-status"></span>
                     <span class="ms-1" id="status-description"></span>
+                    <span class="ms-1 fs-6" id="ajax-time-execute"></span>
                     @* loading *@
                     <span class="ms-3" id="loading-1"></span>
                     <span class="ms-1" id="loading-2"></span>
@@ -65,13 +75,13 @@
                             <a asp-controller="Home" asp-action="GenerateJson" class="nav-link">JSON</a>
                         </li>
                         <li class="nav-item ms-3 d-none d-md-inline">
-                            <form class="d-flex flex-crow" asp-controller="Student" asp-action="Search">
-                                <input class="form-control me-2 border border-secondary" type="search"
-                                    placeholder="Press Shift + F to search" aria-label="Search" id="btnSearch">
+                            <form class="d-flex flex-crow" asp-controller="Student" asp-action="Index" method="GET">
+                                <input class="form-control me-2 border border-secondary" type="search" name="keysearch"
+                                    placeholder="Press Shift + F to search" aria-label="Search" id="NavbarSearch">
                                 <button class="btn btn-outline-secondary" type="submit">Search</button>
                             </form>
                         </li>
-                        <li class="nav-item ms-3 d-inline">
+                        <li class="nav-item ms-3 d-inline dropdown">
                             <partial name="_LoginPartial" />
                         </li>
                     </ul>
@@ -145,4 +155,5 @@
 <script src="~/js/common.js"></script>
 @* Handing section that child layout or sub-cshtml have *@
 @await RenderSectionAsync("Scripts", required: false)
+
 </html>

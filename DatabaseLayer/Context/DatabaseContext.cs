@@ -25,7 +25,7 @@ namespace DatabaseLayer.Context
             (ILoggingBuilder logger) =>
             {
                 logger.AddFilter(DbLoggerCategory.Query.Name, LogLevel.Information);     
-                //logger.AddConsole();            
+                logger.AddConsole();            
             }
         );
 

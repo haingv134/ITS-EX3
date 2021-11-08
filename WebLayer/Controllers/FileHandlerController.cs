@@ -63,17 +63,18 @@ namespace WebLayer.Controllers
             else message = "User is not login!";
             return Json(new { success = success, message = message });
         }
-        public IActionResult ExportClassDetailToCSV()
-        {
-            var details = _classServices.GetClassListDetail();
-            Response.Headers.Add("Content-Disposition", "attachment; filename=ClassDetail.csv");
-            return new FileContentResult(Encoding.UTF8.GetBytes(details.AsQueryable().CSVStringFormat()), "text/csv");
-        }
-        public IActionResult ExportStudentDetailToCSV()
-        {
-            var details = _studentServices.GetStudentListDetail();
-            Response.Headers.Add("Content-Disposition", "attachment; filename=StudentDetail.csv");
-            return new FileContentResult(Encoding.UTF8.GetBytes(details.AsQueryable().CSVStringFormat()), "text/csv");
-        }
+        // [Route("/tai-file/")]
+        // public IActionResult ExportClassDetailToCSV()
+        // {
+        //     var details = _classServices.GetClassListDetail();
+        //     Response.Headers.Add("Content-Disposition", "attachment; filename=ClassDetail.csv");
+        //     return new FileContentResult(Encoding.UTF8.GetBytes(details.AsQueryable().CSVStringFormat()), "text/csv");
+        // }
+        // public IActionResult ExportStudentDetailToCSV()
+        // {
+        //     var details = _studentServices.GetStudentListDetail();
+        //     Response.Headers.Add("Content-Disposition", "attachment; filename=StudentDetail.csv");
+        //     return new FileContentResult(Encoding.UTF8.GetBytes(details.AsQueryable().CSVStringFormat()), "text/csv");
+        // }
     }
 }

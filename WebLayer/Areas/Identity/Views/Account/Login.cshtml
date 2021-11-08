@@ -1,0 +1,89 @@
+﻿@model LoginViewModel
+@inject SignInManager<AppUser> SignInManager
+
+@{
+
+    ViewData["Title"] = "Đăng nhập";
+    var schemes = await SignInManager.GetExternalAuthenticationSchemesAsync();
+    var loginProviders = schemes.ToList();
+    var returUrl = ViewData["ReturnUrl"];
+}
+@if (this.ViewData.ContainsKey("ErrorMessage"))
+{
+    var thongbao = TempData["ErrorMessage"] as string;
+    <partial name="/Areas/Identity/Pages/Account/_StatusMessage.cshtml" model="@thongbao"></partial>
+}
+
+<div class="container bg-white">
+    <div class="row">
+        <div class="mx-auto col-md-7">
+            <div class="card bg-light">
+                <div class="card-body p-4">
+                    <div asp-validation-summary="All" class="text-danger"></div>
+                    <div class="card-title text-center mb-5 fw-light fs-5">Đăng Nhập</div>
+                    <form method="POST">
+                        <input type="text" value="@returUrl" hidden>
+                        <div class="form-floating mb-3">
+                            <label asp-for="UserNameOrEmail" for="floatingInput"></label>
+                            <input asp-for="UserNameOrEmail" class="form-control" id="floatingInput"
+                                placeholder="Username/Email" />
+                            <span asp-validation-for="UserNameOrEmail" class="text-danger"></span>
+                        </div>
+                        <div class="form-floating mb-3">
+                            <label asp-for="Password" for="floatingPassword"></label>
+                            <input asp-for="Password" class="form-control" id="floatingPassword"
+                                placeholder="Password" />
+                            <span asp-validation-for="Password" class="text-danger"></span>
+                        </div>
+                        <div class="form-group">
+                            <div class="checkbox">
+                                <label asp-for="RememberMe">
+                                    @Html.DisplayNameFor(m => m.RememberMe)
+                                </label>
+                                <input asp-for="RememberMe" />
+                            </div>
+                        </div>
+                        <div class="d-grid mt-3">
+                            <button class="btn btn-primary text-center text-uppercase fw-bold" type="submit"> Đăng Nhập
+                            </button>
+                        </div>
+                        <hr />
+                        <div class="form-group">
+                            <a id="forgot-password" asp-action="ForgotPassword" class="text-decoration-none">Quên mật
+                                khẩu</a> |
+                            <a asp-action="Register" asp-route-returnUrl="@returUrl" class="text-decoration-none">Đăng
+                                ký mới</a> |
+                            <a id="resend-confirmation" asp-action="ResendEmailConfirmation"
+                                class="text-decoration-none">Gửi lại Email đăng nhập</a>
+                        </div>
+                        <hr />
+                    </form>
+                    @if ((loginProviders?.Count ?? 0) != 0)
+                    {
+                        <form id="external-account" asp-action="ExternalLogin" asp-route-returnUrl="@returUrl" method="post"
+                        class="form-horizontal">
+                            <div>
+                                <p>
+                                    @foreach (var provider in loginProviders)
+
+                                    {
+                                        <button type="submit" class="btn btn-primary" name="provider" value="@provider.Name"
+                                    title="Đăng nhập với tài khoản @provider.DisplayName"> Đăng nhập với tài khoản
+                                            @provider.DisplayName</button>
+                                    }
+                                </p>
+                            </div>
+                        </form>
+                    }
+                    else
+                    {
+                        <p>Chưa thiết lập đăng kí dịch vụ ngoài </p>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@section Scripts {
+@{ await Html.RenderPartialAsync("_ValidationScriptsPartial"); }
+}

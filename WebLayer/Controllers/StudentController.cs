@@ -15,9 +15,11 @@ using ServicesLayer.ViewModel;
 using DatabaseLayer.ExceptionHandling;
 using ServicesLayer.Interface.Datatable;
 using ServicesLayer.ViewModel.DataTable;
+using Microsoft.AspNetCore.Authorization;
 
 namespace WebLayer.Controllers
 {
+    [Authorize(Roles = "Admin")]
     public class StudentController : Controller
     {
         private readonly ILogger<ClassController> logger;
@@ -34,10 +36,23 @@ namespace WebLayer.Controllers
             this.studentDtServices = studentDtServices;
             this.mapper = mapper;
         }
-        public IActionResult Index() => View();
+        public IActionResult Index(string keysearch)
+        {
+            try
+            {
+                var classList = classServices.GetAll();
+                ViewBag.ClassList = classList;
+                if (classList.Count == 0) return Content("No class found, a student must be assign to at least one class");
+                return View((object)keysearch);
+            }
+            catch (CustomeException e)
+            {
+                return Content(e.Messages);
+            }
+        }
         [HttpPost]
         //public IActionResult Search(string keyword) => Json(studentDtServices.ResponseTable(keyword);
-        public IActionResult Index(DtParameters dtParameters, bool gender) => Json(studentDtServices.ResponseTable(dtParameters, gender));
+        public IActionResult Index(DtParameters dtParameters, string gender, int classid) => Json(studentDtServices.ResponseTable(dtParameters, gender, classid));
 
         [HttpGet]
         public IActionResult Add()
@@ -46,7 +61,7 @@ namespace WebLayer.Controllers
             {
                 var classList = classServices.GetAll().ToList();
                 ViewBag.ClassList = classList;
-                if (classList.Count == 0 ) return Content("No class found, can not add student if has no class");
+                if (classList.Count == 0) return Content("No class found, can not add student if has no class");
             }
             catch (CustomeException e)
             {
@@ -74,7 +89,7 @@ namespace WebLayer.Controllers
             }
             else errorMessages = "Input form is invalid";
             return Json(new { success = true, message = (isSuccess ? "Add successfull" : errorMessages) });
-        }        
+        }
         [HttpGet]
         public IActionResult Edit(int studentId)
         {
@@ -112,7 +127,7 @@ namespace WebLayer.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Delete(int studentId)        
+        public async Task<IActionResult> Delete(int studentId)
         {
             bool isSuccess = false;
             try

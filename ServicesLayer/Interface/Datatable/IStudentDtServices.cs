@@ -9,7 +9,6 @@ namespace ServicesLayer.Interface.Datatable
 {
     public interface IStudentDtServices
     {
-        public StudentDtServicesModal ResponseTable(DtParameters dtParameters, bool gender);
-        public StudentDtServicesModal ResponseTable(string text);
+        public StudentDtServicesModal ResponseTable(DtParameters dtParameters, string gender, int classId);
     }
 }

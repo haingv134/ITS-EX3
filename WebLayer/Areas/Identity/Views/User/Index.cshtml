@@ -1,0 +1,37 @@
+@model List<UserAndRole>
+@{
+    ViewData["Title"] = "Danh sách các thành viên";
+}
+<h2>@ViewData["Title"]</h2>
+<p>Tổng số thành viên: @Model.Count</p>
+
+<table class="table">
+    <tr>
+        <th>Tên user</th>
+        <th>Vai trò (role)</th>
+        <th>Đã xác nhận Email</th>
+        <th>Tác vụ</th>
+    </tr>
+    @foreach (var user in Model)
+    {
+        <tr>
+            <td>@user.UserName</td>
+            <td>
+                @if (string.IsNullOrEmpty(user.RoleNames))
+                {
+                    <a class="text-dark" asp-action="AddRole" asp-route-id="@user.Id">+ Thêm roles</a>
+                }
+                else
+                {
+                    <a asp-action="AddRole" asp-route-id="@user.Id">@user.RoleNames</a>
+                }
+            </td>
+            <td>
+                @(user.EmailConfirmed ? "Đã xác nhận" : "Chưa xác nhận")
+            </td>
+            <td>
+                <a class="btn btn-success btn-sm" asp-action="SetPassword" asp-route-id="@user.Id">Đặt mật khẩu</a>
+            </td>
+        </tr>
+    }
+</table>

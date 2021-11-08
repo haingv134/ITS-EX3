@@ -16,14 +16,10 @@ namespace ServicesLayer.Interface
         public ClassModel Get(int id);
         public Task Delete(int id);
         public void AddClass(ClassModel _class);
-        public List<ClassModel> FilterByText(IQueryable<ClassModel> source, string text, params string[] propertiesName);
-        public List<ClassDetailServicesModel> GetClassListDetail();
-        public List<ClassDetailServicesModel> GetClassListDetail(int skip, int take);
-        public List<ClassDetailServicesModel> GetClassListDetail(List<ClassModel> list, int skip, int take);
-        public List<ClassDetailServicesModel> GetClassListDetailWithRangeCondition(List<ClassModel> list, int min, int max, int skip, int take, params string[] propertiesName);
+        public List<ClassDetailServicesModel> GetClassListDetail(string text, int skip, int take, int min, int max, params string[] properties);   
         public List<ClassDetailServicesModel> GetClassMaxBoy();
         public ClassEditServicesModel GetClassEdit(int classId);
         public Task UpdateClass(ClassEditServicesModel servicesModel);
-        public List<ClassModel> FilterByText(string text);        
+        public List<ClassModel> GetWithIDList(int[] idList);
     }
 }

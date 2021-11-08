@@ -16,10 +16,10 @@ using DatabaseLayer.Entity.Identity;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using System;
-using WebLayer.Areas.Identity.Pages.Account.Manage;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
+using Microsoft.AspNetCore.Authentication.Cookies;
 
 namespace WebLayer
 {
@@ -60,7 +60,8 @@ namespace WebLayer
             // dang ky dich vu cho Identity
             services.AddIdentity<AppUser, IdentityRole>()
                         .AddEntityFrameworkStores<DatabaseContext>()
-                        .AddDefaultTokenProviders();               
+                        .AddDefaultTokenProviders();
+
             //services.AddDefaultIdentity<AppUser>().AddEntityFrameworkStores<DatabaseContext>().AddDefaultTokenProviders();
             //......................................................
             services.AddOptions();
@@ -92,6 +93,24 @@ namespace WebLayer
                 options.SignIn.RequireConfirmedPhoneNumber = false;     // Xác thực số điện thoại
                 options.SignIn.RequireConfirmedAccount = true;
             });
+
+            services.ConfigureApplicationCookie(options =>
+            {
+                options.LoginPath = new PathString("/Login");
+                options.LogoutPath = new PathString("/Logout");
+                options.AccessDeniedPath = new PathString("/khongduoctruycap");
+                // options.Cookie.Name = "Cookie";
+                // options.Cookie.HttpOnly = true;
+                // options.ExpireTimeSpan = TimeSpan.FromMinutes(720);                
+                // options.ReturnUrlParameter = CookieAuthenticationDefaults.ReturnUrlParameter;
+                // options.SlidingExpiration = true;
+            });
+            services.Configure<SecurityStampValidatorOptions>(options =>
+            {
+                // Trên 30 giây truy cập lại sẽ nạp lại thông tin User (Role)
+                // SecurityStamp trong bảng User đổi -> nạp lại thông tinn Security
+                options.ValidationInterval = TimeSpan.FromSeconds(30);
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -112,12 +131,11 @@ namespace WebLayer
 
             app.UseRouting();
 
-            app.UseAuthorization();
             app.UseAuthentication(); // use for login/logout
+            app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
             {
-                endpoints.MapRazorPages();
                 // endpoints.MapMethods("/IdentityUserAvatar", new string[] { "POST" }, async context =>
                 // {
                 //     var provider = app.ApplicationServices;
@@ -133,6 +151,7 @@ namespace WebLayer
                 endpoints.MapControllerRoute(
                     name: "default",
                     pattern: "{controller=Home}/{action=Index}/{id?}");
+                endpoints.MapRazorPages();
             });
 
         }

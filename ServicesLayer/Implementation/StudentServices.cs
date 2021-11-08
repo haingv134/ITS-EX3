@@ -33,7 +33,7 @@ namespace ServicesLayer.Implementation
                 var student = unitOfWork.StudentRepository.Insert(studentModel, true);
                 // add to connection between class - student
                 classStudentModel.StudentId = student.StudentId;
-                unitOfWork.ClassStudentRepository.Insert(classStudentModel, true);                
+                unitOfWork.ClassStudentRepository.Insert(classStudentModel, true);
             }
             catch (CustomeException e)
             {
@@ -56,7 +56,6 @@ namespace ServicesLayer.Implementation
             }
         }
         public List<Student> GetAll() => unitOfWork.StudentRepository.GetAll().ToList();
-        public List<Student> GetAllDetail() => unitOfWork.StudentRepository.GetAllDetails().ToList();
         public int GetCounting() => unitOfWork.StudentRepository.GetCounting();
         public List<Student> GetStudentListByClass(int classId) => unitOfWork.StudentRepository.GetStudentListbyClass(classId).ToList();
         public List<StudentOldServicesModel> GetYoungestStudent()
@@ -81,11 +80,12 @@ namespace ServicesLayer.Implementation
         {
             try
             {
-                var studentModel = unitOfWork.StudentRepository.GetStudentDetail(studentId) ?? throw new CustomeException("Null student object");
+                var studentModel = unitOfWork.StudentRepository.GetStudentEdit(studentId) ?? throw new CustomeException("Null student object");
                 // get require information about current student
                 var servicesModel = new StudentEditServicesModel();
                 var classStudentModel = studentModel.ClassStudent.FirstOrDefault();
                 servicesModel.Name = studentModel.Name;
+                servicesModel.StudentCode = studentModel.StudentCode;
                 servicesModel.StudentId = studentModel.StudentId;
                 servicesModel.Birthday = studentModel.Birthday;
                 servicesModel.Gender = studentModel.Gender;
@@ -107,6 +107,7 @@ namespace ServicesLayer.Implementation
                 studentModel.Name = servicesModel.Name;
                 studentModel.Gender = servicesModel.Gender;
                 studentModel.Birthday = servicesModel.Birthday;
+                studentModel.StudentCode = servicesModel.StudentCode;                
                 unitOfWork.StudentRepository.Update(studentModel);
                 // update or create new class references 
                 var classStudentModel = new ClassStudent();
@@ -139,55 +140,28 @@ namespace ServicesLayer.Implementation
                 throw new CustomeException(e.Messages);
             }
         }
-        public StudentDetailServicesModel GetStudentDetail(int studentId)
+
+        public List<StudentDetailServicesModel> GetStudentListDetail(string text, int classid, string gender, int skip, int take)
         {
-            try
-            {
-                var studentModel = unitOfWork.StudentRepository.GetStudentDetail(studentId);
-                var result = new StudentDetailServicesModel()
+            var baseQuery = unitOfWork.StudentRepository.GetAll();
+            var result = unitOfWork.StudentRepository.FilterByTextDetail(baseQuery, text);
+            if (classid != 0) result = unitOfWork.StudentRepository.FilterByClass(result, classid);
+            if (!string.IsNullOrEmpty(gender)){
+                bool sex = (gender.Contains("male", StringComparison.InvariantCultureIgnoreCase));
+                result = unitOfWork.StudentRepository.FilterByGender(result, sex);
+            }
+            return result.Select(res =>
+                new StudentDetailServicesModel()
                 {
-                    StudentId = studentId,
-                    Birthday = studentModel.Birthday,
-                    Name = studentModel.Name,
-                    Gender = studentModel.Gender,
-                };
-                var classStudentModel = studentModel.ClassStudent.FirstOrDefault();
-                if (classStudentModel != null)
-                {
-                    result.ClassName = classStudentModel.Class.Name;
-                    result.Subjects = string.Join(" ", classStudentModel.Class.ClassSubject.Select(cs => cs.Subject.Name).ToArray());
+                    StudentId = res.StudentId,
+                    Birthday = res.Birthday,
+                    Name = res.Name,
+                    StudentCode = res.StudentCode,
+                    Gender = res.Gender,
+                    ClassName = res.ClassStudent.FirstOrDefault().Class.Name,
+                    Subjects = string.Join(" ", res.ClassStudent.FirstOrDefault().Class.ClassSubject.Select(cs => cs.Subject.Name).ToArray())
                 }
-                return result;
-            }
-            catch (CustomeException e)
-            {
-                throw new CustomeException(e.Messages);
-            }
+            ).ToList();
         }
-        public List<StudentDetailServicesModel> GetStudentListDetail()
-        {
-            try
-            {
-                return unitOfWork.StudentRepository.GetAll().ToList().Select(st => GetStudentDetail(st.StudentId)).ToList();
-            }
-            catch (CustomeException e)
-            {
-                throw new CustomeException(e.Messages);
-            }
-        }
-        public List<StudentDetailServicesModel> GetStudentListDetail(List<Student> list, int skip, int take)
-        {
-            try
-            {
-                return list.Skip(skip).Take(take).Select(st => GetStudentDetail(st.StudentId)).ToList();
-            }
-            catch (CustomeException e)
-            {
-                throw new CustomeException(e.Messages);
-            }
-        }
-        public List<Student> FilterByText(string text) => unitOfWork.StudentRepository.FilterByText(text).ToList();
-        public List<Student> FilterByTextDetail(string text) => unitOfWork.StudentRepository.FilterByTextDetail(text).ToList();
-        public List<Student> FilterByGender(bool gender) => unitOfWork.StudentRepository.FilterByGender(gender).ToList();
     }
 }

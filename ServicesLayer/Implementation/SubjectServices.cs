@@ -25,28 +25,36 @@ namespace ServicesLayer.Implementation
         public List<Subject> GetAll(int skip, int take) => unitOfWork.SubjectRepository.GetAll().Skip(skip).Take(take).ToList();
         public List<Subject> GetAllDetail() => unitOfWork.SubjectRepository.GetAllDetails().ToList();
         public void AddSubject(Subject subject)
-        {            
+        {
             try
             {
                 unitOfWork.SubjectRepository.Insert(subject, true);
             }
             catch (CustomeException e)
-            {                
+            {
                 throw new CustomeException(e.Messages);
             }
         }
         public async Task AddClassSubject(ClassAddSubjectServicesModel csModel)
         {
             // get list subject to add with class
-            int classId = csModel.ClassId;
-            var listClassSubject = csModel.SubjectId.Select(sid => (new ClassSubject() { ClassId = classId, SubjectId = sid }));
+
             // add connection 
             try
             {
-                // remove avaiable subject added to class before all
-                unitOfWork.ClassSubjectRepository.RemoveRange(unitOfWork.ClassSubjectRepository.Find(cs => cs.ClassId == classId).ToArray());
-                // add/update new subject to class
-                unitOfWork.ClassSubjectRepository.InsertRange(listClassSubject.ToArray());
+                foreach (var classId in csModel.ClassId)
+                {
+                    var listClassSubject = unitOfWork.ClassSubjectRepository.GetSubjectInClass(classId).ToArray();
+                    // remove avaiable subject added to class before all
+                    unitOfWork.ClassSubjectRepository.RemoveRange(listClassSubject);
+                    var subjectAdded = csModel.SubjectId.Select(sid => new ClassSubject()
+                    {
+                        ClassId = classId,
+                        SubjectId = sid
+                    }).ToArray();
+                    // add/update new subject to class
+                    unitOfWork.ClassSubjectRepository.InsertRange(subjectAdded);
+                }
                 int roweffected = await unitOfWork.SaveChange();
             }
             catch (CustomeException e)
@@ -72,7 +80,7 @@ namespace ServicesLayer.Implementation
         {
             try
             {
-                var  model = Get(subjectModel.SubjectId);
+                var model = Get(subjectModel.SubjectId);
                 model.Name = subjectModel.Name;
                 unitOfWork.SubjectRepository.Update(model);
                 int roweffected = await unitOfWork.SaveChange();

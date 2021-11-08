@@ -185,7 +185,7 @@ namespace WebLayer.Migrations
                     b.Property<DateTime>("Birthday")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("DATE")
-                        .HasDefaultValue(new DateTime(2021, 10, 29, 17, 7, 26, 193, DateTimeKind.Local).AddTicks(9373));
+                        .HasDefaultValue(new DateTime(2021, 11, 5, 11, 43, 29, 974, DateTimeKind.Local).AddTicks(1536));
 
                     b.Property<bool>("Gender")
                         .ValueGeneratedOnAdd()
@@ -196,6 +196,9 @@ namespace WebLayer.Migrations
                         .IsRequired()
                         .HasMaxLength(50)
                         .HasColumnType("NVARCHAR(50)");
+
+                    b.Property<string>("StudentCode")
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("StudentId");
 
@@ -215,6 +218,9 @@ namespace WebLayer.Migrations
                         .IsRequired()
                         .HasMaxLength(50)
                         .HasColumnType("NVARCHAR(50)");
+
+                    b.Property<string>("SubjectCode")
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("SubjectId");
 

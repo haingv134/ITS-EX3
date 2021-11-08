@@ -8,7 +8,7 @@ namespace ServicesLayer.ViewModel
 {
     public class ClassAddSubjectServicesModel
     {
-        public int ClassId { get; set; }
+        public int[] ClassId { get; set; }
         public int[] SubjectId { get; set; }
     }
 }

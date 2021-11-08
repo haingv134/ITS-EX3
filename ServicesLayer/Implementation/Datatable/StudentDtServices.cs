@@ -20,31 +20,16 @@ namespace ServicesLayer.Implementation.Datatable
             this.studentServices = studentServices;
         }
 
-        public StudentDtServicesModal ResponseTable(DtParameters dtParameters, bool gender)
+        public StudentDtServicesModal ResponseTable(DtParameters dtParameters, string gender, int classId)
         {
             var keysearch = dtParameters.Search.Value ?? string.Empty;
-
-            var filter = studentServices.FilterByTextDetail(keysearch);
-            var result = studentServices.GetStudentListDetail(filter, dtParameters.Start, dtParameters.Length);
-            result = SortedResult(result, GetSortedColumns(dtParameters));
+            var filter = studentServices.GetStudentListDetail(keysearch, classId, gender, dtParameters.Start, dtParameters.Length);
+            var result = SortedResult(filter, GetSortedColumns(dtParameters));
 
             var recordTotal = studentServices.GetCounting();
             return new StudentDtServicesModal()
             {
                 draw = dtParameters.Draw,
-                recordsFiltered = filter.Count,
-                recordsTotal = recordTotal,
-                data = result
-            };
-        }
-        public StudentDtServicesModal ResponseTable(string keysearch)
-        {
-            var filter = studentServices.FilterByText(keysearch);
-            var result = studentServices.GetStudentListDetail(filter, 0, 10);
-            var recordTotal = studentServices.GetCounting();
-            return new StudentDtServicesModal()
-            {
-                draw = 1,
                 recordsFiltered = filter.Count,
                 recordsTotal = recordTotal,
                 data = result

@@ -9,6 +9,7 @@ namespace DatabaseLayer.Entity
     public class Subject
     {
         public int SubjectId { get; set; }
+        public string SubjectCode {get; set;}
         public string Name { get; set; }
         public virtual IEnumerable<ClassSubject> ClassSubject { get; set; }
     }

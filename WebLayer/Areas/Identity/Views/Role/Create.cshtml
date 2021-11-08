@@ -1,0 +1,34 @@
+@model CreateRoleModel
+@{
+    ViewData["Title"] = "Tạo role mới";
+}
+<h2>@ViewData["Title"]</h2>
+@if (this.ViewData.ContainsKey("ErrorMessage"))
+{
+    var thongbao = TempData["ErrorMessage"] as string;
+    <partial name="/Areas/Identity/Pages/Account/_StatusMessage.cshtml" model="@thongbao"></partial>
+}
+<hr>
+
+<div class="row">
+    <div class="col-md-6">
+        <form method="post" asp-action="Create" >
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="Name" class="control-label"></label>
+                <input asp-for="Name" class="form-control" />
+                <span asp-validation-for="Name" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <input type="submit" value="Tạo mới" class="btn btn-primary" />
+                <a class="btn btn-primary" asp-action="Index">Danh sách các role</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

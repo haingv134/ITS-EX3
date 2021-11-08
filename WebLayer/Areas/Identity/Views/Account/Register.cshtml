@@ -1,0 +1,87 @@
+﻿@inject SignInManager<AppUser> SignInManager
+@model RegisterViewModel
+@{
+    ViewData["Title"] = "Đăng ký";
+    var thongbao = TempData["ErrorMessage"] as string;
+    var returUrl = ViewData["ReturnUrl"];
+    var schemes = await SignInManager.GetExternalAuthenticationSchemesAsync();
+    var loginProviders = schemes.ToList();
+}
+@if (this.ViewData.ContainsKey("ErrorMessage"))
+{
+    <partial name="/Areas/Identity/Pages/Account/_StatusMessage.cshtml" model="@thongbao"></partial>
+
+}
+<div class="container bg-white">
+    <div class="row">
+        <div class="mx-auto col-md-7">
+            <div class="card bg-light">
+                <div class="card-body p-4">
+                    <div asp-validation-summary="All" class="text-danger"></div>
+                    <div class="card-title text-center mb-5 fw-light fs-5">Đăng ký tài khoản mới</div>
+                    <form method="POST">
+                        <input type="text" value="@returUrl" hidden>
+                        <div class="form-floating mb-3">
+                            <label asp-for="UserName" for="floatingInputUsername"></label>
+                            <input asp-for="UserName" class="form-control" id="floatingInputUsername"
+                                placeholder="Username" />
+                            <span asp-validation-for="UserName" class="text-danger"></span>
+                        </div>
+                        <div class="form-floating mb-3">
+                            <label asp-for="Email" for="floatingInputEmail"></label>
+                            <input asp-for="Email" class="form-control" id="floatingInputEmail" placeholder="Email" />
+                            <span asp-validation-for="Email" class="text-danger"></span>
+                        </div>
+                        <div class="form-floating mb-3">
+                            <label asp-for="Password" for="floatingPassword"></label>
+                            <input asp-for="Password" class="form-control" id="floatingPassword"
+                                placeholder="Password" />
+                            <span asp-validation-for="Password" class="text-danger"></span>
+                        </div>
+                        <div class="form-floating mb-3">
+                            <label asp-for="ConfirmPassword" for="floatingPasswordConfirm"></label>
+                            <input asp-for="ConfirmPassword" class="form-control" id="floatingPasswordConfirm"
+                                placeholder="ConfirmPassword" />
+                            <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
+                        </div>
+                        <div class="d-grid mt-3">
+                            <button class="btn btn-primary text-center text-uppercase fw-bold" type="submit"> Đăng ký
+                            </button>
+                        </div>
+                        <hr />
+
+                    </form>
+                    @if ((loginProviders?.Count ?? 0) != 0)
+
+                    {
+                        <form id="external-account" asp-controller="Account" asp-action="ExternalLogin" asp-route-returnUrl="@returUrl"
+                        method="post" class="form-horizontal">
+                            <div>
+                                <p>
+                                    @foreach (var provider in loginProviders)
+                                    {
+                                        <button type="submit" class="btn btn-primary" name="provider" value="@provider.Name"
+                                    title="Đăng nhập với tài khoản @provider.DisplayName"> Đăng nhập với tài khoản
+                                            @provider.DisplayName</button>
+                                    }
+                                </p>
+                            </div>
+                        </form>
+
+                    }
+
+                    else
+
+                    {
+                        <p>Chưa thiết lập đăng kí dịch vụ ngoài </p>
+
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+<partial name="_ValidationScriptsPartial" />
+}

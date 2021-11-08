@@ -16,6 +16,6 @@ namespace DatabaseLayer.Repository
         {
             _dbContext = dbContext;
         }
-       
+       public IQueryable<ClassSubject> GetSubjectInClass(int classId) => _dbContext.ClassSubjects.Where(cs => cs.ClassId == classId);
     }
 }

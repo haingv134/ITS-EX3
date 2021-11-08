@@ -14,11 +14,13 @@
                     <div asp-validation-summary="All" style="color: red"></div>
                     <input asp-for="@Model.OldClassId" type="hidden" />
                     <input asp-for="@Model.StudentId" type="hidden" />
-                    <label asp-for="@Model.Name"> StudentName </label>
+                    <label asp-for="@Model.Name"></label>
                     <input asp-for="@Model.Name" class="form-control">
-                    <label asp-for="@Model.Birthday"> Birthday </label>
+                     <label asp-for="@Model.StudentCode"></label>
+                    <input asp-for="@Model.StudentCode" class="form-control">
+                    <label asp-for="@Model.Birthday"></label>
                     <input asp-for="@Model.Birthday" class="form-control">
-                    <label asp-for="@Model.Gender"> Gender </label>
+                    <label asp-for="@Model.Gender"></label>
                     <div class="form-check">
                         <input class="form-check-input" type="radio" asp-for="@Model.Gender" value="true" id="male">
                         <label class="form-check-label" for="male">

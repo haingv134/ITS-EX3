@@ -1,7 +1,19 @@
 var datatable;
-$(document).on('resize', function () {
-  $.debounce(500, function () {
-    datatable.columns.adjust();
+$(document).ready(function () {
+  $('#btnAddClass').click(function () {
+    OpenPopup(urlAddClass());
+  })
+  $('#btnAddSubjectToClass').click(function () {
+    let rowData = datatable.rows({ selected: true }).data();
+    let classIdData = [];
+    for (let index = 0; index < rowData.length; index++) {
+      classIdData[index] = rowData[index].classId;
+    };
+    if (classIdData.length > 0) 
+      OpenPopup(urlRegisterSubject(), classIdData);
+    else {
+      notify('Please select class first', 'error');
+    }
   })
 })
 
@@ -41,7 +53,6 @@ $('#Search').click(function () {
     datatable.search($(this).val()).draw();
   }
 })
-
 $(document).ready(function () {
   // default option for datatables
   $.extend(true, $.fn.dataTable.defaults, {
@@ -52,7 +63,10 @@ $(document).ready(function () {
     paging: true, // phan trang
     filter: false, // enable searching on input search
     stateSave: true, // save state of last table (lost if accessing with orther url or no session)
-    autoWidth: true
+    autoWidth: true,
+    // scrollY: "200px",
+    // crollCollapse: true
+    pagingType: "full_numbers",
   });
 
   datatable = $('#example').DataTable({
@@ -71,11 +85,20 @@ $(document).ready(function () {
         })
       }
     },
-
+    columnDefs: [{
+      orderable: false,
+      className: 'select-checkbox',
+      targets: 0
+    }],
+    select: {
+      style: 'os',
+      selector: 'td:first-child'
+    },
     columns: [
-      { data: 'className', name: 'ClassName', title: 'Class Name', render: renderClass },
-      { data: 'persidentName', name: 'PersidentName', title: 'Persident Name', render: renderPresidentStudent },
-      { data: 'secretaryName', name: 'SecretaryName', title: 'Secretary Name', render: renderSecretaryStudent },
+      { data: 'null', "defaultContent": "", width: '50px' },
+      { data: 'className', name: 'ClassName', title: 'Class', render: renderClass },
+      { data: 'persidentName', name: 'PersidentName', title: 'Persident', render: renderPresidentStudent },
+      { data: 'secretaryName', name: 'SecretaryName', title: 'Secretary', render: renderSecretaryStudent },
       { data: 'quantity', name: 'Quantity', title: 'Quantity' },
       { data: 'boyQuantity', name: 'BoyQuantity', title: 'Boy Quantity' },
       { data: 'girlQuantity', name: 'GirlQuantity', title: 'Girl Quantity' },
@@ -88,11 +111,17 @@ $(document).ready(function () {
       }
     ],
 
-    order: [[0, 'asc'], [1, 'asc']],
+    order: [[1, 'asc'], [2, 'asc']],
     language: {
       emptyTable: 'No record found, please <b> Add New Class </b> to show detail', // no data
       infoEmpty: 'No records avaiable',
       zeroRecords: 'Humm.... No result founded'
     }
-  })
+  });
+
+  $('#example tfoot th').each(function () {
+    var title = $(this).text();
+    $(this).html('<input type="text" placeholder="Search ' + title + '" />');
+  });
+
 });
