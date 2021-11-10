@@ -1,16 +1,14 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 using DatabaseLayer.Entity;
-namespace WebLayer.EditModel.Class
+
+namespace ServicesLayer.ViewModel
 {
-    public class AddEditModel
+    public class ClassAddServicesModel
     {
-        [Required(ErrorMessage = "This field is required")]
-        [StringLength(20, MinimumLength = 3, ErrorMessage = "Length require from 3 - 20")]
-        [Display(Name = "Ten lop")]
         public string Name { get; set; }
         public int[] StudentId { get; set; }
         public int[] SubjectId { get; set; }

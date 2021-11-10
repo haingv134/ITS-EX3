@@ -15,5 +15,6 @@ namespace DatabaseLayer.Repository.Interface
         public IQueryable<Student> GetYoungestStudent();
         public IQueryable<Student> GetOldestStudent();
         public IQueryable<Student> GetStudentListbyClass(int classId);
+        public IQueryable<Student> GetAvaibleStudent();
     }
 }

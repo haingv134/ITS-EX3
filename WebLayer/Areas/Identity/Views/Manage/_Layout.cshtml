@@ -1,0 +1,65 @@
+﻿@{
+    Layout = "_MyParentLayout";
+    string CurrentPage = ViewData["CurrentPage"] as string;
+    string message = TempData["StatusMessage"] as string;
+}
+
+<h2 class="text-center">Manage your account</h2>
+<partial name="/Areas/Identity/Views/Manage/_StatusMessage.cshtml" model="@message"></partial>
+
+<div>
+    <hr />
+    <div class="row">
+        <div class="col-md-3">
+            <partial name="_ManageNav" />
+        </div>
+        <div class="col-md-9">
+            <div class="card">
+                <div class="card-title">
+                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-sm-12 col-md-12 col-xl-12 col-lg-12 pb-3">
+                            <ul class="nav nav-tabs flex-column flex-sm-row">
+                                <li class="flex-sm-fill text-sm-center">
+                                    <a class="nav-link" asp-action="Index" asp-controller="Manage"
+                                        id="PersonalDetails">Personal Details</a>
+                                </li>
+                                <li class="flex-sm-fill text-sm-center">
+                                    <a class="nav-link" asp-action="Email" asp-controller="Manage"
+                                        id="UpdateEmail">Update Email</a>
+                                </li>
+                                <li class="flex-sm-fill text-sm-center">
+                                    <a class="nav-link" asp-action="ChangePassword" asp-controller="Manage"
+                                        id="ChangePassword">Change Password</a>
+                                </li>
+                                <li class="flex-sm-fill text-sm-center">
+                                    <a class="nav-link" asp-action="TwoFactorAuthentication" asp-controller="Manage"
+                                        id="TwoFactorAuthentication">Two Factor Authentication</a>
+                                </li>
+                                <li class="flex-sm-fill text-sm-center">
+                                    <a class="nav-link" asp-action="PersonalData" asp-controller="Manage"
+                                        id="PersonalData">Personal Data</a>
+                                </li>
+                            </ul>
+                        </div>
+                        @RenderBody()
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    let currentPage = '@CurrentPage';
+    document.querySelector('#PersonalDetails').classList.add(currentPage == 'Index' ? 'active' : 'null');
+    document.querySelector('#UpdateEmail');
+    document.querySelector('#ChangePassword').classList.add(currentPage == 'ChangePassword' ? 'active' : 'null');
+    document.querySelector('#TwoFactorAuthentication');
+    document.querySelector('#PersonalData');
+
+</script>
+@section Scripts {
+@RenderSection("Scripts", required: false)
+}

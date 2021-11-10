@@ -45,8 +45,7 @@ namespace DatabaseLayer.Repository
             var parameter = Expression.Parameter(type); // x
             // x.[Property] : get key (ID) of entity
             
-           var proprertyInfor = type.GetProperties().Where(p => p.GetCustomAttribute<KeyAttribute>() != null).SingleOrDefault(); 
-            //var proprertyInfor = type.GetProperties().Where(p => p.Name.Contains("ClassId")).SingleOrDefault(); 
+            var proprertyInfor = type.GetProperties().Where(p => p.GetCustomAttribute<KeyAttribute>() != null).SingleOrDefault(); 
             var memberExpression = Expression.Property(parameter, proprertyInfor); // parameter.propertyInfor => x.ClassId...
 
             var expressions = idValues.ToList().Select(

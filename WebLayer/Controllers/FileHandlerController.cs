@@ -9,9 +9,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using ServicesLayer.ExtensionMethod;
+using Microsoft.AspNetCore.Authorization;
 
 namespace WebLayer.Controllers
 {
+    [Authorize(Roles = "Admin")]
     public class FileHandlerController : Controller
     {
         private readonly UserManager<AppUser> _userManager;
@@ -63,18 +65,18 @@ namespace WebLayer.Controllers
             else message = "User is not login!";
             return Json(new { success = success, message = message });
         }
-        // [Route("/tai-file/")]
-        // public IActionResult ExportClassDetailToCSV()
-        // {
-        //     var details = _classServices.GetClassListDetail();
-        //     Response.Headers.Add("Content-Disposition", "attachment; filename=ClassDetail.csv");
-        //     return new FileContentResult(Encoding.UTF8.GetBytes(details.AsQueryable().CSVStringFormat()), "text/csv");
-        // }
-        // public IActionResult ExportStudentDetailToCSV()
-        // {
-        //     var details = _studentServices.GetStudentListDetail();
-        //     Response.Headers.Add("Content-Disposition", "attachment; filename=StudentDetail.csv");
-        //     return new FileContentResult(Encoding.UTF8.GetBytes(details.AsQueryable().CSVStringFormat()), "text/csv");
-        // }
+        [Route("/tai-file/")]
+        public IActionResult ExportClassDetailToCSV()
+        {
+            var details = _classServices.GetClassListDetail(string.Empty, 0, 0, 0, 0, "", out int record);
+            Response.Headers.Add("Content-Disposition", "attachment; filename=ClassDetail.csv");
+            return new FileContentResult(Encoding.UTF8.GetBytes(details.AsQueryable().CSVStringFormat()), "text/csv");
+        }
+        public IActionResult ExportStudentDetailToCSV()
+        {
+            var details = _studentServices.GetStudentListDetail(string.Empty,0, "", 0, 0, out int record);
+            Response.Headers.Add("Content-Disposition", "attachment; filename=StudentDetail.csv");
+            return new FileContentResult(Encoding.UTF8.GetBytes(details.AsQueryable().CSVStringFormat()), "text/csv");
+        }
     }
 }

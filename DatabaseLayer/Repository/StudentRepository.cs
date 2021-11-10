@@ -26,11 +26,12 @@ namespace DatabaseLayer.Repository
         }
         public IQueryable<Student> GetAllDetails()
         {
-            return _dbContext.Students.Include(st => st.ClassStudent)
-                                    .ThenInclude(cs => cs.Class)
-                                        .ThenInclude(cl => cl.ClassSubject)
-                                            .ThenInclude(cs => cs.Subject);
+            return _dbContext.Students.Include(s => s.ClassStudent)
+                                        .ThenInclude(cs => cs.Class)
+                                            .ThenInclude(c => c.ClassSubject)
+                                                .ThenInclude(sj => sj.Subject);
         }
+
         public IQueryable<Student> FilterByTextDetail(IQueryable<Student> source, string text)
         {
             return source.Where(st => st.Name.ToLower().Contains(text)
@@ -53,6 +54,17 @@ namespace DatabaseLayer.Repository
             return _dbContext.ClassStudents.Include(cs => cs.Student)
                                             .Where(cs => cs.ClassId == classId)
                                             .Select(cs => cs.Student);
+        }
+        public IQueryable<Student> GetAvaibleStudent()
+        {
+            return _dbContext.Students.Include(cs => cs.ClassStudent)
+                                        .Where(cs => !cs.ClassStudent.Any());
+        }
+        // get avaiable student that include a class and except student have already being in class
+        public IQueryable<Student> GetAvaibleStudentWithClass(int classid)
+        {
+            return _dbContext.Students.Include(cs => cs.ClassStudent)
+                                        .Where(cs => !cs.ClassStudent.Any() || cs.ClassStudent.Any(cs => cs.ClassId == classid));
         }
         public int Count(int classId) => _dbContext.ClassStudents.Count(cs => cs.ClassId == classId);
 

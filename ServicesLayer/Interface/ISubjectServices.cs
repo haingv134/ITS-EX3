@@ -14,6 +14,7 @@ namespace ServicesLayer.Interface
         public int GetCounting();
         public List<Subject> GetAll();
         public List<Subject> GetAll(int skip, int take);
+         public List<Subject> GetSubjectListByClass(int classid);
         public List<Subject> GetAllDetail(); // for greate json file
         public void AddSubject(Subject subject);
         public Task AddClassSubject(ClassAddSubjectServicesModel csModel);

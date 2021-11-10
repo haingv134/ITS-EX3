@@ -9,36 +9,36 @@ $(document).ready(function () {
     for (let index = 0; index < rowData.length; index++) {
       classIdData[index] = rowData[index].classId;
     };
-    if (classIdData.length > 0) 
+    if (classIdData.length > 0) {
       OpenPopup(urlRegisterSubject(), classIdData);
+    }
     else {
       notify('Please select class first', 'error');
     }
   })
 })
-
 function renderClass(data, type, row, meta) {
   if (String(data).length !== 0) {
-    return '<a href="#" onclick=OpenPopup(' + urlEditClass(row['classId']) + ') style="text-decoration: none;">' + data + ' </a>';
+    return '<a href="#" onclick=OpenPopup("' + urlEditClass(row['classId']) + '") style="text-decoration: none;">' + data + ' </a>';
   }
 }
 
 function renderPresidentStudent(data, type, row, meta) {
   if (String(data).length !== 0) {
-    return '<a href="#" onclick=OpenPopup(' + urlEditStudent(row["persidentId"]) + ') style="text-decoration: none;">' + data + ' </a>';
+    return '<a href="#" onclick=OpenPopup("' + urlEditStudent(row["persidentId"]) + '") style="text-decoration: none;">' + data + ' </a>';
   }
   return data;
 }
 
 function renderSecretaryStudent(data, type, row, meta) {
   if (String(data).length !== 0) {
-    return '<a href="#" onclick=OpenPopup(' + urlEditStudent(row["secretaryId"]) + ') style="text-decoration: none;">' + data + ' </a>';
+    return '<a href="#" onclick=OpenPopup("' + urlEditStudent(row["secretaryId"]) + '") style="text-decoration: none;">' + data + ' </a>';
   }
   return data;
 }
 
 function renderAction(data, type, row, meta) {
-  return '<a class="btn btn-success btn-sm" onclick=OpenPopup(' + urlEditClass(data) + ')> <i class="ti-pencil"></i>  Edit </a> | <a class="btn btn-danger btn-sm" onclick=DoAction(' + urlDeleteClass(data) + ')> <i class="ti-trash"></i> Delete </a> ';
+  return '<a class="btn btn-success btn-sm" onclick=OpenPopup("' + urlEditClass(data) + '")> <i class="ti-pencil"></i>  Edit </a> | <a class="btn btn-danger btn-sm" onclick=DoAction("' + urlDeleteClass(data) + '")> <i class="ti-trash"></i> Delete </a> ';
 }
 
 $('#Reset').click(function () {
@@ -119,9 +119,30 @@ $(document).ready(function () {
     }
   });
 
-  $('#example tfoot th').each(function () {
-    var title = $(this).text();
-    $(this).html('<input type="text" placeholder="Search ' + title + '" />');
-  });
+  var classIdData = [];
+  // delete many class when select row in datatable
+  datatable.on('deselect',DoRowSelectChange);
+  datatable.on('select',DoRowSelectChange);
 
+  function DoRowSelectChange(e, dt, type, indexes) {
+    if (type === 'row') {
+      let rowData = datatable.rows({ selected: true }).data();
+      if (rowData.length >= 2) {
+        let btnDelete = document.querySelector('#btnDelete');
+        btnDelete.removeEventListener('click', DoRmoveRange);
+        btnDelete.style.display = 'inline-block';
+        classIdData = [];
+        for (let index = 0; index < rowData.length; index++) {
+          classIdData[index] = rowData[index].classId;
+        };
+        btnDelete.addEventListener('click', DoRmoveRange);
+      } else {
+        btnDelete.style.display = 'none';
+      }
+    }
+  }
+  function DoRmoveRange() {
+    DoAction(urlDeleteClassWithRange(), classIdData);
+    btnDelete.style.display = 'none';
+  }
 });

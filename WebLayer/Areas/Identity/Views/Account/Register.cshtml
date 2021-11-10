@@ -22,26 +22,26 @@
                     <form method="POST">
                         <input type="text" value="@returUrl" hidden>
                         <div class="form-floating mb-3">
-                            <label asp-for="UserName" for="floatingInputUsername"></label>
                             <input asp-for="UserName" class="form-control" id="floatingInputUsername"
                                 placeholder="Username" />
+                            <label asp-for="UserName" for="floatingInputUsername"></label>
                             <span asp-validation-for="UserName" class="text-danger"></span>
                         </div>
                         <div class="form-floating mb-3">
-                            <label asp-for="Email" for="floatingInputEmail"></label>
                             <input asp-for="Email" class="form-control" id="floatingInputEmail" placeholder="Email" />
+                            <label asp-for="Email" for="floatingInputEmail"></label>
                             <span asp-validation-for="Email" class="text-danger"></span>
                         </div>
                         <div class="form-floating mb-3">
-                            <label asp-for="Password" for="floatingPassword"></label>
                             <input asp-for="Password" class="form-control" id="floatingPassword"
                                 placeholder="Password" />
+                            <label asp-for="Password" for="floatingPassword"></label>
                             <span asp-validation-for="Password" class="text-danger"></span>
                         </div>
                         <div class="form-floating mb-3">
-                            <label asp-for="ConfirmPassword" for="floatingPasswordConfirm"></label>
                             <input asp-for="ConfirmPassword" class="form-control" id="floatingPasswordConfirm"
                                 placeholder="ConfirmPassword" />
+                            <label asp-for="ConfirmPassword" for="floatingPasswordConfirm"></label>
                             <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
                         </div>
                         <div class="d-grid mt-3">

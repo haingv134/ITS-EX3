@@ -22,8 +22,10 @@ namespace ServicesLayer.Implementation
         }
         public ClassDtServicesModal ResponseTable(DtParameters dtParameters, int min, int max, string quantityName)
         {
+            int recordFilterd;
+
             var keySearch = dtParameters.Search.Value ?? string.Empty;
-            var filter = classServices.GetClassListDetail(keySearch, dtParameters.Start, dtParameters.Length, min, max, quantityName);
+            var filter = classServices.GetClassListDetail(keySearch, dtParameters.Start, dtParameters.Length, min, max, quantityName, out recordFilterd);
             var result = SortedResult(filter, GetSortedColumns(dtParameters));
 
             var totalRecords = classServices.GetCounting();
@@ -32,7 +34,7 @@ namespace ServicesLayer.Implementation
             return new ClassDtServicesModal()
             {
                 draw = dtParameters.Draw,
-                recordsFiltered = recordFiltered,
+                recordsFiltered = recordFilterd,
                 recordsTotal = totalRecords,
                 data = result
             };

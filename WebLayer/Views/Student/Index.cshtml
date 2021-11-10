@@ -8,21 +8,23 @@
                     Student </a>
                 <a class="btn btn-outline-primary btn-sm" asp-action="youngest"> Youngest student</a>
                 <a class="btn btn-outline-primary btn-sm" asp-action="Oldest"> Oldest student</a>
-                <a class="btn btn-outline-primary btn-sm" asp-controller="FileHandler" asp-action="ExportStudentDetailToCSV"> Export To CSV</a>
+                <a class="btn btn-outline-primary btn-sm" asp-controller="FileHandler"
+                    asp-action="ExportStudentDetailToCSV"> Export To CSV</a>
             </div>
         </div>
         <div class="row row-cols-1 row-cols-sm-2 mb-2 ">
             <div class="col-sm-2">
                 <div class="input-group">
                     <span class="input-group-text">Class</span>
-                    <select class="form-select" id="ClassId">
+                    <input class="form-control" list="datalistOptions"
+                        placeholder="Class Name" id="ClassId">
+                    <datalist id="datalistOptions">
                         <option value="0">-- All --</option>
                         @foreach (var item in ViewBag.ClassList)
                         {
-                            <option value="@item.ClassId">@item.Name</option>
-
+                            <option value="@item.ClassId" label="@item.Name"></option>
                         }
-                    </select>
+                    </datalist>
                 </div>
             </div>
             <div class="col-sm-3">

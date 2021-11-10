@@ -22,15 +22,16 @@ namespace ServicesLayer.Implementation.Datatable
 
         public StudentDtServicesModal ResponseTable(DtParameters dtParameters, string gender, int classId)
         {
+            int recordsFiltered;
             var keysearch = dtParameters.Search.Value ?? string.Empty;
-            var filter = studentServices.GetStudentListDetail(keysearch, classId, gender, dtParameters.Start, dtParameters.Length);
+            var filter = studentServices.GetStudentListDetail(keysearch, classId, gender, dtParameters.Start, dtParameters.Length, out recordsFiltered);
             var result = SortedResult(filter, GetSortedColumns(dtParameters));
 
             var recordTotal = studentServices.GetCounting();
             return new StudentDtServicesModal()
             {
                 draw = dtParameters.Draw,
-                recordsFiltered = filter.Count,
+                recordsFiltered = recordsFiltered,
                 recordsTotal = recordTotal,
                 data = result
             };

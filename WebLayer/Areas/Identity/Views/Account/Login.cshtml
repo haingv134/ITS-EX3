@@ -24,15 +24,14 @@
                     <form method="POST">
                         <input type="text" value="@returUrl" hidden>
                         <div class="form-floating mb-3">
-                            <label asp-for="UserNameOrEmail" for="floatingInput"></label>
                             <input asp-for="UserNameOrEmail" class="form-control" id="floatingInput"
                                 placeholder="Username/Email" />
+                            <label asp-for="UserNameOrEmail" for="floatingInput"></label>
                             <span asp-validation-for="UserNameOrEmail" class="text-danger"></span>
                         </div>
                         <div class="form-floating mb-3">
+                            <input asp-for="Password" class="form-control" id="floatingPassword" placeholder="Password" />
                             <label asp-for="Password" for="floatingPassword"></label>
-                            <input asp-for="Password" class="form-control" id="floatingPassword"
-                                placeholder="Password" />
                             <span asp-validation-for="Password" class="text-danger"></span>
                         </div>
                         <div class="form-group">
@@ -59,13 +58,13 @@
                         <hr />
                     </form>
                     @if ((loginProviders?.Count ?? 0) != 0)
+
                     {
                         <form id="external-account" asp-action="ExternalLogin" asp-route-returnUrl="@returUrl" method="post"
                         class="form-horizontal">
                             <div>
                                 <p>
                                     @foreach (var provider in loginProviders)
-
                                     {
                                         <button type="submit" class="btn btn-primary" name="provider" value="@provider.Name"
                                     title="Đăng nhập với tài khoản @provider.DisplayName"> Đăng nhập với tài khoản

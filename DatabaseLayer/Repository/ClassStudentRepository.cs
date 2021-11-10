@@ -23,5 +23,9 @@ namespace DatabaseLayer.Repository
             var listStudent = _dbContext.ClassStudents.Where(cs => cs.ClassId == classId && cs.Role == role);
             return listStudent.Include(cs => cs.Student).Select(cs => cs.Student);
         }
+        public void DeleteStudentInClass(int classid)
+        {
+            _dbContext.ClassStudents.RemoveRange(_dbContext.ClassStudents.Where(cs => cs.ClassId == classid).ToArray());
+        }
     }
 }

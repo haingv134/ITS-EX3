@@ -15,10 +15,12 @@ namespace ServicesLayer.Interface
         public List<Student> GetAll();
         public int GetCounting();
         public List<Student> GetStudentListByClass(int classId);
+        public List<Student> GetAvaibleStudentWithClass(int classid);
         public List<StudentOldServicesModel> GetYoungestStudent();
         public List<StudentOldServicesModel> GetOldestStudent();
+        public List<Student> GetAvaiableStudent();
         public StudentEditServicesModel GetStudentEdit(int studentId);
         public Task UpdateStudent(StudentEditServicesModel servicesModel);
-        public List<StudentDetailServicesModel> GetStudentListDetail(string text, int classid, string gender, int skip, int take);
+        public List<StudentDetailServicesModel> GetStudentListDetail(string text, int classid, string gender, int skip, int take, out int recordsFiltered);
     }
 }

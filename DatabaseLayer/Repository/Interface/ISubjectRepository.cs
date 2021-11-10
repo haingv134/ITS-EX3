@@ -10,5 +10,6 @@ namespace DatabaseLayer.Repository.Interface
     public interface ISubjectRepository
     {
         public IQueryable<Subject> GetAllDetails();
+        public IQueryable<Subject> GetSubjectInClass(int classid);
     }
 }

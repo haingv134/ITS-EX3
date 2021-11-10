@@ -5,7 +5,7 @@
 
 <form class="form-group" asp-action="Add" id="submitForm" onsubmit=" return SubmitForm(this)">
     <div class="modal fade" id="modal-id" aria-labelledby="modal-title" aria-hidden="true">
-        <div class="modal-dialog">
+        <div class="modal-dialog modal-lg">
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title" id="modal-title">Enter new class</h5>
@@ -13,12 +13,52 @@
                 </div>
                 <div class="modal-body">
                     <div asp-validation-summary="All" style="color: red"></div>
-                    <div class="input-group">
-                        <div class="input-group-prepend">
-                            <label asp-for="@Model.Name" class="input-group-text" id="cName">Name </label>
+                    <div class="row">
+                        <div class="col col-sm-3">
+                            <label asp-for="@Model.Name" class="input-group-text">Name </label>
                         </div>
-                        <input asp-for="@Model.Name" placeholder="Class" class="form-control" aria-describedby="cName" aria-label="ClassName">
-                    </div>                    
+                        <div class="col col-sm-9">
+                            <input asp-for="@Model.Name" placeholder="Class" class="form-control"
+                                aria-describedby="cName" aria-label="Name">
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col col-sm-3">
+                            <label asp-for="@Model.StudentId" class="input-group-text">Student Avaiable</label>
+                        </div>
+                        <div class="col col-sm-9">
+                            <select asp-for="@Model.StudentId" class="form-select" multiple id="Add-Class-Student">
+                                @foreach (var item in ViewBag.StudentList)
+                                {
+                                    <option value="@item.StudentId">@item.Name</option>
+                                }
+                            </select>
+                        </div>
+                    </div>
+                    <div class="row" id="set-student-role" style="display: none;">
+                        <div class="col col-sm-3">
+                            <span class="input-group-text">Persident/Secretary</span>
+                        </div>
+                        <div class="col col-sm-9">
+                            <div class="input-group">
+                                <select asp-for="@Model.PersidentId" id="select-persident" class="form-select"> </select>
+                                <select asp-for="@Model.SecretaryId" id="select-secretary" class="form-select"> </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col col-sm-3">
+                            <label asp-for="@Model.SubjectId" class="input-group-text">Subject List</label>
+                        </div>
+                        <div class="col col-sm-9">
+                            <select asp-for="@Model.SubjectId" class="form-select" multiple id="Add-Class-Subject">
+                                @foreach (var item in ViewBag.SubjectList)
+                                {
+                                    <option value="@item.SubjectId">@item.Name</option>
+                                }
+                            </select>
+                        </div>
+                    </div>
                 </div>
                 <div class="modal-footer">
                     <button class="btn btn-danger" type="button" data-bs-dismiss="modal">Close</button>
@@ -28,3 +68,4 @@
         </div>
     </div>
 </form>
+<script src="~/js/class_add.js"></script>

@@ -1,24 +1,27 @@
-// Licensed to the .NET Foundation under one or more agreements.
-// The .NET Foundation licenses this file to you under the MIT license.
-
+using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNetCore.Identity;
 
 namespace App.Areas.Identity.Models.ManageViewModels
 {
     public class IndexViewModel
     {
-        public EditExtraProfileModel profile { get; set; }
-        public bool HasPassword { get; set; }
+        [Display(Name = "Tên đăng nhập")]
+        public string Username { get; set; }
 
-        public IList<UserLoginInfo> Logins { get; set; }
-
+        [Display(Name = "Tên đầy đủ")]
+        [StringLength(50, ErrorMessage = "{0} phải có chiều dài từ {2} tới {1}", MinimumLength = 3)]
+        public string FullName { get; set; }
+        public string Website { get; set; }
+        [Phone]
+        [Display(Name = "Số điện thoại")]
         public string PhoneNumber { get; set; }
-
-        public bool TwoFactor { get; set; }
-
-        public bool BrowserRemembered { get; set; }
-
-        public string AuthenticatorKey { get; set; }
+        [Display(Name = "Ngày Sinh")]
+        public DateTime? Birthday { get; set; }
+        [Display(Name = "Địa chỉ")]
+        public string Address { get; set; }
+        [Display(Name = "Thông tin chi tiết")]
+        public string About { get; set; }
     }
 }

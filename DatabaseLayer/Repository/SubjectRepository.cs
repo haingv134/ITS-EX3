@@ -18,5 +18,7 @@ namespace DatabaseLayer.Repository
             _dbContext = dbContext;
         }
         public IQueryable<Subject> GetAllDetails() => _dbContext.Subjects.Include(subject => subject.ClassSubject);
+        public IQueryable<Subject> GetSubjectInClass(int classid) => _dbContext.Subjects.Include(s => s.ClassSubject)
+                                                                                            .Where(s => s.ClassSubject.Any());
     }
 }

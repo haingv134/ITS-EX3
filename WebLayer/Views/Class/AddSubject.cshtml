@@ -14,33 +14,34 @@
                 <div class="modal-body">
                     <div asp-validation-summary="All" style="color: red"></div>
                     <table>
-                        <tr style="width: 100%;">
-                            <td>
-                                <span class="input-group-text me-2">Class</span>
-                            </td>
-                            <td>
-                                @Html.ListBox("ClassId", Model.ClassList, new {
-                                @class = "form-control",
-                                id = "ClassListId",
-                                multiple="multiple",
-                                style="width: 100%"
-                                })
-                            </td>
-                        </tr>
-                        <tr style="width: 100%;">
-                            <td>
-                                <span class="input-group-text"> Subjects </span>
-                            </td>
-                            <td>
-                                <select asp-for="@Model.SubjectId" class="form-select ms-2" id="SubjectListId"
-                                    multiple="multiple" required>
-                                    @foreach (var item in ViewBag.SubjectList)
-                                    {
-                                        <option value="@item.SubjectId"> @item.Name </option>
-                                    }
-                                </select>
-                            </td>
-                        </tr>
+                        <tbody style="width: 100%;">
+                            <tr>
+                                <td>
+                                    <span class="input-group-text me-2">Class</span>
+                                </td>
+                                <td style="width: 100%">
+                                    @Html.ListBox("ClassId", Model.ClassList, new {
+                                    @class = "form-control",
+                                    id = "ClassListId",
+                                    multiple="multiple",                                    
+                                    })
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <span class="input-group-text me-2"> Subjects </span>
+                                </td>
+                                <td style="width: 100%">
+                                    <select asp-for="@Model.SubjectId" class="form-select ms-2" id="SubjectListId"
+                                        multiple="multiple" required>
+                                        @foreach (var item in ViewBag.SubjectList)
+                                        {
+                                            <option value="@item.SubjectId"> @item.Name </option>
+                                        }
+                                    </select>
+                                </td>
+                            </tr>
+                        </tbody>
                     </table>
                 </div>
                 <div class="modal-footer">
@@ -56,14 +57,14 @@
     $(document).ready(function () {
         $('#ClassListId').select2({
             dropdownParent: $('.modal'),
-            width: 'resolve',
+            width: '100%',
             theme: "classic"
         });
     })
     $(document).ready(function () {
         $('#SubjectListId').select2({
             dropdownParent: $('.modal'),
-            width: 'resolve',
+            width: '100%',
             theme: "classic"
         });
     })

@@ -15,8 +15,9 @@ namespace ServicesLayer.Interface
         public int GetCounting();
         public ClassModel Get(int id);
         public Task Delete(int id);
-        public void AddClass(ClassModel _class);
-        public List<ClassDetailServicesModel> GetClassListDetail(string text, int skip, int take, int min, int max, params string[] properties);   
+        public Task DeleteRange(int[] id);
+        public Task AddClass(ClassAddServicesModel _class);        
+        public List<ClassDetailServicesModel> GetClassListDetail(string text, int skip, int take, int min, int max, string properties, out int recordFilterd);
         public List<ClassDetailServicesModel> GetClassMaxBoy();
         public ClassEditServicesModel GetClassEdit(int classId);
         public Task UpdateClass(ClassEditServicesModel servicesModel);

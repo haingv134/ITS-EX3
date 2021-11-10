@@ -18,8 +18,8 @@ namespace WebLayer.AutoMapper
         public CommonAutoMapper()
         {
             // ---------------- Class -----------///
-            CreateMap<EditModel.Class.AddEditModel, ClassModel>();
-            CreateMap<ClassModel, EditModel.Class.AddEditModel>(); // --
+            CreateMap<EditModel.Class.AddEditModel, ClassAddServicesModel>();
+            CreateMap<ClassAddServicesModel, EditModel.Class.AddEditModel>(); // --
             CreateMap<ClassEditServicesModel, EditModel.Class.EditEditModel>();
             CreateMap<EditModel.Class.EditEditModel, ClassEditServicesModel>();
             CreateMap<AddSubjectEditModel, ClassAddSubjectServicesModel>();

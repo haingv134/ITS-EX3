@@ -55,6 +55,8 @@ namespace ServicesLayer.Implementation
                 throw new CustomeException(e.Messages);
             }
         }
+        public List<Student> GetAvaiableStudent() => unitOfWork.StudentRepository.GetAvaibleStudent().ToList();
+        public List<Student> GetAvaibleStudentWithClass(int classid) => unitOfWork.StudentRepository.GetAvaibleStudentWithClass(classid).ToList();
         public List<Student> GetAll() => unitOfWork.StudentRepository.GetAll().ToList();
         public int GetCounting() => unitOfWork.StudentRepository.GetCounting();
         public List<Student> GetStudentListByClass(int classId) => unitOfWork.StudentRepository.GetStudentListbyClass(classId).ToList();
@@ -107,25 +109,27 @@ namespace ServicesLayer.Implementation
                 studentModel.Name = servicesModel.Name;
                 studentModel.Gender = servicesModel.Gender;
                 studentModel.Birthday = servicesModel.Birthday;
-                studentModel.StudentCode = servicesModel.StudentCode;                
+                studentModel.StudentCode = servicesModel.StudentCode;
                 unitOfWork.StudentRepository.Update(studentModel);
-                // update or create new class references 
-                var classStudentModel = new ClassStudent();
+
                 // classid == 0 -> no classid in db -> no update class-student references 
                 var classModel = unitOfWork.ClassRepository.Get(servicesModel.OldClassId);
                 if (classModel != null)
                 {
-                    // get old class references
-                    classStudentModel = unitOfWork.ClassStudentRepository.GetClassStudent(servicesModel.OldClassId, servicesModel.StudentId);
-                    // update new class references 
-                    classStudentModel.ClassId = servicesModel.NewClassId;
-                    // reset role to member after update student to new class
-                    classStudentModel.Role = (int)Role.MEMBER;
-                    // update student information and its references to class                
-                    unitOfWork.ClassStudentRepository.Update(classStudentModel);
+                    // Student move to new classes
+                    if (servicesModel.NewClassId != servicesModel.OldClassId)
+                    {
+                        // get old class references
+                        var classStudentModel = unitOfWork.ClassStudentRepository.GetClassStudent(servicesModel.OldClassId, servicesModel.StudentId);
+                        classStudentModel.ClassId = servicesModel.NewClassId;
+                        classStudentModel.Role = (int)Role.MEMBER;
+                        // update student information and its references to class                
+                        unitOfWork.ClassStudentRepository.Update(classStudentModel);
+                    }
                 }
                 else
-                {
+                {   // create new class references 
+                    var classStudentModel = new ClassStudent();
                     classStudentModel.StudentId = servicesModel.StudentId;
                     classStudentModel.ClassId = servicesModel.NewClassId;
                     classStudentModel.Role = (int)Role.MEMBER;
@@ -141,27 +145,31 @@ namespace ServicesLayer.Implementation
             }
         }
 
-        public List<StudentDetailServicesModel> GetStudentListDetail(string text, int classid, string gender, int skip, int take)
+        public List<StudentDetailServicesModel> GetStudentListDetail(string text, int classid, string gender, int skip, int take, out int recordsFiltered)
         {
             var baseQuery = unitOfWork.StudentRepository.GetAll();
-            var result = unitOfWork.StudentRepository.FilterByTextDetail(baseQuery, text);
-            if (classid != 0) result = unitOfWork.StudentRepository.FilterByClass(result, classid);
-            if (!string.IsNullOrEmpty(gender)){
-                bool sex = (gender.Contains("male", StringComparison.InvariantCultureIgnoreCase));
-                result = unitOfWork.StudentRepository.FilterByGender(result, sex);
+            var query = unitOfWork.StudentRepository.FilterByTextDetail(baseQuery, text);
+            if (classid != 0) query = unitOfWork.StudentRepository.FilterByClass(query, classid);
+            if (!string.IsNullOrEmpty(gender))
+            {
+                bool sex = (!gender.Contains("female", StringComparison.InvariantCultureIgnoreCase));
+                query = unitOfWork.StudentRepository.FilterByGender(query, sex);
             }
-            return result.Select(res =>
-                new StudentDetailServicesModel()
-                {
-                    StudentId = res.StudentId,
-                    Birthday = res.Birthday,
-                    Name = res.Name,
-                    StudentCode = res.StudentCode,
-                    Gender = res.Gender,
-                    ClassName = res.ClassStudent.FirstOrDefault().Class.Name,
-                    Subjects = string.Join(" ", res.ClassStudent.FirstOrDefault().Class.ClassSubject.Select(cs => cs.Subject.Name).ToArray())
-                }
-            ).ToList();
+            recordsFiltered = query.Count();
+            if (take != 0) query = query.Skip(skip).Take(take);
+            var result = query.Select(res =>
+               new StudentDetailServicesModel()
+               {
+                   StudentId = res.StudentId,
+                   Birthday = res.Birthday,
+                   Name = res.Name,
+                   StudentCode = res.StudentCode,
+                   Gender = res.Gender,
+                   ClassName = res.ClassStudent.FirstOrDefault().Class.Name,
+                   Subjects = string.Join(" ", res.ClassStudent.FirstOrDefault().Class.ClassSubject.Select(cs => cs.Subject.Name).ToArray())
+               }
+            );
+            return result.ToList();
         }
     }
 }

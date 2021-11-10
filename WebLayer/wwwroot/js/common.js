@@ -1,11 +1,10 @@
 function OpenPopup(URL, ...args) {
-
     // call URL and including array data if have
     $.ajax({
         type: 'GET',
         url: URL,
         traditional: true,
-        data: { 'classList': args }
+        data: { 'args': args }
     }).done(function (response) {
         $('#popup').html(response);
         // if response has model -> show it and processing, if not: push error nontification
@@ -18,7 +17,6 @@ function OpenPopup(URL, ...args) {
             ClosePopup();
         } else {
             $('#popup').hide();
-            console.log('hide');
             notify(response, 'error');
         }
     })
@@ -74,12 +72,21 @@ function SubmitForm(form) {
     return false;
 }
 
-function DoAction(url) {
+function DoAction(url, ...args) {
     var splits = url.split('?');
+    var dataTransfer;
+    if (args.length > 0){
+        dataTransfer = {
+            'args' : args
+        }
+    } else {
+        dataTransfer = splits.shift();   
+    }
     $.ajax({
         type: 'POST',
         url: url,
-        data: splits.shift(),
+        traditional: true,
+        data: dataTransfer,
         success: function (data) {
             HanderAjaxResponse(data);
         },
@@ -165,7 +172,7 @@ function notify(msg, typeMsg) {
 
     setTimeout(function () {
         panel.style.display = 'none';
-    }, 2000);
+    }, 10000);
 }
 var ajaxStartTime, ajaxEndTime;
 $(document).ready(function () {    

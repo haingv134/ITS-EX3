@@ -18,7 +18,7 @@ using System;
 
 namespace WebLayer.Controllers
 {
-    // [Authorize(Roles = "SystemAdmin")]
+    [Authorize(Roles = "Admin")]
 
     [Route("lop/[action]")]
     public class ClassController : Controller
@@ -48,10 +48,22 @@ namespace WebLayer.Controllers
         public IActionResult Index(DtParameters dtParameters, int maxValue, int minValue, string quantityType) => Json(dataTableServices.ResponseTable(dtParameters, minValue, maxValue, quantityType));
 
         [HttpGet("/themlop")]
-        public IActionResult Add() => View();
+        public IActionResult Add()
+        {
+            try
+            {
+                ViewBag.StudentList = studentServices.GetAvaiableStudent();
+                ViewBag.SubjectList = subjectServices.GetAll();
+                return View();
+            }
+            catch (CustomeException e)
+            {
+                return Content(e.Messages);
+            }
+        }
 
         [HttpPost("/themlop")]
-        public JsonResult Add([Bind("Name")] AddEditModel source)
+        public async Task<IActionResult> Add(AddEditModel source)
         {
             bool isSuccess = false;
             // if all field is inputed correctly
@@ -59,9 +71,8 @@ namespace WebLayer.Controllers
             {
                 try
                 {
-                    // map AddClassEditModel -> ClassModel
-                    var classModel = mapper.Map<AddEditModel, ClassModel>(source);
-                    classServices.AddClass(classModel);
+                    var model = mapper.Map<AddEditModel, ClassAddServicesModel>(source);
+                    await classServices.AddClass(model);
                     isSuccess = true;
                 }
                 catch (CustomeException e)
@@ -80,8 +91,22 @@ namespace WebLayer.Controllers
             {
                 var classEdit = classServices.GetClassEdit(classId);
                 var data = mapper.Map<ClassEditServicesModel, EditEditModel>(classEdit);
-                var studentList = studentServices.GetStudentListByClass(classId).ToList();
-                ViewBag.StudentList = studentList;
+
+                var studentList = studentServices.GetAvaibleStudentWithClass(classId);
+                var selectedstudentList = studentServices.GetStudentListByClass(classId);
+                data.StudentList = studentList.Select(student => new SelectListItem(){
+                    Value = student.StudentId.ToString(),
+                    Text = student.Name,
+                    Selected = (selectedstudentList.Contains(student)) ? true : false
+                }).ToList();
+
+                var subjectList = subjectServices.GetAll();
+                var selectedSubjectList = subjectServices.GetSubjectListByClass(classId);
+                data.SubjectList = subjectList.Select(subject => new SelectListItem(){
+                    Value = subject.SubjectId.ToString(),
+                    Text = subject.Name,
+                    Selected = (selectedSubjectList.Contains(subject)) ? true : false
+                }).ToList();
                 return View(data);
             }
             catch (CustomeException e)
@@ -128,32 +153,64 @@ namespace WebLayer.Controllers
             }
             return Json(new { success = isSuccess, message = isSuccess ? "Delete class sucessfull" : errorMessages });
         }
-
-        [HttpGet]
-        public IActionResult AddSubject(string classList)
+        [HttpPost]
+        public async Task<IActionResult> DeleteRange(string args)
         {
             List<int> classIdList = new List<int>();
-            foreach (var classId in classList.Split(","))
+            var spl = args.Split(",");
+            var count = spl.Count();
+            foreach (var classId in spl)
             {
                 var id = Convert.ToInt32(classId);
                 classIdList.Add(id);
             }
-            var classListModel = classServices.GetWithIDList(classIdList.ToArray());
-            logger.LogInformation("Number of class selected: " + classListModel.Count);
+            if (classIdList.Count() == 0) return Content("No Class Selected");
 
-            var classListItem = classListModel.Select(cl => new SelectListItem()
+            bool isSuccess = false;
+            try
             {
-                Text = cl.Name,
-                Value = cl.ClassId.ToString(),
-                Selected = true
-            });
+                await classServices.DeleteRange(classIdList.ToArray());
+                isSuccess = true;
+            }
+            catch (CustomeException e)
+            {
+                errorMessages = e.Messages;
+            }
+            return Json(new { success = isSuccess, message = isSuccess ? "Delete class sucessfull" : errorMessages });
+        }
 
-            ViewBag.SubjectList = subjectServices.GetAll().ToList();
-            
-            var addSubjectModel = new AddSubjectEditModel();
-            addSubjectModel.ClassList = classListItem.ToList();
+        [HttpGet]
+        public IActionResult AddSubject(string args)
+        {
 
-            return View(addSubjectModel);
+            List<int> classIdList = new List<int>();
+            foreach (var classId in args.Split(","))
+            {
+                var id = Convert.ToInt32(classId);
+                classIdList.Add(id);
+            }
+            if (classIdList.Count() == 0) return Content("No Class Selected");
+            try
+            {
+                var classListModel = classServices.GetAll();
+                var selectedClassListModel = classServices.GetWithIDList(classIdList.ToArray());
+                var classListItem = classListModel.Select(cl => new SelectListItem()
+                {
+                    Text = cl.Name,
+                    Value = cl.ClassId.ToString(),
+                    Selected = (selectedClassListModel.Contains(cl)) ? true : false
+                });
+
+                ViewBag.SubjectList = subjectServices.GetAll().ToList();
+                var addSubjectModel = new AddSubjectEditModel();
+                addSubjectModel.ClassList = classListItem.ToList();
+
+                return View(addSubjectModel);
+            }
+            catch (CustomeException e)
+            {
+                return Content(e.Messages);
+            }
         }
 
         [HttpPost]

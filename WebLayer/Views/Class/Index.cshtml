@@ -2,15 +2,15 @@
 
     <div class="container border border-2 border-secondary p-2">
         <div class="row">
-            <div class="col-sm-5">
+            <div class="col-sm-10">
                 <button class="btn btn-outline-primary btn-sm my-2 me-1" id="btnAddClass"> <i class="ti-plus"></i> Add
                     Class</button>
                 <button class="btn btn-outline-primary btn-sm my-2 me-1" id="btnAddSubjectToClass"> <i
                         class="ti-book"></i> Register Subject</button>
+                <button class="btn btn-outline-primary btn-sm my-2 me-1" id="btnDelete" style="display: none;"> <i
+                        class="ti-trash"></i> Delete Selected Class </button>
                 <button class="btn btn-outline-primary btn-sm my-2" asp-action="MaxBoy"> <i class="ti-eye"></i> Max
                     Boy</button>
-            </div>
-            <div class="col-sm-7">
                 <a class="btn btn-outline-primary btn-sm my-2" asp-controller="FileHandler"
                     asp-action="ExportClassDetailToCSV"> Export To CSV</a>
             </div>
@@ -55,17 +55,21 @@
         return '@Url.Action("Add", "Class")';
     }
     function urlEditClass(classId) {
-        return '\'@Url.Action("Edit", "Class")?classId=' + classId + '\'';
+        return '@Url.Action("Edit", "Class")?classId=' + classId;
     }
     function urlDeleteClass(classId) {
-        return '\'@Url.Action("Delete", "Class")?classId=' + classId + '\'';
+        return '@Url.Action("Delete", "Class")?classId=' + classId;
+    }
+    function urlEditStudent(studentId) {
+        return '@Url.Action("Edit", "Student")?studentid=' + studentId;
+    }
+    function urlDeleteClassWithRange() {
+        return '@Url.Action("DeleteRange", "Class")';
     }
     function urlRegisterSubject() {
         return '@Url.Action("AddSubject", "Class")';
     }
-    function urlEditStudent(studentId) {
-        return '\'@Url.Action("Edit", "Student")?studentid=' + studentId + '\'';
-    }
+    
 </script>
 <script src="~/js/class_index.js"></script>
 @* sending to parent layout *@

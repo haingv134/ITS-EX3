@@ -24,6 +24,8 @@ namespace ServicesLayer.Implementation
         public List<Subject> GetAll() => unitOfWork.SubjectRepository.GetAll().ToList();
         public List<Subject> GetAll(int skip, int take) => unitOfWork.SubjectRepository.GetAll().Skip(skip).Take(take).ToList();
         public List<Subject> GetAllDetail() => unitOfWork.SubjectRepository.GetAllDetails().ToList();
+        
+        public List<Subject> GetSubjectListByClass(int classid) => unitOfWork.SubjectRepository.GetSubjectInClass(classid).ToList();
         public void AddSubject(Subject subject)
         {
             try
@@ -37,9 +39,6 @@ namespace ServicesLayer.Implementation
         }
         public async Task AddClassSubject(ClassAddSubjectServicesModel csModel)
         {
-            // get list subject to add with class
-
-            // add connection 
             try
             {
                 foreach (var classId in csModel.ClassId)

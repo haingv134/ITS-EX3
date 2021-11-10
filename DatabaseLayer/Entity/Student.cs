@@ -13,6 +13,7 @@ namespace DatabaseLayer.Entity
         public string Name { get; set; }
         public DateTime Birthday { get; set; }
         public bool Gender { get; set; }
+        public string ExtraInfor {get; set;}
         public virtual IEnumerable<ClassStudent> ClassStudent { get; set; }      
     }
 }

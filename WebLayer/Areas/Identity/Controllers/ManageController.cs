@@ -24,7 +24,8 @@ namespace App.Areas.Identity.Controllers
         private readonly SignInManager<AppUser> _signInManager;
         private readonly IEmailSender _emailSender;
         private readonly ILogger<ManageController> _logger;
-
+        [TempData]
+        public string StatusMessage {get; set;}
         public ManageController(
         UserManager<AppUser> userManager,
         SignInManager<AppUser> signInManager,
@@ -40,37 +41,53 @@ namespace App.Areas.Identity.Controllers
         //
         // GET: /Manage/Index
         [HttpGet]
-        public async Task<IActionResult> Index(ManageMessageId? message = null)
+        public async Task<IActionResult> Index()
         {
-            ViewData["StatusMessage"] =
-                message == ManageMessageId.ChangePasswordSuccess ? "Đã thay đổi mật khẩu."
-                : message == ManageMessageId.SetPasswordSuccess ? "Đã đặt lại mật khẩu."
-                : message == ManageMessageId.SetTwoFactorSuccess ? "Your two-factor authentication provider has been set."
-                : message == ManageMessageId.Error ? "Có lỗi."
-                : message == ManageMessageId.AddPhoneSuccess ? "Đã thêm số điện thoại."
-                : message == ManageMessageId.RemovePhoneSuccess ? "Đã bỏ số điện thoại."
-                : "";
-
             var user = await GetCurrentUserAsync();
+            if (user == null) return Content("No current user logged in");
             var model = new IndexViewModel
             {
-                HasPassword = await _userManager.HasPasswordAsync(user),
-                PhoneNumber = await _userManager.GetPhoneNumberAsync(user),
-                TwoFactor = await _userManager.GetTwoFactorEnabledAsync(user),
-                Logins = await _userManager.GetLoginsAsync(user),
-                BrowserRemembered = await _signInManager.IsTwoFactorClientRememberedAsync(user),
-                AuthenticatorKey = await _userManager.GetAuthenticatorKeyAsync(user),
-                profile = new EditExtraProfileModel()
-                {
-                    UserName = user.UserName,
-                    UserEmail = user.Email,
-                    PhoneNumber = user.PhoneNumber,
-                }
+                PhoneNumber = user.PhoneNumber,
+                Address = user.Address,
+                FullName = user.FullName,
+                Username = user.UserName,
+                Website = user.Website,
+                About = user.About,
+                Birthday = user.Birthday
             };
-            var a = HttpContext.User.Identity.IsAuthenticated;
+            return View(model);
+        }
+        [HttpPost]
+        public async Task<IActionResult> Index(IndexViewModel model)
+        {
+            var user = await _userManager.GetUserAsync(User);
+            if (user == null)
+            {
+                return NotFound($"Unable to load user with ID '{_userManager.GetUserId(User)}'.");
+            }
+            if (!ModelState.IsValid)
+            {
+                return Content("Model invalid");
+            }
+            user.PhoneNumber = model.PhoneNumber;
+            // set other custome information
+            user.FullName = model.FullName;
+            user.Address = model.Address;
+            user.Website = model.Website;
+            user.About = model.About;
+            user.Birthday = model.Birthday;
+            //
+            var setOtherInformationResult = await _userManager.UpdateAsync(user);
+            if (!setOtherInformationResult.Succeeded)
+            {
+                StatusMessage = "Unexpected error!";
+                ModelState.AddModelError(string.Empty, setOtherInformationResult.Errors.ToList()[0].ToString());
+                return RedirectToAction();
+            }
 
-            return NotFound(a.ToString());
-            //return View(model);
+            await _signInManager.RefreshSignInAsync(user);
+            StatusMessage = "Your profile has been updated";
+            return RedirectToAction();
         }
         public enum ManageMessageId
         {
@@ -372,7 +389,7 @@ namespace App.Areas.Identity.Controllers
         public async Task<IActionResult> EditProfileAsync()
         {
             var user = await GetCurrentUserAsync();
-            
+
             var model = new EditExtraProfileModel()
             {
                 // BirthDate = user.BirthDate,

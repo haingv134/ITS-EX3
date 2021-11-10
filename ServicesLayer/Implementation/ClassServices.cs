@@ -40,39 +40,88 @@ namespace ServicesLayer.Implementation
                 throw new CustomeException(e.Messages);
             }
         }
-        public void AddClass(ClassModel _class)
+        public async Task DeleteRange(int[] id)
         {
             try
             {
-                unitOfWork.ClassRepository.Insert(_class, true);
+                var classListModal = GetWithIDList(id);
+                unitOfWork.ClassRepository.RemoveRange(classListModal.ToArray());
+                int roweffected = await unitOfWork.SaveChange();
+                if (roweffected == 0) throw new CustomeException("No record effected in database");
             }
             catch (CustomeException e)
             {
                 throw new CustomeException(e.Messages);
             }
         }
-        public List<ClassDetailServicesModel> GetClassListDetail(string text, int skip, int take, int min, int max, params string[] properties)
+        public async Task AddClass(ClassAddServicesModel source)
+        {
+            try
+            {
+                if (source.SecretaryId == source.PersidentId && source.SecretaryId != 0)
+                    throw new CustomeException("A class have only one persident and one secretary");
+                var classModel = new ClassModel() { Name = source.Name };
+                int classId = unitOfWork.ClassRepository.Insert(classModel, true).ClassId;
+                if (source.StudentId.Length > 0)
+                {
+                    var classStudent = new List<ClassStudent>();
+                    for (int index = 0; index < source.StudentId.Length; index++)
+                    {
+                        int role = 0;
+                        int studentId = source.StudentId[index];
+                        if (source.PersidentId == studentId) role = (int)Role.PRESIDENT;
+                        if (source.SecretaryId == studentId) role = (int)Role.SECRETARY;
+                        classStudent.Add(new ClassStudent()
+                        {
+                            ClassId = classId,
+                            StudentId = studentId,
+                            Role = role
+                        });
+                        unitOfWork.ClassStudentRepository.InsertRange(classStudent.ToArray());
+                    }
+                }
+                if (source.SubjectId.Length > 0)
+                {
+                    var classSubject = new List<ClassSubject>();
+                    for (int index = 0; index < source.SubjectId.Length; index++)
+                    {
+                        classSubject.Add(new ClassSubject()
+                        {
+                            ClassId = classId,
+                            SubjectId = source.SubjectId[index]
+                        });
+                    }
+                    unitOfWork.ClassSubjectRepository.InsertRange(classSubject.ToArray());
+                }
+                await unitOfWork.SaveChange();
+            }
+            catch (CustomeException e)
+            {
+                throw new CustomeException(e.Messages);
+            }
+        }
+        public List<ClassDetailServicesModel> GetClassListDetail(string text, int skip, int take, int min, int max, string properties, out int recordFilterd)
         {
             try
             {
                 var baseQuery = unitOfWork.ClassRepository.GetAllDetail();
                 var query = unitOfWork.ClassRepository.FilterByText(baseQuery, text);
-                query = unitOfWork.ClassRepository.GetPaging(query, skip, take);
-
                 var result = query.Select(q => new ClassDetailServicesModel()
                 {
                     ClassId = q.ClassId,
                     ClassName = q.Name,
                     PersidentId = q.ClassStudent.Where(cs => cs.Role == (int)Role.PRESIDENT).DefaultIfEmpty().First().StudentId,
-                    PersidentName = q.ClassStudent.Where(cs => cs.Role == (int)Role.PRESIDENT).DefaultIfEmpty().First().Student.Name??"",
+                    PersidentName = q.ClassStudent.Where(cs => cs.Role == (int)Role.PRESIDENT).DefaultIfEmpty().First().Student.Name ?? "",
                     SecretaryId = q.ClassStudent.Where(cs => cs.Role == (int)Role.SECRETARY).DefaultIfEmpty().First().StudentId,
-                    SecretaryName = q.ClassStudent.Where(cs => cs.Role == (int)Role.SECRETARY).DefaultIfEmpty().First().Student.Name??"",
+                    SecretaryName = q.ClassStudent.Where(cs => cs.Role == (int)Role.SECRETARY).DefaultIfEmpty().First().Student.Name ?? "",
                     Quantity = q.ClassStudent.Count(),
                     GirlQuantity = q.ClassStudent.Count(cs => cs.Student.Gender == true),
                     BoyQuantity = q.ClassStudent.Count(cs => cs.Student.Gender == false),
                     Subjects = string.Join("|", q.ClassSubject.Select(cs => cs.Subject.Name).ToArray())
                 });
-
+                if (!string.IsNullOrEmpty(properties)) result = result.FilterWithRange(min, max, properties);
+                recordFilterd = result.Count();
+                if (take != 0) result = result.Skip(skip).Take(take);
                 return result.ToList();
             }
             catch (CustomeException e)
@@ -107,6 +156,7 @@ namespace ServicesLayer.Implementation
                 model.Name = classModel.Name;
                 model.OldPresidentId = (president.Any()) ? president[0].StudentId : 0;
                 model.OldSecretaryId = (secreatary.Any()) ? secreatary[0].StudentId : 0;
+
                 return model;
             }
             catch (CustomeException e)
@@ -115,49 +165,53 @@ namespace ServicesLayer.Implementation
             }
         }
 
-        private ClassStudent[] ListStudentEffected(ClassEditServicesModel servicesModel)
-        {
-            // the student has old role and new role
-            var listStudentEffected = new List<ClassStudent>();
-
-            //Reset old president and secreatary to member role
-            var resetStudentRole = unitOfWork.ClassStudentRepository.Find(cs => cs.StudentId == servicesModel.OldPresidentId || cs.StudentId == servicesModel.OldSecretaryId);
-            resetStudentRole.ToList().ForEach(cs => cs.Role = 0);
-            listStudentEffected.AddRange(resetStudentRole);
-            //  update new role
-            var newPresident = unitOfWork.ClassStudentRepository.GetClassStudent(servicesModel.ClassId, servicesModel.NewPresidentId);
-            var newSecreatary = unitOfWork.ClassStudentRepository.GetClassStudent(servicesModel.ClassId, servicesModel.NewSecretaryId);
-            if (newPresident != null)
-            {
-                newPresident.Role = (int)Role.PRESIDENT;
-                listStudentEffected.Add(newPresident);
-            }
-            if (newSecreatary != null)
-            {
-                newSecreatary.Role = (int)Role.SECRETARY;
-                listStudentEffected.Add(newSecreatary);
-            }
-            return listStudentEffected.ToArray();
-        }
-
-        public async Task UpdateClass(ClassEditServicesModel servicesModel)
+        public async Task UpdateClass(ClassEditServicesModel source)
         {
             // one student has only one role and ID must != 0
-            if (servicesModel.NewPresidentId == servicesModel.NewSecretaryId && servicesModel.NewPresidentId != 0)
+            if (source.NewPresidentId == source.NewSecretaryId && source.NewPresidentId != 0)
             {
                 throw new CustomeException("A class has only one president and one secretary");
             }
             try
             {
-                var classModel = Get(servicesModel.ClassId);
-
-                classModel.Name = servicesModel.Name;
-                var listStudentEffected = ListStudentEffected(servicesModel);
-                if (listStudentEffected.Length > 0)
-                {
-                    unitOfWork.ClassStudentRepository.UpdateRange(listStudentEffected);
-                }
+                var classModel = Get(source.ClassId);
+                classModel.Name = source.Name;                
                 unitOfWork.ClassRepository.Update(classModel);
+
+                if (source.StudentId.Length > 0)
+                {
+                    var classStudent = new List<ClassStudent>();
+                    for (int index = 0; index < source.StudentId.Length; index++)
+                    {
+                        int role = 0;
+                        int studentId = source.StudentId[index];
+                        if (source.NewPresidentId == studentId) role = (int)Role.PRESIDENT;
+                        if (source.NewSecretaryId == studentId) role = (int)Role.SECRETARY;
+                        classStudent.Add(new ClassStudent()
+                        {
+                            ClassId = source.ClassId,
+                            StudentId = studentId,
+                            Role = role
+                        });
+                        unitOfWork.ClassStudentRepository.DeleteStudentInClass(source.ClassId);
+                        unitOfWork.ClassStudentRepository.InsertRange(classStudent.ToArray());
+                    }
+                }
+                if (source.SubjectId.Length > 0)
+                {
+                    var classSubject = new List<ClassSubject>();
+                    for (int index = 0; index < source.SubjectId.Length; index++)
+                    {
+                        classSubject.Add(new ClassSubject()
+                        {
+                            ClassId = source.ClassId,
+                            SubjectId = source.SubjectId[index]
+                        });
+                    }
+                    unitOfWork.ClassSubjectRepository.DeleteSubjectInClass(source.ClassId);
+                    unitOfWork.ClassSubjectRepository.InsertRange(classSubject.ToArray());
+                }
+
                 int roweffected = await unitOfWork.SaveChange();
             }
             catch (CustomeException e)

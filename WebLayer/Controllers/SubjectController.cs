@@ -12,9 +12,12 @@ using WebLayer.EditModel.Subject;
 using AutoMapper;
 using DatabaseLayer.ExceptionHandling;
 using ServicesLayer.ViewModel;
+using Microsoft.AspNetCore.Authorization;
 
 namespace WebLayer.Controllers
 {
+    [Authorize(Roles = "Admin")]
+
     public class SubjectController : Controller
     {
         private readonly ILogger<ClassController> logger;
