@@ -20,7 +20,5 @@ namespace App.Areas.Identity.Models.UserViewModels
       [Display(Name = "Xác nhận mật khẩu")]
       [Compare("NewPassword", ErrorMessage = "Lặp lại mật khẩu không chính xác.")]
       public string ConfirmPassword { get; set; }
-
-
   }
 }

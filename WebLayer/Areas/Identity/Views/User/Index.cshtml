@@ -1,5 +1,6 @@
 @model List<UserAndRole>
 @{
+
     ViewData["Title"] = "Danh sách các thành viên";
 }
 <h2>@ViewData["Title"]</h2>
@@ -8,6 +9,7 @@
 <table class="table">
     <tr>
         <th>Tên user</th>
+        <th>Email</th>
         <th>Vai trò (role)</th>
         <th>Đã xác nhận Email</th>
         <th>Tác vụ</th>
@@ -16,6 +18,7 @@
     {
         <tr>
             <td>@user.UserName</td>
+            <td> @user.Email</td>
             <td>
                 @if (string.IsNullOrEmpty(user.RoleNames))
                 {
@@ -25,7 +28,7 @@
                 {
                     <a asp-action="AddRole" asp-route-id="@user.Id">@user.RoleNames</a>
                 }
-            </td>
+            </td>            
             <td>
                 @(user.EmailConfirmed ? "Đã xác nhận" : "Chưa xác nhận")
             </td>

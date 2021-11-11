@@ -22,7 +22,7 @@ using DatabaseLayer.Entity;
 namespace App.Areas.Identity.Controllers
 {
 
-    // [Authorize(Roles = "Admin")]
+    //[Authorize(Roles = "Admin")]
     [Area("Identity")]
     [Route("/Role/[action]")]
     public class RoleController : Controller
@@ -46,11 +46,17 @@ namespace App.Areas.Identity.Controllers
         public async Task<IActionResult> Index()
         {
             var r = await _roleManager.Roles.OrderBy(r => r.Name).ToListAsync();
-            var roles = r.Select(ro => new RoleModel()
+            var roles = new List<RoleModel>();
+            foreach (var role in r)
             {
-                Name = ro.Name,
-                Id = ro.Id
-            }).ToList();
+                var claims = (await _roleManager.GetClaimsAsync(role)).Select(c => c.Type + "=" + c.Value).ToArray();
+                roles.Add(new RoleModel()
+                {
+                    Id = role.Id,
+                    Name = role.Name,
+                    Claims = claims
+                });
+            }
             return View(roles);
         }
 
@@ -85,7 +91,7 @@ namespace App.Areas.Identity.Controllers
         }
 
         // GET: /Role/Delete/roleid
-        [HttpGet, ActionName("Delete")]
+        [HttpGet("{roleid}"), ActionName("Delete")]
         public async Task<IActionResult> DeleteAsync(string roleid)
         {
             if (roleid == null) return NotFound("Không tìm thấy role");
@@ -120,8 +126,9 @@ namespace App.Areas.Identity.Controllers
             return View(role);
         }
 
+        [Authorize(policy: "AllowEditRole")]
         // GET: /Role/Edit/roleid
-        [HttpGet("{roleid}")]
+        [HttpGet("{roleid}"), ActionName("Edit")]
         public async Task<IActionResult> EditAsync(string roleid)
         {
             _logger.LogInformation("on edit role");
@@ -131,10 +138,13 @@ namespace App.Areas.Identity.Controllers
             {
                 return NotFound("Không tìm thấy role");
             }
-            var model  = new EditRoleModel(){
+            var model = new EditRoleModel()
+            {
                 Name = role.Name,
-                role = role
+                role = role,
+                Claims = _context.RoleClaims.Where(rc => rc.RoleId == roleid).ToList()
             };
+
             return View(model);
         }
 
@@ -170,6 +180,121 @@ namespace App.Areas.Identity.Controllers
             }
 
             return View(model);
+        }
+
+
+        [Authorize(policy: "AllowEditRole")]
+        // GET: /Role/Edit/AddRoleClaim
+        [HttpGet("{roleid}")]
+        public async Task<IActionResult> AddRoleClaim(string roleid)
+        {
+            _logger.LogInformation("on edit role");
+            if (roleid == null) return NotFound("Không tìm thấy role");
+            var role = await _roleManager.FindByIdAsync(roleid);
+            if (role == null)
+            {
+                return NotFound("Không tìm thấy role");
+            }
+            var model = new EditClaimModel()
+            {
+                roleId = role.Id,
+                roleName = role.Name                
+            };
+
+            return View(model);
+        }
+        [Authorize(policy: "AllowEditRole")]
+        // GET: /Role/Edit/AddRoleClaim
+        [HttpPost("{roleid}")]
+        public async Task<IActionResult> AddRoleClaim(string roleid, EditClaimModel model)
+        {
+            _logger.LogInformation("on edit role claim");
+            if (roleid == null) return NotFound("Không tìm thấy role");
+            var role = await _roleManager.FindByIdAsync(roleid);
+            if (role == null)
+            {
+                return NotFound("Không tìm thấy role");
+            }
+            bool isExistedClaim = (await _roleManager.GetClaimsAsync(role)).Any(c => c.Type == model.ClaimType && c.Value == model.ClaimValue);
+            if (isExistedClaim)
+            {
+                ModelState.AddModelError(string.Empty, "Claim này đã có");
+                return View(model);
+            }
+            else
+            {
+                var newClaim = new Claim(type: model.ClaimType, value: model.ClaimValue);
+                var result = await _roleManager.AddClaimAsync(role, newClaim);
+                if (!result.Succeeded)
+                {
+                    ModelState.AddModelError(string.Empty, "Lỗi không thể thêm claim cho role");
+                    return View(model);
+                }
+                StatusMessage = "Đã thêm claim mơi thành công";
+            }
+            return RedirectToAction("Edit", new {roleid = roleid});
+        }
+
+        // GET: /Role/Edit/EditRoleClaim
+        [HttpGet("{claimid}")]
+        public async Task<IActionResult> EditRoleClaim(int? claimid)
+        {
+            _logger.LogInformation("on edit claim");
+            if (claimid == null) return NotFound("Không tìm thấy claim");
+            var claim = _context.RoleClaims.Where(rc => rc.Id == claimid).SingleOrDefault();
+            if (claim == null) return Content("Không tìm thấy claims");
+            var role = await _roleManager.FindByIdAsync(claim.RoleId);
+            if (role == null ) return Content("Không tìm thâyd role");
+
+            var model = new EditClaimModel(){
+                ClaimType = claim.ClaimType,
+                ClaimValue = claim.ClaimValue,
+                roleId = role.Id,
+                ClaimId = claimid.Value 
+            };
+
+            return View(model);
+        }
+
+        [HttpPost("{claimid}")]
+        public async Task<IActionResult> EditRoleClaim(int? claimid, EditClaimModel model)
+        {
+            _logger.LogInformation("on edit claim");
+            if (claimid == null) return NotFound("Không tìm thấy claim");
+            var claim = _context.RoleClaims.Where(rc => rc.Id == claimid).SingleOrDefault();
+            if (claim == null) return Content("Không tìm thấy claims");
+            var role = await _roleManager.FindByIdAsync(claim.RoleId);
+            if (role == null ) return Content("Không tìm thâyd role");
+
+            bool isExistedClaim = _context.RoleClaims.Any(rc => rc.RoleId == role.Id &&  rc.ClaimType == model.ClaimType && rc.ClaimValue == model.ClaimValue);
+            if (isExistedClaim)
+            {
+                ModelState.AddModelError(string.Empty, "Claim này đã có");
+                return View(model);
+            }
+            claim.ClaimType = model.ClaimType;
+            claim.ClaimValue = model.ClaimValue;
+
+            await _context.SaveChangesAsync();
+            StatusMessage = "Vừa cập nhập thành công claims";
+
+            return RedirectToAction(nameof(Index)) ;
+        }
+
+        [HttpPost("{claimid}")]
+        public async Task<IActionResult> DeleteRoleClaim(int? claimid)
+        {
+            _logger.LogInformation("on edit claim");
+            if (claimid == null) return NotFound("Không tìm thấy claim");
+            var claim = _context.RoleClaims.Where(rc => rc.Id == claimid).SingleOrDefault();
+            if (claim == null) return Content("Không tìm thấy claims");
+            var role = await _roleManager.FindByIdAsync(claim.RoleId);
+            if (role == null ) return Content("Không tìm thâyd role");
+
+            await _roleManager.RemoveClaimAsync(role, new Claim(claim.ClaimType, claim.ClaimValue));
+            StatusMessage = "Vừa xóa thành công claims";
+
+            return RedirectToAction(nameof(Index)) ;
         }
     }
 }

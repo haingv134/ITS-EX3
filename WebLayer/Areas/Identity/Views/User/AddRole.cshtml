@@ -1,11 +1,8 @@
 @model AddUserRoleModel
 @{
-
     ViewData["Title"] = "Gán role";
 }
-
 <h4>Thiết lập role cho user: @Model.user.UserName</h4>
-
 <div class="row">
     <div class="col-md-6">
         <form id="set-password-form" method="post">
@@ -14,15 +11,37 @@
             <div class="form-group">
                 <label asp-for="RoleNames"></label>
                 @Html.ListBoxFor(m => m.RoleNames, (SelectList) ViewBag.allRoles, new {
-                    id = "id-listbox-role",
-                    @class = "form-select",
-                    required = ""
+                id = "id-listbox-role",
+                @class = "form-select",
+                required = ""
                 })
                 <span asp-validation-for="RoleNames" class="text-danger"></span>
             </div>
             <button type="submit" class="btn btn-primary">Cập nhật</button>
             <a class="btn btn-primary" asp-action="Index">Danh sách thành viên</a>
         </form>
+        <hr>
+        <p>Danh sách các claims của user từ role: </p>
+        @if (Model.ListRoleClaims.Count() > 0)
+        {
+            <ul>
+                @foreach (var claim in Model.ListRoleClaims)
+                {
+                    <li> @claim.ClaimType - @claim.ClaimValue </li>
+                }
+            </ul>
+        }
+        <a asp-action="AddClaim" asp-route-userid="@Model.user.Id">+Thêm claim riêng</a>
+        <p>Danh sách các claims riêng của user: </p>
+        @if (Model.ListUserClaims.Count() > 0)
+        {
+            <ul>
+                @foreach (var claim in Model.ListUserClaims)
+                {
+                    <li> <a asp-action="EditClaim" asp-route-claimid="@claim.Id">@claim.ClaimType - @claim.ClaimValue</a> </li>
+                }
+            </ul>
+        }
         <hr>
     </div>
 </div>

@@ -2,9 +2,7 @@
 @{
     ViewData["Title"] = "Gán đặc tính cho role";
 }
-<h2>@ViewData["Title"]: @Model.role.Name</h2>
-<partial name="_StatusMessage"></partial>
-
+<h2>@ViewData["Title"]: @Model.ClaimType</h2>
 <hr>
 
 <div class="row">
@@ -23,9 +21,9 @@
                 <span asp-validation-for="ClaimValue" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <input type="submit" value="Cập nhật" class="btn btn-primary" />
-                <input type="submit" asp-action="DeleteClaim" asp-route-claimid="@ViewBag.claimid"  value="Xóa" class="btn btn-danger" />
-                <a class="btn btn-primary" asp-action="Edit" asp-route-roleid="@Model.role.Id">Edit role</a>
+                <input type="submit" asp-action="EditRoleClaim" value="Cập nhật" class="btn btn-primary" />
+                <input type="submit" asp-action="DeleteRoleClaim" asp-route-claimid="@Model.ClaimId" value="Xóa" class="btn btn-danger" />
+                <a class="btn btn-primary" asp-action="Edit" asp-route-roleid="@Model.roleId">Edit role</a>
             </div>
         </form>
     </div>

@@ -36,9 +36,12 @@
     <link href="~/themify-icons/themify-icons.css" rel="stylesheet" />
     <link href="~/css/style.css" rel="stylesheet" />
 
+
+
+    <script src="~/js/common.js"></script>
 </head>
 
-<body style="background-color: aliceblue;">
+<body style="background-color: aliceblue;">    
     <header class="mb-5">
         <div class="navbar navbar-expand-lg navbar-light bg-light border border-button shadow rounded fixed-top">
             <div class="container">
@@ -152,7 +155,6 @@
         </div>
     </footer>
 </body>
-<script src="~/js/common.js"></script>
 @* Handing section that child layout or sub-cshtml have *@
 @await RenderSectionAsync("Scripts", required: false)
 

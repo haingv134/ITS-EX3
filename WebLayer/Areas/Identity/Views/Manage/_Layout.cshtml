@@ -1,11 +1,8 @@
 ﻿@{
     Layout = "_MyParentLayout";
-    string CurrentPage = ViewData["CurrentPage"] as string;
-    string message = TempData["StatusMessage"] as string;
+    string CurrentPage = ViewData["CurrentPage"] as string;    
 }
-
 <h2 class="text-center">Manage your account</h2>
-<partial name="/Areas/Identity/Views/Manage/_StatusMessage.cshtml" model="@message"></partial>
 
 <div>
     <hr />
@@ -15,9 +12,6 @@
         </div>
         <div class="col-md-9">
             <div class="card">
-                <div class="card-title">
-                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-                </div>
                 <div class="card-body">
                     <div class="row">
                         <div class="col-sm-12 col-md-12 col-xl-12 col-lg-12 pb-3">
@@ -27,7 +21,7 @@
                                         id="PersonalDetails">Personal Details</a>
                                 </li>
                                 <li class="flex-sm-fill text-sm-center">
-                                    <a class="nav-link" asp-action="Email" asp-controller="Manage"
+                                    <a class="nav-link" asp-action="UpdateEmail" asp-controller="Manage"
                                         id="UpdateEmail">Update Email</a>
                                 </li>
                                 <li class="flex-sm-fill text-sm-center">
@@ -53,11 +47,23 @@
 </div>
 <script>
     let currentPage = '@CurrentPage';
-    document.querySelector('#PersonalDetails').classList.add(currentPage == 'Index' ? 'active' : 'null');
-    document.querySelector('#UpdateEmail');
-    document.querySelector('#ChangePassword').classList.add(currentPage == 'ChangePassword' ? 'active' : 'null');
-    document.querySelector('#TwoFactorAuthentication');
-    document.querySelector('#PersonalData');
+    switch (currentPage) {
+        case 'Index':
+            document.querySelector('#PersonalDetails').classList.add('active');
+            break;
+        case 'ChangePassword':
+            document.querySelector('#ChangePassword').classList.add('active');
+            break;
+        case 'UpdateEmail':
+            document.querySelector('#UpdateEmail').classList.add('active');
+            break;
+        case 'TwoFactorAuthentication':
+            document.querySelector('#TwoFactorAuthentication').classList.add('active');
+            break;
+        case 'PersonalData':
+            document.querySelector('#PersonalData').classList.add('active');
+            break;
+    }
 
 </script>
 @section Scripts {

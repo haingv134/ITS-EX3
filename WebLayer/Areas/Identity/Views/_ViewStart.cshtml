@@ -1,3 +1,5 @@
 ﻿@{
    Layout = "_MyParentLayout";
+   string message = TempData["StatusMessage"] as string;
 }
+<partial name="/Views/Shared/_StatusMessage.cshtml" model="@message"></partial>

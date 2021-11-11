@@ -95,8 +95,6 @@ namespace App.Areas.Identity.Controllers
                     return View(model);
                 }
             }
-            var aa = HttpContext.User.Identity.IsAuthenticated;
-            if (aa) return NotFound("User identity not null");
             return View(model);
         }
 
@@ -104,13 +102,11 @@ namespace App.Areas.Identity.Controllers
 
         [ValidateAntiForgeryToken]
         [HttpPost("/Logout")]
-        public async Task<IActionResult> Logout(string returnUrl = null)
+        public async Task<IActionResult> Logout()
         {
-            returnUrl ??= Url.Content("~/");
-
             await _signInManager.SignOutAsync();
             _logger.LogInformation("User đăng xuất");
-            return LocalRedirect(returnUrl);
+            return LocalRedirect(Url.Content("~/"));
         }
         //
         // GET: /Account/Register
@@ -314,11 +310,6 @@ namespace App.Areas.Identity.Controllers
                     }
                     else
                     {
-                        // registeredUser = externalEmailUser (externalEmail != Input.Email)
-                        /*
-                            info => user1 (mail1@abc.com)
-                                 => user2 (mail2@abc.com)
-                        */
                         ModelState.AddModelError(string.Empty, "Không liên kết được tài khoản, hãy sử dụng email khác");
                         return View();
                     }

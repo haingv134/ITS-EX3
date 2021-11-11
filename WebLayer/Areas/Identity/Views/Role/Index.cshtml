@@ -13,7 +13,6 @@
 
 <div class="mb-2">
     <a class="btn btn-secondary" asp-action="Create">Tạo role mới</a>
-    <a class="btn btn-secondary" asp-action="Index" asp-controller="User">Quản lý thành viên</a>
 </div>
 
 <table class="table">
@@ -25,7 +24,13 @@
         foreach (var role in Model)
         {
             <tr>
-                <td>@role.Name</td>
+                <td>
+                    <p>@role.Name</p>
+                    @foreach (var item in role.Claims)
+                    {
+                        <small>@item</small>
+                    }
+                </td>
                 <td>
                     <a class="btn btn-success btn-sm" asp-action="Edit" asp-route-roleid="@role.Id">Cập nhật</a>
                     <a class="btn btn-success btn-sm" asp-action="Delete" asp-route-roleid="@role.Id">Xóa</a>

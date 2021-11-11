@@ -172,7 +172,7 @@ function notify(msg, typeMsg) {
 
     setTimeout(function () {
         panel.style.display = 'none';
-    }, 10000);
+    }, 3000);
 }
 var ajaxStartTime, ajaxEndTime;
 $(document).ready(function () {    

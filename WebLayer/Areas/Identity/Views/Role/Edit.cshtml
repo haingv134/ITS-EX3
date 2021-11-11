@@ -1,9 +1,9 @@
 @model EditRoleModel
- 
 @{
+
     ViewData["Title"] = "Cập nhật role";
 }
-<h2>@ViewData["Title"]</h2> 
+<h2>@ViewData["Title"]</h2>
 
 <hr>
 <div class="row">
@@ -15,7 +15,18 @@
                 <input asp-for="Name" class="form-control" />
                 <span asp-validation-for="Name" class="text-danger"></span>
             </div>
-
+            <hr>
+            <p>Claim properties</p>
+            @if (Model.Claims.Count > 0)
+            {
+                <ul>
+                    @foreach (var claim in Model.Claims)
+                    {
+                        <li> <a asp-action="EditRoleClaim" asp-route-claimid="@claim.Id" >@claim.ClaimType - @claim.ClaimValue</a> </li>
+                    }
+                </ul>
+            }            
+            <a asp-action="AddRoleClaim" asp-route-roleid="@Model.role.Id">Thêm claim</a>
             <div class="form-group">
                 <input type="submit" value="Cập nhật" class="btn btn-primary" />
                 <a class="btn btn-primary" asp-action="Index">Danh sách các role</a>
@@ -25,7 +36,6 @@
     </div>
 </div>
 
-
 @section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+@{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
 }

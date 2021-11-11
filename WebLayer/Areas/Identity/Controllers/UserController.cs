@@ -67,6 +67,21 @@ namespace App.Areas.Identity.Controllers
             return View(users);
         }
 
+        private async Task<List<IdentityRoleClaim<String>>>  GetUserClaimsInRoleAsync(string userId){
+            var listRoleQuery = _context.UserRoles.Where(ur => ur.UserId == userId)
+                                                    .Join(_context.Roles, ur => ur.RoleId, r => r.Id, (ur, r) => new {
+                                                        userRole = ur,
+                                                        role = r
+                                                    }).Select(gr => gr.role);
+            var listRoleClaimsQuery = listRoleQuery.Join(_context.RoleClaims, r => r.Id, rc => rc.RoleId, (r, rc) => new {
+                role = r,
+                roleClaim = rc
+            }).Select(gr => gr.roleClaim);
+            return await listRoleClaimsQuery.ToListAsync();
+        }
+        private async Task<List<IdentityUserClaim<string>>> GetUserClaimsAsync(string userId){
+            return await _context.UserClaims.Where(uc => uc.UserId == userId).ToListAsync();                                             
+        }
         // GET: /ManageUser/AddRole/id
         [HttpGet("{id}"), ActionName("AddRole")]
         public async Task<IActionResult> AddRoleAsync(string id)
@@ -88,6 +103,10 @@ namespace App.Areas.Identity.Controllers
             // lấy tất cả các role hiện tại trên hệ thống
             List<string> roleNames = await _roleManager.Roles.Select(r => r.Name).ToListAsync();
             ViewBag.allRoles = new SelectList(roleNames);
+
+            model.ListRoleClaims = await GetUserClaimsInRoleAsync(id);
+            model.ListUserClaims = await GetUserClaimsAsync(id);
+
             return View(model);
         }
 
@@ -191,7 +210,7 @@ namespace App.Areas.Identity.Controllers
         }
 
 
-        [HttpGet("{userid}")]
+        [HttpGet("{userid}"), ActionName("AddClaim")]
         public async Task<ActionResult> AddClaimAsync(string userid)
         {
 
@@ -201,7 +220,7 @@ namespace App.Areas.Identity.Controllers
             return View();
         }
 
-        [HttpPost("{userid}")]
+        [HttpPost("{userid}"),  ActionName("AddClaim")]
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> AddClaimAsync(string userid, AddUserClaimModel model)
         {
@@ -236,7 +255,6 @@ namespace App.Areas.Identity.Controllers
             {
                 ClaimType = userclaim.ClaimType,
                 ClaimValue = userclaim.ClaimValue
-
             };
             ViewBag.user = user;
             ViewBag.userclaim = userclaim;
