@@ -17,14 +17,7 @@
             <a class="nav-link text-dark" asp-area="Identity" asp-action="Index" asp-controller="Manage"> Account
             </a>
         </li>
-        <li class="dropdown-item">
-            <a class="nav-link text-dark" asp-area="Identity" asp-action="Index" asp-controller="Role"> Role Manager
-            </a>
-        </li>
-        <li class="dropdown-item">
-            <a class="nav-link text-dark" asp-area="Identity" asp-action="Index" asp-controller="User"> User Manager
-            </a>
-        </li>
+        <partial name="_AdminParial"></partial>
         <li class="dropdown-item">
             <form class="form-inline" asp-area="Identity" asp-action="Logout" asp-controller="Account"
             asp-route-returnUrl="@returnUrl" method="post">

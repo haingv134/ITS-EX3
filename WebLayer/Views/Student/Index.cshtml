@@ -1,6 +1,4 @@
-﻿@model string
-
-<body>
+﻿<body>
     <div class="container border border-2 border-secondary p-2">
         <div class="row my-2">
             <div class="col-sm-5">
@@ -16,8 +14,7 @@
             <div class="col-sm-2">
                 <div class="input-group">
                     <span class="input-group-text">Class</span>
-                    <input class="form-control" list="datalistOptions"
-                        placeholder="Class Name" id="ClassId">
+                    <input class="form-control" list="datalistOptions" placeholder="Class Name" id="ClassId">
                     <datalist id="datalistOptions">
                         <option value="0">-- All --</option>
                         @foreach (var item in ViewBag.ClassList)
@@ -47,10 +44,13 @@
             </div>
 
         </div>
-        <div class="lead fs-6">
-            <table id="StudentTable" class="table table-hover table-striped table-responsive table-bordered ">
-                <caption>Student Detail</caption>
-            </table>
+        <div class="row mb-2">
+            <div class="col col-lg-12 col-sm-12 lead text-secondary fs-6">
+                <div class="table-responsive w-100">
+                    <table id="StudentTable" class="table table-hover table-striped table-bordered ">
+                        <caption>Student Detail</caption>
+                    </table>
+            </div>
         </div>
     </div>
 </body>

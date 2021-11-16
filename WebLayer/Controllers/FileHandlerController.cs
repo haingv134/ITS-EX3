@@ -13,7 +13,7 @@ using Microsoft.AspNetCore.Authorization;
 
 namespace WebLayer.Controllers
 {
-    [Authorize(Roles = "Admin")]
+    [Authorize(policy: "StudentManagement")]
     public class FileHandlerController : Controller
     {
         private readonly UserManager<AppUser> _userManager;

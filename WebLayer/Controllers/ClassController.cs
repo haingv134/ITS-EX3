@@ -18,7 +18,7 @@ using System;
 
 namespace WebLayer.Controllers
 {
-    [Authorize(Roles = "Admin")]
+    [Authorize(policy: "StudentManagement")]
 
     [Route("lop/[action]")]
     public class ClassController : Controller

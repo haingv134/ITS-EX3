@@ -15,6 +15,9 @@ using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.WebUtilities;
 using System.Text;
 using System.Text.Encodings.Web;
+using System.Collections.Generic;
+using Newtonsoft.Json;
+using System;
 
 namespace App.Areas.Identity.Controllers
 {
@@ -153,7 +156,7 @@ namespace App.Areas.Identity.Controllers
                 var callBackUrl = Url.Action(
                             action: "ConfirmEmail",
                             controller: "Account",
-                            values: new { userId = userId, code = code},
+                            values: new { userId = userId, code = code },
                             protocol: Request.Scheme
                         );
                 var encode = HtmlEncoder.Default.Encode(callBackUrl);
@@ -405,6 +408,86 @@ namespace App.Areas.Identity.Controllers
                 return View("DisplayRecoveryCodes", new DisplayRecoveryCodesViewModel { Codes = codes });
             }
             return View("Error");
+        }
+
+
+        [HttpGet]
+        public async Task<IActionResult> PersonalData()
+        {
+            var user = await _userManager.GetUserAsync(User);
+            if (user == null)
+            {
+                return NotFound($"Unable to load user with ID '{_userManager.GetUserId(User)}'.");
+            }
+            // Only include personal data for download
+            var personalData = new Dictionary<string, string>();
+            typeof(AppUser).GetProperties()
+                            .Where(property => Attribute.IsDefined(property, typeof(PersonalDataAttribute)))
+                            .ToList()
+                            .ForEach(property =>
+                            {
+                                personalData.Add(property.Name, property.GetValue(user)?.ToString());
+                            });
+            var logins = await _userManager.GetLoginsAsync(user);
+            foreach (var l in logins)
+            {
+                personalData.Add($"{l.LoginProvider} external login provider key", l.ProviderKey);
+            }
+            ViewData["jsonString"] = JsonConvert.SerializeObject(personalData, Formatting.Indented);
+            return View();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> DownloadPersonalData(string fileType)
+        {
+            var user = await _userManager.GetUserAsync(User);
+            if (user == null)
+            {
+                return NotFound($"Unable to load user with ID '{_userManager.GetUserId(User)}'.");
+            }
+
+            _logger.LogInformation("User with ID '{UserId}' asked for their personal data.", _userManager.GetUserId(User));
+
+            // Only include personal data for download
+            var personalData = new Dictionary<string, string>();
+            typeof(AppUser).GetProperties()
+                            .Where(property => Attribute.IsDefined(property, typeof(PersonalDataAttribute)))
+                            .ToList()
+                            .ForEach(property =>
+                            {
+                                personalData.Add(property.Name, property.GetValue(user)?.ToString() ?? "null");
+                            });
+            var logins = await _userManager.GetLoginsAsync(user);
+            foreach (var l in logins)
+            {
+                personalData.Add($"{l.LoginProvider} external login provider key", l.ProviderKey);
+            }
+
+            // if (fileType.Contains("JSON", StringComparison.InvariantCultureIgnoreCase))
+            // {
+            //     Response.Headers.Add("Content-Disposition", "attachment; filename=PersonalData.json");
+            //     return new FileContentResult(JsonSerializer.SerializeToUtf8Bytes(personalData), "application/json");
+            // }
+            if (fileType.Contains("TEXT", StringComparison.InvariantCultureIgnoreCase))
+            {
+                Response.Headers.Add("Content-Disposition", "attachment; filename=PersonalData.txt");
+                var txtBuilder = new StringBuilder();
+                personalData.ToList().ForEach(pair => txtBuilder.Append($"[{pair.Key}] - [{pair.Value}]\n"));
+                return new FileContentResult(Encoding.UTF8.GetBytes(txtBuilder.ToString()), "text/plain");
+            }
+            if (fileType.Contains("CSV", StringComparison.InvariantCultureIgnoreCase))
+            {
+                Response.Headers.Add("Content-Disposition", "attachment; filename=PersonalData.csv");
+                var txtBuilder = new StringBuilder();
+                personalData.ToList().ForEach(pair => txtBuilder.Append($"{pair.Key},{pair.Value}\n"));
+                return new FileContentResult(Encoding.UTF8.GetBytes(txtBuilder.ToString()), "text/csv");
+            }
+            return Content("Not JSON FILE");
+        }
+        public IActionResult DeletePersonalData()
+        {
+            
+            return View();
         }
     }
 }

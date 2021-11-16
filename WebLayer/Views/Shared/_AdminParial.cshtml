@@ -1,0 +1,17 @@
+@using Microsoft.AspNetCore.Authorization
+@inject IAuthorizationService authorizationService
+
+@{
+    var resultAuthor = await authorizationService.AuthorizeAsync(this.User, "Manager");
+}
+@if (resultAuthor.Succeeded)
+{
+    <li class="dropdown-item">
+        <a class="nav-link text-dark" asp-area="Identity" asp-action="Index" asp-controller="Role"> Role Manager
+        </a>
+    </li>
+    <li class="dropdown-item">
+        <a class="nav-link text-dark" asp-area="Identity" asp-action="Index" asp-controller="User"> User Manager
+        </a>
+    </li>
+}

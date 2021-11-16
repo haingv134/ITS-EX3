@@ -1,4 +1,9 @@
 var datatable;
+$(document).ready(function () {
+    window.addEventListener('resize', function (e) {
+        datatable.draw();
+    }, true)
+})
 
 $('#Reset').click(function () {
     if ($('#SearchBar').val().length > 0 || $('#ClassId').val().length > 0 || $('#Gender').val().length > 0) {
@@ -42,7 +47,9 @@ $(document).ready(function () {
         paging: true, // phan trang
         filter: false, // enable searching on input search
         stateSave: true, // save state of last table (lost if accessing with orther url or no session)
-        autoWidth: true
+        autoWidth: true,
+        pagingType: "full_numbers",
+        responsive: true
     });
 
     datatable = $('#StudentTable').DataTable({
@@ -63,7 +70,8 @@ $(document).ready(function () {
             }
         },
         columnDefs: [
-            { orderable: false, targets: [3, 5] }
+            { orderable: false, targets: [3, 5] },
+            { width: "14%", targets: [0, 1, 2, 3, 4, 5] }
         ],
         columns: [
             { data: 'name', name: 'Name', title: 'Student Name' },
@@ -76,13 +84,13 @@ $(document).ready(function () {
                 data: 'studentId', name: 'StudentId', title: 'Actions', render: renderAction,
                 orderable: false,
                 visiable: false,
-                width: '200px'
+                width: '15%'
             }
         ],
 
         order: [[0, 'asc'], [1, 'asc']],
         language: {
-            emptyTable: 'No class found, please <b> Add New Class </b> to show detail', // no data
+            emptyTable: 'No student found, please <b> Add Student </b> to show detail', // no data
             infoEmpty: 'No records avaiable',
             zeroRecords: 'Humm.... No result founded'
         }

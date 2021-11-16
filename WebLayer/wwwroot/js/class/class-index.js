@@ -1,4 +1,11 @@
 var datatable;
+
+$(document).ready(function () {
+  window.addEventListener('resize', function (e) {
+    datatable.draw();
+  }, true)
+})
+
 $(document).ready(function () {
   $('#btnAddClass').click(function () {
     OpenPopup(urlAddClass());
@@ -54,19 +61,29 @@ $('#Search').click(function () {
   }
 })
 $(document).ready(function () {
+
+  // reload datatable after ajax request completed
+  let datatableAjaxResponse = {};
+  ajaxResponseStatus = new Proxy(datatableAjaxResponse, {
+    set: () => {
+      datatable.ajax.reload();
+    }
+  })
+
   // default option for datatables
   $.extend(true, $.fn.dataTable.defaults, {
     processing: false, // showing 'processing' message while ajax is executing
-    serverSide: true,  // handing request on server
-    searching: false, //
-    ordering: true, // allow order
-    paging: true, // phan trang
+    serverSide: true,  
+    searching: false, 
+    ordering: true,
+    paging: true, 
     filter: false, // enable searching on input search
     stateSave: true, // save state of last table (lost if accessing with orther url or no session)
-    autoWidth: true,
+    autoWidth: false,
     // scrollY: "200px",
     // crollCollapse: true
     pagingType: "full_numbers",
+    responsive: true
   });
 
   datatable = $('#example').DataTable({
@@ -85,17 +102,17 @@ $(document).ready(function () {
         })
       }
     },
-    columnDefs: [{
-      orderable: false,
-      className: 'select-checkbox',
-      targets: 0
-    }],
+    columnDefs: [
+      { orderable: false, className: 'select-checkbox', targets: 0 },
+      { width: "10%", targets: [1, 2, 3, 4, 5, 6, 7] }
+    ],
+
     select: {
       style: 'os',
       selector: 'td:first-child'
     },
     columns: [
-      { data: 'null', "defaultContent": "", width: '50px' },
+      { data: 'null', "defaultContent": "", width: '5%' },
       { data: 'className', name: 'ClassName', title: 'Class', render: renderClass },
       { data: 'persidentName', name: 'PersidentName', title: 'Persident', render: renderPresidentStudent },
       { data: 'secretaryName', name: 'SecretaryName', title: 'Secretary', render: renderSecretaryStudent },
@@ -107,7 +124,7 @@ $(document).ready(function () {
         data: 'classId', name: 'ClassId', title: 'Actions', render: renderAction,
         orderable: false,
         visiable: false,
-        width: '200px'
+        width: '15%'
       }
     ],
 
@@ -121,8 +138,8 @@ $(document).ready(function () {
 
   var classIdData = [];
   // delete many class when select row in datatable
-  datatable.on('deselect',DoRowSelectChange);
-  datatable.on('select',DoRowSelectChange);
+  datatable.on('deselect', DoRowSelectChange);
+  datatable.on('select', DoRowSelectChange);
 
   function DoRowSelectChange(e, dt, type, indexes) {
     if (type === 'row') {

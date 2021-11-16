@@ -11,10 +11,11 @@ using DatabaseLayer.Entity;
 using DatabaseLayer.UnitOfWork;
 using Newtonsoft.Json;
 using Newtonsoft;
-
+using Microsoft.AspNetCore.Authorization;
 
 namespace WebLayer.Controllers
 {
+    [Authorize(policy: "StudentManagement")]
     public class HomeController : Controller
     {
         private readonly IClassServices classServices;
@@ -27,7 +28,7 @@ namespace WebLayer.Controllers
         public IActionResult Index()
         {
             return View();
-        }
+        }        
         public IActionResult GenerateJson()
         {
             var allData = new AllData()

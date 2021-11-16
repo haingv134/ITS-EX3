@@ -25,7 +25,7 @@ using DatabaseLayer.Context;
 namespace App.Areas.Identity.Controllers
 {
 
-    //[Authorize(Roles = "Admin")]
+    [Authorize(policy: "Manager")]
     [Area("Identity")]
     [Route("/ManageUser/[action]")]
     public class UserController : Controller
@@ -67,20 +67,24 @@ namespace App.Areas.Identity.Controllers
             return View(users);
         }
 
-        private async Task<List<IdentityRoleClaim<String>>>  GetUserClaimsInRoleAsync(string userId){
+        private async Task<List<IdentityRoleClaim<String>>> GetUserClaimsInRoleAsync(string userId)
+        {
             var listRoleQuery = _context.UserRoles.Where(ur => ur.UserId == userId)
-                                                    .Join(_context.Roles, ur => ur.RoleId, r => r.Id, (ur, r) => new {
+                                                    .Join(_context.Roles, ur => ur.RoleId, r => r.Id, (ur, r) => new
+                                                    {
                                                         userRole = ur,
                                                         role = r
                                                     }).Select(gr => gr.role);
-            var listRoleClaimsQuery = listRoleQuery.Join(_context.RoleClaims, r => r.Id, rc => rc.RoleId, (r, rc) => new {
+            var listRoleClaimsQuery = listRoleQuery.Join(_context.RoleClaims, r => r.Id, rc => rc.RoleId, (r, rc) => new
+            {
                 role = r,
                 roleClaim = rc
             }).Select(gr => gr.roleClaim);
             return await listRoleClaimsQuery.ToListAsync();
         }
-        private async Task<List<IdentityUserClaim<string>>> GetUserClaimsAsync(string userId){
-            return await _context.UserClaims.Where(uc => uc.UserId == userId).ToListAsync();                                             
+        private async Task<List<IdentityUserClaim<string>>> GetUserClaimsAsync(string userId)
+        {
+            return await _context.UserClaims.Where(uc => uc.UserId == userId).ToListAsync();
         }
         // GET: /ManageUser/AddRole/id
         [HttpGet("{id}"), ActionName("AddRole")]
@@ -220,7 +224,7 @@ namespace App.Areas.Identity.Controllers
             return View();
         }
 
-        [HttpPost("{userid}"),  ActionName("AddClaim")]
+        [HttpPost("{userid}"), ActionName("AddClaim")]
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> AddClaimAsync(string userid, AddUserClaimModel model)
         {

@@ -22,7 +22,7 @@ using DatabaseLayer.Entity;
 namespace App.Areas.Identity.Controllers
 {
 
-    //[Authorize(Roles = "Admin")]
+    [Authorize(policy: "Manager")]
     [Area("Identity")]
     [Route("/Role/[action]")]
     public class RoleController : Controller

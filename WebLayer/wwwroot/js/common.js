@@ -1,3 +1,6 @@
+// store response satatus of ajax each time its completed
+var ajaxResponseStatus = false;
+
 function OpenPopup(URL, ...args) {
     // call URL and including array data if have
     $.ajax({
@@ -75,12 +78,12 @@ function SubmitForm(form) {
 function DoAction(url, ...args) {
     var splits = url.split('?');
     var dataTransfer;
-    if (args.length > 0){
+    if (args.length > 0) {
         dataTransfer = {
-            'args' : args
+            'args': args
         }
     } else {
-        dataTransfer = splits.shift();   
+        dataTransfer = splits.shift();
     }
     $.ajax({
         type: 'POST',
@@ -97,20 +100,13 @@ function DoAction(url, ...args) {
 }
 
 function HanderAjaxResponse(data) {
+    // Call reload ajax request in each page using this
+    ajaxResponseStatus.change = data.success;
     if (data.success) {
-        // if form is proccessing to datatable
-        if (typeof (datatable) != 'undefined') {
-            datatable.ajax.reload();
-        }
-        // if form inside subject part
-        if (typeof (subjectList) != 'undefined') {
-            ajaxLoadSubject(0, 6);
-        }
         notify(data.message, 'success');
     } else {
         notify(data.message, 'error');
     }
-    // if form inside a popup modal
     if ($('.modal').length) {
         $('.modal').modal('hide');
     }
@@ -145,6 +141,7 @@ $(document).ready(function () {
     }, 1000);
 })
 
+// back-to-top options 
 $(document).ready(function () {
 
     $(window).scroll(function (e) {
@@ -154,28 +151,15 @@ $(document).ready(function () {
             $('#back-to-top').slideUp('fast');
         }
     });
+    $('#back-to-top').click(function (e) {
+        $('html, body').animate({
+            scrollTop: 0
+        }, 200);
+    });
 });
 
-$('#back-to-top').click(function (e) {
-    $('html, body').animate({
-        scrollTop: 0
-    }, 200);
-});
-
-function notify(msg, typeMsg) {
-
-    var panel = document.querySelector("#nontification-container");
-    panel.style.display = 'flex';
-    panel.style.backgroundColor = (typeMsg === 'success') ? "rgba(32, 151, 32, 0.349)" : "rgba(255, 0, 0, 0.1)";
-    panel.style.color = (typeMsg === 'success') ? "green" : "red";
-    panel.innerHTML = msg;
-
-    setTimeout(function () {
-        panel.style.display = 'none';
-    }, 3000);
-}
 var ajaxStartTime, ajaxEndTime;
-$(document).ready(function () {    
+$(document).ready(function () {
     var loadingStatus = true;
     $(document).ajaxStart(function () {
         loadingStatus = true;
@@ -189,7 +173,7 @@ $(document).ready(function () {
     $(document).ajaxComplete(function () {
         $('#loading-1, #loading-2, #loading-3').css('display', 'none');
         loadingStatus = false;
-        ajaxEndTime = new Date().getTime();        
+        ajaxEndTime = new Date().getTime();
         document.querySelector('#ajax-time-execute').innerText = 'request took ' + (ajaxEndTime - ajaxStartTime) + 'ms';
     });
 })

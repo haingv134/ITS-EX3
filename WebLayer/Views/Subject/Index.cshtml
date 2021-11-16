@@ -1,6 +1,6 @@
 ﻿<div id="subject-container">
     <button class="btn btn-primary mb-3" id="btnAddSubject"> Add Subject </button>
-
+    <button class="btn btn-primary mb-3" id="btnDeleteSubject"> Delete Multiple Subjects </button>
 
     <div class="list-group list-group-flush">
         <div class="overflow-auto row border-0" id="parentNode" style="max-height: 50vh;">
@@ -8,9 +8,7 @@
         </div>
     </div>
     <div class="d-flex flex-row justify-content-end pt-2 ">
-        <div class="pagination">
-            <div class="page-item" id="previous-page"><a class="page-link" href="#">Previous</a></div>
-            <div class="page-item" id="next-page"><a class="page-link" href="#">Next</a></div>
+        <div class="pagination" id="subject-pagination">
         </div>
     </div>
 </div>
@@ -24,13 +22,13 @@
         return '@Url.Action("Add", "Subject")';
     }
     function urlEditSubject(subjectId) {
-        return '\'@Url.Action("Edit", "Subject")?subjectId=' + subjectId + '\'';
+        return '@Url.Action("Edit", "Subject")?subjectId=' + subjectId;
     }
     function urlDeleteSubject(subjectId) {
-        return '\'@Url.Action("Delete", "Subject")?subjectId=' + subjectId + '\'';
+        return '@Url.Action("Delete", "Subject")?subjectId=' + subjectId;
     }
 </script>
-<script src="~/js/subject_index.js"></script>
+<script src="~/js/subject-index.js"></script>
 @*Send validation to layout*@
 @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
 }

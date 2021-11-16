@@ -41,3 +41,4 @@ D:\ITS-EX3\ServicesLayer\obj\Debug\net5.0\ServicesLayer.csproj.CoreCompileInputs
 D:\ITS-EX3\ServicesLayer\obj\Debug\net5.0\ServicesLayer.dll
 D:\ITS-EX3\ServicesLayer\obj\Debug\net5.0\ref\ServicesLayer.dll
 D:\ITS-EX3\ServicesLayer\obj\Debug\net5.0\ServicesLayer.pdb
+D:\ITS-EX3\ServicesLayer\obj\Debug\net5.0\ServicesLayer.csproj.CopyComplete

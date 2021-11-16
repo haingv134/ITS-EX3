@@ -20,6 +20,8 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using Microsoft.AspNetCore.Authentication.Cookies;
+using WebLayer.Security.Requirement;
+using Microsoft.AspNetCore.Authorization;
 
 namespace WebLayer
 {
@@ -125,14 +127,24 @@ namespace WebLayer
                     });
             services.AddAuthorization(author =>
             {
-                author.AddPolicy("AllowEditRole", policy =>
+                author.AddPolicy("Manager", policy =>
                 {
                     policy.RequireAuthenticatedUser();
                     policy.RequireRole(new string[] {"Admin"});
-                    policy.RequireRole(new string[] { "Editor" });
-                    //policy.RequireClaim("duocphepxoa", "user");
                 });
+                author.AddPolicy("StudentManagement", policy => {
+                    policy.RequireAuthenticatedUser();
+                    policy.RequireRole(new string[] {"Teacher", "Admin"});
+
+                });
+                author.AddPolicy("InGenZ", policy => {
+                    policy.AddRequirements(new GenzRequirements());
+                    // new GenzRequirements() => Authorization Handler
+                });
+
             });
+            services.AddTransient<IAuthorizationHandler, AppAuthoriaztionHandler>();
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

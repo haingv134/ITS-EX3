@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
+using System.Text;
 using ServicesLayer.ExtensionMethod;
 
 namespace ServicesLayer.ExtensionMethod
@@ -13,14 +14,16 @@ namespace ServicesLayer.ExtensionMethod
         {
             var type = typeof(T);
 
-            string myData = string.Empty;
+            var myData = new StringBuilder();
             string myHeader = (string.Join(",", type.GetProperties().Select(pro => pro.Name).ToArray()));
             source.ToList().ForEach(cl =>
             {
                 var lineArray = cl.GetType().GetProperties().Select(pro => pro.GetValue(cl)?.ToString()).ToArray();
-                myData += string.Join(",", lineArray) + "\n";
+                myData.Append(string.Join(",", lineArray) + "\n");
+
             });
-            return (myHeader + "\n" + myData);
+            myData.Append("\",this is testing for add comma,\"");
+            return (myHeader + "\n" + myData.ToString());
         }
         public static IQueryable<T> FilterWithRange<T>(this IQueryable<T> source, int min, int max, params string[] propertiesName)
         {

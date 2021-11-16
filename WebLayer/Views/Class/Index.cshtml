@@ -15,8 +15,8 @@
                     asp-action="ExportClassDetailToCSV"> Export To CSV</a>
             </div>
         </div>
-        <div class="row row-cols-1 row-cols-sm-2 mb-2 ">
-            <div class="col">
+        <div class="row mb-2 ">
+            <div class="col-sm-12 col-lg-6">
                 <div class="input-group">
                     <select class="form-select" id="quanityType">
                         <option value="Quantity">Quanity</option>
@@ -27,7 +27,7 @@
                     <input type="text" aria-label="Max Value" id="maxValue" class="form-control" placeholder="Max">
                 </div>
             </div>
-            <div class="col">
+            <div class="col-sm-12 col-lg-6">
                 <div class="input-group">
                     <input type="text" aria-label="Search Box" id="SearchBar" class="form-control"
                         placeholder="Class, President, Secretary">
@@ -37,10 +37,14 @@
             </div>
 
         </div>
-        <div class="lead text-secondary fs-6">
-            <table id="example" class="table table-hover table-striped table-responsive table-bordered ">
-                <caption>Class Detail</caption>
-            </table>
+        <div class="row mb-2">
+            <div class="col col-lg-12 col-sm-12 lead text-secondary fs-6">
+                <div class="table-responsive w-100">
+                    <table id="example" class="table table-hover table-striped table-bordered ">
+                        <caption>Class Detail</caption>
+                    </table>
+                </div>
+            </div>
         </div>
     </div>
 </body>
@@ -69,7 +73,7 @@
     function urlRegisterSubject() {
         return '@Url.Action("AddSubject", "Class")';
     }
-    
+
 </script>
 <script src="~/js/class/class-index.js"></script>
 @* sending to parent layout *@

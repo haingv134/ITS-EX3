@@ -1,0 +1,39 @@
+@{
+    ViewData["Title"] = "Personal Data";
+    ViewData["CurrentPage"] = "PersonalData";
+}
+
+<div class="row">
+    <div class="col-md-6">
+        <h4>@ViewData["Title"]</h4>
+
+        <p>Your account contains personal data that you have given us. This page allows you to download or delete that
+            data.</p>
+        <p>
+            <strong>Deleting this data will permanently remove your account, and this cannot be recovered.</strong>
+        </p>
+        <form id="download-data" asp-action="DownloadPersonalData" method="post" class="form-group">
+            <div class="btn-group">
+                <div class="dropdown pe-2">
+                    <button class="btn btn-primary dropdown-toggle" data-bs-toggle="dropdown">Download</button>
+                    <div class="dropdown-menu">
+                        <input class="dropdown-item " type="submit" name="FileType" value="Json File"></input>
+                        <input class="dropdown-item" type="submit" name="FileType" value="Text File"></input>
+                        <input class="dropdown-item" type="submit" name="FileType" value="CSV File"></input>
+                    </div>
+                </div>
+                <a id="delete" asp-action="DeletePersonalData" class="btn btn-danger">Delete</a>
+            </div>
+        </form>
+
+    </div>
+    <div class="col-md-6">
+        <textarea style="width: 100%; height: 50vh;">
+            @ViewData["jsonString"]
+        </textarea>
+    </div>
+</div>
+
+@section Scripts {
+<partial name="_ValidationScriptsPartial" />
+}

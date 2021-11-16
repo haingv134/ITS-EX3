@@ -18,10 +18,12 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.Extensions.Logging;
+using System.Collections.Generic;
+using Newtonsoft.Json;
 
 namespace App.Areas.Identity.Controllers
 {
-    // [AllowAnonymous]
+    [Authorize]
     [Area("Identity")]
     [Route("/Account/[action]")]
     public class AccountController : Controller
@@ -670,7 +672,7 @@ namespace App.Areas.Identity.Controllers
         public IActionResult AccessDenied()
         {
             return View();
-        }
+        }        
 
     }
 }
