@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "dgSpecHash": "LTnVMM/GDlHetoKEiNdvP9G1w72nO+cb/LTBRM82sVEZxR43Tje6LW8t0i00pNTeXGPGlthvam+e3DC13bYbxA==",
+  "dgSpecHash": "wOShJUJmwDPNZB6MDe4JdS4jh83DbUjNqsvWZDhOXhp1E7e7fQoUXIHuA1nCTLTVih86707w0JxjzlEV3AGsGg==",
   "success": true,
   "projectFilePath": "D:\\ITS-EX3\\ServicesLayer\\ServicesLayer.csproj",
   "expectedPackageFiles": [
@@ -94,6 +94,8 @@
     "C:\\Users\\haiva\\.nuget\\packages\\mimekit\\2.15.1\\mimekit.2.15.1.nupkg.sha512",
     "C:\\Users\\haiva\\.nuget\\packages\\netstandard.library\\1.6.1\\netstandard.library.1.6.1.nupkg.sha512",
     "C:\\Users\\haiva\\.nuget\\packages\\newtonsoft.json\\11.0.2\\newtonsoft.json.11.0.2.nupkg.sha512",
+    "C:\\Users\\haiva\\.nuget\\packages\\npgsql\\5.0.10\\npgsql.5.0.10.nupkg.sha512",
+    "C:\\Users\\haiva\\.nuget\\packages\\npgsql.entityframeworkcore.postgresql\\5.0.10\\npgsql.entityframeworkcore.postgresql.5.0.10.nupkg.sha512",
     "C:\\Users\\haiva\\.nuget\\packages\\portable.bouncycastle\\1.8.10\\portable.bouncycastle.1.8.10.nupkg.sha512",
     "C:\\Users\\haiva\\.nuget\\packages\\runtime.debian.8-x64.runtime.native.system.security.cryptography.openssl\\4.3.0\\runtime.debian.8-x64.runtime.native.system.security.cryptography.openssl.4.3.0.nupkg.sha512",
     "C:\\Users\\haiva\\.nuget\\packages\\runtime.fedora.23-x64.runtime.native.system.security.cryptography.openssl\\4.3.0\\runtime.fedora.23-x64.runtime.native.system.security.cryptography.openssl.4.3.0.nupkg.sha512",

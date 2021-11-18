@@ -22,12 +22,12 @@ namespace DatabaseLayer.Entity.Map
             builder.Property(s => s.Name)
                     .HasMaxLength(50)
                     .IsRequired(true)
-                    .HasColumnType("NVARCHAR");
+                    .HasColumnType("VARCHAR");
             //
             builder.Property(s => s.Gender)
                     .IsRequired(true)
                     .HasDefaultValue(true)
-                    .HasColumnType("BIT");
+                    .HasColumnType("BOOLEAN");
             //
             builder.Property(s => s.Birthday)
                     .IsRequired(true)

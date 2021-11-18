@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "dgSpecHash": "XmSuJu4sIGWwitho9/rnT0MWyHeg2HDlDnfYMkh0tYxr96Grkw/vXRNgADsF3ai+jyoKUNO/9B1bbUQ3otQmiQ==",
+  "dgSpecHash": "Zwju0yWMouVpfQbvy83IjEdOLM7CmyKfFODhlOPF8NJRU+mAkRWuuoo/nOymQIs095ne/BuWPUF/921dvwNZDw==",
   "success": true,
   "projectFilePath": "D:\\ITS-EX3\\DatabaseLayer\\DatabaseLayer.csproj",
   "expectedPackageFiles": [
@@ -92,6 +92,8 @@
     "C:\\Users\\haiva\\.nuget\\packages\\microsoft.win32.systemevents\\4.7.0\\microsoft.win32.systemevents.4.7.0.nupkg.sha512",
     "C:\\Users\\haiva\\.nuget\\packages\\netstandard.library\\1.6.1\\netstandard.library.1.6.1.nupkg.sha512",
     "C:\\Users\\haiva\\.nuget\\packages\\newtonsoft.json\\11.0.2\\newtonsoft.json.11.0.2.nupkg.sha512",
+    "C:\\Users\\haiva\\.nuget\\packages\\npgsql\\5.0.10\\npgsql.5.0.10.nupkg.sha512",
+    "C:\\Users\\haiva\\.nuget\\packages\\npgsql.entityframeworkcore.postgresql\\5.0.10\\npgsql.entityframeworkcore.postgresql.5.0.10.nupkg.sha512",
     "C:\\Users\\haiva\\.nuget\\packages\\runtime.debian.8-x64.runtime.native.system.security.cryptography.openssl\\4.3.0\\runtime.debian.8-x64.runtime.native.system.security.cryptography.openssl.4.3.0.nupkg.sha512",
     "C:\\Users\\haiva\\.nuget\\packages\\runtime.fedora.23-x64.runtime.native.system.security.cryptography.openssl\\4.3.0\\runtime.fedora.23-x64.runtime.native.system.security.cryptography.openssl.4.3.0.nupkg.sha512",
     "C:\\Users\\haiva\\.nuget\\packages\\runtime.fedora.24-x64.runtime.native.system.security.cryptography.openssl\\4.3.0\\runtime.fedora.24-x64.runtime.native.system.security.cryptography.openssl.4.3.0.nupkg.sha512",

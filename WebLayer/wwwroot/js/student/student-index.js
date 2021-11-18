@@ -38,6 +38,15 @@ $(document).ready(function () {
     function renderAction(data, type, row, meta) {
         return '<a class="btn btn-success btn-sm" onclick=OpenPopup(' + urlEditStudent(data) + ')> <i class="ti-pencil"></i>  Edit </a> | <a class="btn btn-danger btn-sm" onclick=DoAction(' + urlDeleteStudent(data) + ')> <i class="ti-trash"></i> Delete </a> ';
     }
+
+    // reload datatable after ajax request completed
+    let datatableAjaxResponse = {};
+    ajaxResponseStatus = new Proxy(datatableAjaxResponse, {
+        set: () => {
+            datatable.ajax.reload();
+        }
+    })
+
     // default option for datatables
     $.extend(true, $.fn.dataTable.defaults, {
         processing: false, // showing 'processing' message while ajax is executing

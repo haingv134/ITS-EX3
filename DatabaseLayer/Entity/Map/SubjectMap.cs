@@ -19,7 +19,7 @@ namespace DatabaseLayer.Entity.Map
                     .HasColumnType("INT");
             //
             builder.Property(s => s.Name)
-                    .HasColumnType("NVARCHAR")
+                    .HasColumnType("VARCHAR")
                     .IsRequired(true)
                     .HasMaxLength(50);
         }

@@ -38,7 +38,8 @@ namespace DatabaseLayer.Context
         {
             base.OnConfiguring(optionsBuilder);
             optionsBuilder.UseLoggerFactory(loggerFactory);
-            optionsBuilder.UseSqlServer(_configuration.GetConnectionString("ITS-EX3"), b => b.MigrationsAssembly("WebLayer")).EnableSensitiveDataLogging();
+            //optionsBuilder.UseSqlServer(_configuration.GetConnectionString("ITS-EX3"), b => b.MigrationsAssembly("WebLayer")).EnableSensitiveDataLogging();
+            optionsBuilder.UseNpgsql(_configuration.GetConnectionString("ITS-EX3_psql"), b => b.MigrationsAssembly("WebLayer")).EnableSensitiveDataLogging();
             
         }
 

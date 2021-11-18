@@ -22,7 +22,7 @@ namespace DatabaseLayer.Entity.Map
                     .HasColumnType("INT");
             // Setup property for Class Name
             builder.Property(c => c.Name)
-                    .HasColumnType("NVARCHAR")
+                    .HasColumnType("VARCHAR")
                     .HasMaxLength(50)
                     .IsRequired(true);
             
