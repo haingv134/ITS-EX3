@@ -10,17 +10,17 @@ namespace ServicesLayer.Interface
     public interface IStudentServices
     {
         public void AddStudent(StudentAddServicesModel studentServicesModel);
-        public Student Get(int id);
-        public Task Delete(int id);
+        public Student Get(Guid id);
+        public Task Delete(Guid id);
         public List<Student> GetAll();
         public int GetCounting();
-        public List<Student> GetStudentListByClass(int classId);
-        public List<Student> GetAvaibleStudentWithClass(int classid);
+        public List<Student> GetStudentListByClass(Guid classId);
+        public List<Student> GetAvaibleStudentWithClass(Guid classid);
         public List<StudentOldServicesModel> GetYoungestStudent();
         public List<StudentOldServicesModel> GetOldestStudent();
         public List<Student> GetAvaiableStudent();
-        public StudentEditServicesModel GetStudentEdit(int studentId);
+        public StudentEditServicesModel GetStudentEdit(Guid studentId);
         public Task UpdateStudent(StudentEditServicesModel servicesModel);
-        public List<StudentDetailServicesModel> GetStudentListDetail(string text, int classid, string gender, int skip, int take, out int recordsFiltered);
+        public List<StudentDetailServicesModel> GetStudentListDetail(string text, Guid classid, string gender, int skip, int take, out int recordsFiltered);
     }
 }

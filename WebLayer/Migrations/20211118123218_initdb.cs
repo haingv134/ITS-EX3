@@ -4,17 +4,21 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 namespace WebLayer.Migrations
 {
-    public partial class initDb : Migration
+    public partial class initdb : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.AlterDatabase()
+                .Annotation("Npgsql:PostgresExtension:uuid-ossp", ",,");
+
             migrationBuilder.CreateTable(
                 name: "Classes",
                 columns: table => new
                 {
-                    ClassId = table.Column<int>(type: "INT", nullable: false)
-                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    Name = table.Column<string>(type: "VARCHAR", maxLength: 50, nullable: false)
+                    ClassId = table.Column<Guid>(type: "UUID", nullable: false, defaultValueSql: "uuid_generate_v4()"),
+                    Name = table.Column<string>(type: "VARCHAR", maxLength: 50, nullable: false),
+                    MaxStudent = table.Column<int>(type: "INT", nullable: false, defaultValue: 24),
+                    IsAvaiable = table.Column<bool>(type: "BOOLEAN", nullable: false, defaultValue: true)
                 },
                 constraints: table =>
                 {
@@ -39,13 +43,14 @@ namespace WebLayer.Migrations
                 name: "Students",
                 columns: table => new
                 {
-                    StudentId = table.Column<int>(type: "integer", nullable: false)
-                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    StudentCode = table.Column<string>(type: "text", nullable: true),
+                    StudentId = table.Column<Guid>(type: "UUID", nullable: false, defaultValueSql: "uuid_generate_v4()"),
+                    StudentCode = table.Column<string>(type: "VARCHAR", maxLength: 50, nullable: false),
                     Name = table.Column<string>(type: "VARCHAR", maxLength: 50, nullable: false),
-                    Birthday = table.Column<DateTime>(type: "DATE", nullable: false, defaultValue: new DateTime(2021, 11, 18, 15, 3, 52, 371, DateTimeKind.Local).AddTicks(5253)),
+                    Birthday = table.Column<DateTime>(type: "DATE", nullable: false, defaultValue: new DateTime(2021, 11, 18, 19, 32, 17, 715, DateTimeKind.Local).AddTicks(3651)),
                     Gender = table.Column<bool>(type: "BOOLEAN", nullable: false, defaultValue: true),
-                    ExtraInfor = table.Column<string>(type: "text", nullable: true)
+                    YearOfEnroll = table.Column<int>(type: "INT", nullable: false, defaultValue: 2021),
+                    ExtraInfor = table.Column<string>(type: "VARCHAR", maxLength: 500, nullable: true),
+                    IsAvaiable = table.Column<bool>(type: "BOOLEAN", nullable: false, defaultValue: true)
                 },
                 constraints: table =>
                 {
@@ -56,10 +61,12 @@ namespace WebLayer.Migrations
                 name: "Subjects",
                 columns: table => new
                 {
-                    SubjectId = table.Column<int>(type: "INT", nullable: false)
-                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    SubjectCode = table.Column<string>(type: "text", nullable: true),
-                    Name = table.Column<string>(type: "VARCHAR", maxLength: 50, nullable: false)
+                    SubjectId = table.Column<Guid>(type: "UUID", nullable: false, defaultValueSql: "uuid_generate_v4()"),
+                    SubjectCode = table.Column<string>(type: "VARCHAR", maxLength: 10, nullable: false),
+                    Name = table.Column<string>(type: "VARCHAR", maxLength: 50, nullable: false),
+                    StartTime = table.Column<DateTime>(type: "DATE", nullable: false, defaultValue: new DateTime(2021, 11, 18, 19, 32, 17, 712, DateTimeKind.Local).AddTicks(1829)),
+                    EndTime = table.Column<DateTime>(type: "DATE", nullable: false),
+                    IsAvaiable = table.Column<bool>(type: "BOOLEAN", nullable: false, defaultValue: true)
                 },
                 constraints: table =>
                 {
@@ -124,9 +131,10 @@ namespace WebLayer.Migrations
                 {
                     ClassStudentId = table.Column<int>(type: "INT", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    ClassId = table.Column<int>(type: "INT", nullable: false),
-                    StudentId = table.Column<int>(type: "integer", nullable: false),
-                    Role = table.Column<int>(type: "integer", nullable: false)
+                    ClassId = table.Column<Guid>(type: "UUID", nullable: false),
+                    StudentId = table.Column<Guid>(type: "UUID", nullable: false),
+                    Role = table.Column<int>(type: "integer", nullable: false),
+                    IsAvaiable = table.Column<bool>(type: "BOOLEAN", nullable: false, defaultValue: true)
                 },
                 constraints: table =>
                 {
@@ -135,14 +143,12 @@ namespace WebLayer.Migrations
                         name: "Fk_ClassStudent_Class",
                         column: x => x.ClassId,
                         principalTable: "Classes",
-                        principalColumn: "ClassId",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "ClassId");
                     table.ForeignKey(
                         name: "Fk_ClassStudent_Student",
                         column: x => x.StudentId,
                         principalTable: "Students",
-                        principalColumn: "StudentId",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "StudentId");
                 });
 
             migrationBuilder.CreateTable(
@@ -151,8 +157,9 @@ namespace WebLayer.Migrations
                 {
                     ClassSubjectId = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    ClassId = table.Column<int>(type: "INT", nullable: false),
-                    SubjectId = table.Column<int>(type: "INT", nullable: false)
+                    ClassId = table.Column<Guid>(type: "UUID", nullable: false),
+                    SubjectId = table.Column<Guid>(type: "UUID", nullable: false),
+                    IsAvaiable = table.Column<bool>(type: "BOOLEAN", nullable: false, defaultValue: true)
                 },
                 constraints: table =>
                 {
@@ -161,14 +168,12 @@ namespace WebLayer.Migrations
                         name: "Fk_ClassSubject_Class",
                         column: x => x.ClassId,
                         principalTable: "Classes",
-                        principalColumn: "ClassId",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "ClassId");
                     table.ForeignKey(
                         name: "Fk_ClassSubject_Subject",
                         column: x => x.SubjectId,
                         principalTable: "Subjects",
-                        principalColumn: "SubjectId",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "SubjectId");
                 });
 
             migrationBuilder.CreateTable(

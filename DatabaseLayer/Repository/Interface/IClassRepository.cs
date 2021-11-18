@@ -12,8 +12,7 @@ namespace DatabaseLayer.Repository.Interface
     // IGenericRepository just need implemented by GenericRepository
     public interface IClassRepository
     {
-        public IQueryable<ClassModel> GetClassMaxBoy();
         public IQueryable<ClassModel> FilterByText(IQueryable<ClassModel> source, string text);
-        public IQueryable<ClassModel> GetPaging(IQueryable<ClassModel> source, int skip, int take);
+        
     }
 }

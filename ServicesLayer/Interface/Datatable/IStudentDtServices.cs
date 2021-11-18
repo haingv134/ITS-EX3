@@ -9,6 +9,6 @@ namespace ServicesLayer.Interface.Datatable
 {
     public interface IStudentDtServices
     {
-        public StudentDtServicesModal ResponseTable(DtParameters dtParameters, string gender, int classId);
+        public StudentDtServicesModal ResponseTable(DtParameters dtParameters, string gender, Guid classId);
     }
 }

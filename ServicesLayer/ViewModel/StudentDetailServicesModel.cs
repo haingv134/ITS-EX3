@@ -8,7 +8,7 @@ namespace ServicesLayer.ViewModel
 {
     public class StudentDetailServicesModel
     {
-        public int StudentId { get; set; }
+        public Guid StudentId { get; set; }
         public string Name { get; set; }
         public string StudentCode { get; set; }
         public DateTime Birthday { get; set; }

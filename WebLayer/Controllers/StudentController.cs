@@ -19,7 +19,7 @@ using Microsoft.AspNetCore.Authorization;
 
 namespace WebLayer.Controllers
 {
-    [Authorize(policy: "StudentManagement")]
+    //[Authorize(policy: "StudentManagement")]
     public class StudentController : Controller
     {
         private readonly ILogger<ClassController> logger;
@@ -52,7 +52,7 @@ namespace WebLayer.Controllers
         }
         [HttpPost]
         //public IActionResult Search(string keyword) => Json(studentDtServices.ResponseTable(keyword);
-        public IActionResult Index(DtParameters dtParameters, string gender, int classid) => Json(studentDtServices.ResponseTable(dtParameters, gender, classid));
+        public IActionResult Index(DtParameters dtParameters, string gender, Guid classid) => Json(studentDtServices.ResponseTable(dtParameters, gender, classid));
 
         [HttpGet]
         public IActionResult Add()
@@ -91,7 +91,7 @@ namespace WebLayer.Controllers
             return Json(new { success = true, message = (isSuccess ? "Add successfull" : errorMessages) });
         }
         [HttpGet]
-        public IActionResult Edit(int studentId)
+        public IActionResult Edit(Guid studentId)
         {
             try
             {
@@ -127,7 +127,7 @@ namespace WebLayer.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Delete(int studentId)
+        public async Task<IActionResult> Delete(Guid studentId)
         {
             bool isSuccess = false;
             try

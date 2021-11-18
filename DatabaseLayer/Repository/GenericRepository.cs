@@ -17,7 +17,7 @@ namespace DatabaseLayer.Repository
 
         private readonly DatabaseContext _dbContext;
         public GenericRepository(DatabaseContext dbContext) => _dbContext = dbContext;
-        public TEntity Get(int id) => _dbContext.Set<TEntity>().Find(id);
+        public TEntity Get(Guid id) => _dbContext.Set<TEntity>().Find(id);
         public IQueryable<TEntity> GetAll() => _dbContext.Set<TEntity>();
         public int GetCounting() => _dbContext.Set<TEntity>().Count();
         public IQueryable<TEntity> Find(Expression<Func<TEntity, bool>> expression) => _dbContext.Set<TEntity>().Where(expression);
@@ -39,7 +39,7 @@ namespace DatabaseLayer.Repository
         public void RemoveRange(TEntity[] entities) => _dbContext.Set<TEntity>().RemoveRange(entities);
         public void Update(TEntity entity) => _dbContext.Set<TEntity>().Update(entity);
         public void UpdateRange(TEntity[] entities) => _dbContext.Set<TEntity>().UpdateRange(entities);       
-        public IQueryable<TEntity> GetWithIDList(params int[] idValues)
+        public IQueryable<TEntity> GetWithIDList(params Guid[] idValues)
         {
             var type = typeof(TEntity);
             var parameter = Expression.Parameter(type); // x
@@ -49,7 +49,7 @@ namespace DatabaseLayer.Repository
             var memberExpression = Expression.Property(parameter, proprertyInfor); // parameter.propertyInfor => x.ClassId...
 
             var expressions = idValues.ToList().Select(
-                ID => Expression.Equal(memberExpression, Expression.Constant(ID, typeof(int)))
+                ID => Expression.Equal(memberExpression, Expression.Constant(ID, typeof(Guid)))
              );
             // wrap expression list into a body             
             // var body = expressions[0];

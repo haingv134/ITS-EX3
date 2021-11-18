@@ -18,7 +18,7 @@ namespace DatabaseLayer.Repository
         {
             _dbContext = dbContext;
         }
-        public Student GetStudentEdit(int studentId)
+        public Student GetStudentEdit(Guid studentId)
         {
             return _dbContext.Students.Include(st => st.ClassStudent)
                                     .Where(st => st.StudentId == studentId)
@@ -40,7 +40,7 @@ namespace DatabaseLayer.Repository
                                 || st.ClassStudent.Any(cs => cs.Class.ClassSubject.Any(cs => cs.Subject.Name.ToLower().Contains(text))));
         }
         public IQueryable<Student> FilterByGender(IQueryable<Student> source, bool gender) => source.Where(st => st.Gender == gender);
-        public IQueryable<Student> FilterByClass(IQueryable<Student> source, int classId) => source.Where(st => st.ClassStudent.Any(st => st.ClassId == classId));
+        public IQueryable<Student> FilterByClass(IQueryable<Student> source, Guid classId) => source.Where(st => st.ClassStudent.Any(st => st.ClassId == classId));
         public IQueryable<Student> GetYoungestStudent()
         {
             return _dbContext.Students.Where(student => student.Birthday == _dbContext.Students.Max(student => student.Birthday));
@@ -49,7 +49,7 @@ namespace DatabaseLayer.Repository
         {
             return _dbContext.Students.Where(student => student.Birthday == _dbContext.Students.Min(student => student.Birthday));
         }
-        public IQueryable<Student> GetStudentListbyClass(int classId)
+        public IQueryable<Student> GetStudentListbyClass(Guid classId)
         {
             return _dbContext.ClassStudents.Include(cs => cs.Student)
                                             .Where(cs => cs.ClassId == classId)
@@ -61,12 +61,12 @@ namespace DatabaseLayer.Repository
                                         .Where(cs => !cs.ClassStudent.Any());
         }
         // get avaiable student that include a class and except student have already being in class
-        public IQueryable<Student> GetAvaibleStudentWithClass(int classid)
+        public IQueryable<Student> GetAvaibleStudentWithClass(Guid classid)
         {
             return _dbContext.Students.Include(cs => cs.ClassStudent)
                                         .Where(cs => !cs.ClassStudent.Any() || cs.ClassStudent.Any(cs => cs.ClassId == classid));
         }
-        public int Count(int classId) => _dbContext.ClassStudents.Count(cs => cs.ClassId == classId);
+        public int Count(Guid classId) => _dbContext.ClassStudents.Count(cs => cs.ClassId == classId);
 
     }
 }

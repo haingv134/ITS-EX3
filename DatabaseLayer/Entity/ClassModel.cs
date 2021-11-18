@@ -9,10 +9,10 @@ namespace DatabaseLayer.Entity
 {
     public class ClassModel
     {
-        [Key]
-        public int ClassId { get; set; }
+        public Guid ClassId { get; set; }    
         public string Name { get; set; }
-
+        public int MaxStudent {get; set;}
+        public bool IsAvaiable {get; set; }
         // Collection Navigation
         public virtual IEnumerable<ClassStudent> ClassStudent { get; set; }
         // Collection Navigation

@@ -11,10 +11,10 @@ namespace DatabaseLayer.Repository.Interface
         public IQueryable<Student> GetAllDetails();
         public IQueryable<Student> FilterByTextDetail(IQueryable<Student> source, string text);
         public IQueryable<Student> FilterByGender(IQueryable<Student> source, bool gender);
-        public IQueryable<Student> FilterByClass(IQueryable<Student> source, int classId);
+        public IQueryable<Student> FilterByClass(IQueryable<Student> source, Guid classId);
         public IQueryable<Student> GetYoungestStudent();
         public IQueryable<Student> GetOldestStudent();
-        public IQueryable<Student> GetStudentListbyClass(int classId);
+        public IQueryable<Student> GetStudentListbyClass(Guid classId);
         public IQueryable<Student> GetAvaibleStudent();
     }
 }

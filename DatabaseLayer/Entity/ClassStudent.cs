@@ -10,14 +10,17 @@ namespace DatabaseLayer.Entity
     public class ClassStudent
     {
         public int ClassStudentId { get; set; } // PK
-        public int ClassId { get; set; }
-        public int StudentId { get; set; }
+        public Guid ClassId { get; set; }
+        public Guid StudentId { get; set; }
+        public int Role { get; set; }
 
         [ForeignKey("ClassId")]
         public virtual ClassModel Class { get; set; } // Fk
 
         [ForeignKey("StudentId")]
         public virtual Student Student { get; set; } // Fk
-        public int Role { get; set; }
+
+        public bool IsAvaiable {get; set; }
+
     }
 }

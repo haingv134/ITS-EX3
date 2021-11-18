@@ -74,7 +74,7 @@ namespace WebLayer.Controllers
         }
         public IActionResult ExportStudentDetailToCSV()
         {
-            var details = _studentServices.GetStudentListDetail(string.Empty,0, "", 0, 0, out int record);
+            var details = _studentServices.GetStudentListDetail(string.Empty,System.Guid.Empty, "", 0, 0, out int record);
             Response.Headers.Add("Content-Disposition", "attachment; filename=StudentDetail.csv");
             return new FileContentResult(Encoding.UTF8.GetBytes(details.AsQueryable().CSVStringFormat()), "text/csv");
         }

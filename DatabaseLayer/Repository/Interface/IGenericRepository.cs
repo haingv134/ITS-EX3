@@ -10,7 +10,7 @@ namespace DatabaseLayer.Repository.Interface
 {
     public interface IGenericRepository<TEntity> where TEntity : class
     {
-        TEntity Get(int id);
+        TEntity Get(Guid id);
         public IQueryable<TEntity> Find(Expression<Func<TEntity, bool>> expression);
         IQueryable<TEntity> GetAll();        
         void Update(TEntity entity);
@@ -18,6 +18,6 @@ namespace DatabaseLayer.Repository.Interface
         void Remove(TEntity entity);
         void RemoveRange(TEntity[] entities);
         public TEntity Insert(TEntity entity, bool SaveChange);
-        void InsertRange(TEntity[] entities);
+        void InsertRange(TEntity[] entities);        
     }
 }

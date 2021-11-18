@@ -10,9 +10,9 @@ namespace ServicesLayer.ViewModel
     public class ClassAddServicesModel
     {
         public string Name { get; set; }
-        public int[] StudentId { get; set; }
-        public int[] SubjectId { get; set; }
-        public int PersidentId {get; set;}
-        public int SecretaryId {get; set;}
+        public Guid[] StudentId { get; set; }
+        public Guid[] SubjectId { get; set; }
+        public Guid PersidentId {get; set;}
+        public Guid SecretaryId {get; set;}
     }
 }

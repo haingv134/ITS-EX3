@@ -40,8 +40,8 @@ namespace ServicesLayer.Implementation
                 throw new CustomeException($"Add Student With name: {studentModel.Name} unsuccessful, Error: {e.Message}");
             }
         }
-        public Student Get(int id) => unitOfWork.StudentRepository.Get(id) ?? throw new CustomeException("Null student object");
-        public async Task Delete(int id)
+        public Student Get(Guid id) => unitOfWork.StudentRepository.Get(id) ?? throw new CustomeException("Null student object");
+        public async Task Delete(Guid id)
         {
             try
             {
@@ -56,10 +56,10 @@ namespace ServicesLayer.Implementation
             }
         }
         public List<Student> GetAvaiableStudent() => unitOfWork.StudentRepository.GetAvaibleStudent().ToList();
-        public List<Student> GetAvaibleStudentWithClass(int classid) => unitOfWork.StudentRepository.GetAvaibleStudentWithClass(classid).ToList();
+        public List<Student> GetAvaibleStudentWithClass(Guid classid) => unitOfWork.StudentRepository.GetAvaibleStudentWithClass(classid).ToList();
         public List<Student> GetAll() => unitOfWork.StudentRepository.GetAll().ToList();
         public int GetCounting() => unitOfWork.StudentRepository.GetCounting();
-        public List<Student> GetStudentListByClass(int classId) => unitOfWork.StudentRepository.GetStudentListbyClass(classId).ToList();
+        public List<Student> GetStudentListByClass(Guid classId) => unitOfWork.StudentRepository.GetStudentListbyClass(classId).ToList();
         public List<StudentOldServicesModel> GetYoungestStudent()
         {
             return unitOfWork.StudentRepository.GetYoungestStudent().ToList().Select(student => new StudentOldServicesModel()
@@ -78,7 +78,7 @@ namespace ServicesLayer.Implementation
                 Old = DateTime.Now.Year - student.Birthday.Year
             }).ToList();
         }
-        public StudentEditServicesModel GetStudentEdit(int studentId)
+        public StudentEditServicesModel GetStudentEdit(Guid studentId)
         {
             try
             {
@@ -92,7 +92,7 @@ namespace ServicesLayer.Implementation
                 servicesModel.Birthday = studentModel.Birthday;
                 servicesModel.Gender = studentModel.Gender;
                 // classid == 0 -> no classid in db
-                servicesModel.OldClassId = (classStudentModel != null) ? classStudentModel.ClassId : 0;
+                servicesModel.OldClassId = (classStudentModel != null) ? classStudentModel.ClassId : Guid.Empty;
                 return servicesModel;
             }
             catch (CustomeException e)
@@ -145,11 +145,11 @@ namespace ServicesLayer.Implementation
             }
         }
 
-        public List<StudentDetailServicesModel> GetStudentListDetail(string text, int classid, string gender, int skip, int take, out int recordsFiltered)
+        public List<StudentDetailServicesModel> GetStudentListDetail(string text, Guid classid, string gender, int skip, int take, out int recordsFiltered)
         {
             var baseQuery = unitOfWork.StudentRepository.GetAll();
             var query = unitOfWork.StudentRepository.FilterByTextDetail(baseQuery, text);
-            if (classid != 0) query = unitOfWork.StudentRepository.FilterByClass(query, classid);
+            if (classid != Guid.Empty) query = unitOfWork.StudentRepository.FilterByClass(query, classid);
             if (!string.IsNullOrEmpty(gender))
             {
                 bool sex = (!gender.Contains("female", StringComparison.InvariantCultureIgnoreCase));

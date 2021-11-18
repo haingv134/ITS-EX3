@@ -15,7 +15,7 @@ using Microsoft.AspNetCore.Authorization;
 
 namespace WebLayer.Controllers
 {
-    [Authorize(policy: "StudentManagement")]
+    //[Authorize(policy: "StudentManagement")]
     public class HomeController : Controller
     {
         private readonly IClassServices classServices;

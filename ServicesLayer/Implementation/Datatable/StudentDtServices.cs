@@ -20,7 +20,7 @@ namespace ServicesLayer.Implementation.Datatable
             this.studentServices = studentServices;
         }
 
-        public StudentDtServicesModal ResponseTable(DtParameters dtParameters, string gender, int classId)
+        public StudentDtServicesModal ResponseTable(DtParameters dtParameters, string gender, Guid classId)
         {
             int recordsFiltered;
             var keysearch = dtParameters.Search.Value ?? string.Empty;

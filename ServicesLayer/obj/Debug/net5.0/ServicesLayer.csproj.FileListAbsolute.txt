@@ -41,3 +41,17 @@ D:\ITS-EX3\ServicesLayer\obj\Debug\net5.0\ServicesLayer.csproj.CoreCompileInputs
 D:\ITS-EX3\ServicesLayer\obj\Debug\net5.0\ServicesLayer.dll
 D:\ITS-EX3\ServicesLayer\obj\Debug\net5.0\ref\ServicesLayer.dll
 D:\ITS-EX3\ServicesLayer\obj\Debug\net5.0\ServicesLayer.pdb
+C:\Users\haiva\Desktop\ITS-EX3\ServicesLayer\bin\Debug\net5.0\ServicesLayer.deps.json
+C:\Users\haiva\Desktop\ITS-EX3\ServicesLayer\bin\Debug\net5.0\ServicesLayer.dll
+C:\Users\haiva\Desktop\ITS-EX3\ServicesLayer\bin\Debug\net5.0\ref\ServicesLayer.dll
+C:\Users\haiva\Desktop\ITS-EX3\ServicesLayer\bin\Debug\net5.0\ServicesLayer.pdb
+C:\Users\haiva\Desktop\ITS-EX3\ServicesLayer\bin\Debug\net5.0\DatabaseLayer.dll
+C:\Users\haiva\Desktop\ITS-EX3\ServicesLayer\bin\Debug\net5.0\DatabaseLayer.pdb
+C:\Users\haiva\Desktop\ITS-EX3\ServicesLayer\obj\Debug\net5.0\ServicesLayer.csproj.AssemblyReference.cache
+C:\Users\haiva\Desktop\ITS-EX3\ServicesLayer\obj\Debug\net5.0\ServicesLayer.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\haiva\Desktop\ITS-EX3\ServicesLayer\obj\Debug\net5.0\ServicesLayer.AssemblyInfoInputs.cache
+C:\Users\haiva\Desktop\ITS-EX3\ServicesLayer\obj\Debug\net5.0\ServicesLayer.AssemblyInfo.cs
+C:\Users\haiva\Desktop\ITS-EX3\ServicesLayer\obj\Debug\net5.0\ServicesLayer.csproj.CoreCompileInputs.cache
+C:\Users\haiva\Desktop\ITS-EX3\ServicesLayer\obj\Debug\net5.0\ServicesLayer.dll
+C:\Users\haiva\Desktop\ITS-EX3\ServicesLayer\obj\Debug\net5.0\ref\ServicesLayer.dll
+C:\Users\haiva\Desktop\ITS-EX3\ServicesLayer\obj\Debug\net5.0\ServicesLayer.pdb

@@ -9,6 +9,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using ServicesLayer.ExtensionMethod;
+using System;
 
 namespace ServicesLayer.Implementation
 {
@@ -21,12 +22,12 @@ namespace ServicesLayer.Implementation
             this.unitOfWork = unitOfWork;
         }
 
-        public List<ClassModel> GetWithIDList(int[] idList) => unitOfWork.ClassRepository.GetWithIDList(idList).ToList();
+        public List<ClassModel> GetWithIDList(Guid[] idList) => unitOfWork.ClassRepository.GetWithIDList(idList).ToList();
         public List<ClassModel> GetAll() => unitOfWork.ClassRepository.GetAll().ToList();
         public List<ClassModel> GetAllDetail() => unitOfWork.ClassRepository.GetAllDetail().ToList(); // for greate json file
         public int GetCounting() => unitOfWork.ClassRepository.GetCounting();
-        public ClassModel Get(int id) => unitOfWork.ClassRepository.Get(id) ?? throw new CustomeException("Null class object");
-        public async Task Delete(int id)
+        public ClassModel Get(Guid id) => unitOfWork.ClassRepository.Get(id) ?? throw new CustomeException("Null class object");
+        public async Task Delete(Guid id)
         {
             try
             {
@@ -40,7 +41,7 @@ namespace ServicesLayer.Implementation
                 throw new CustomeException(e.Messages);
             }
         }
-        public async Task DeleteRange(int[] id)
+        public async Task DeleteRange(Guid[] id)
         {
             try
             {
@@ -58,17 +59,17 @@ namespace ServicesLayer.Implementation
         {
             try
             {
-                if (source.SecretaryId == source.PersidentId && source.SecretaryId != 0)
+                if (source.SecretaryId == source.PersidentId && source.SecretaryId != Guid.Empty)
                     throw new CustomeException("A class have only one persident and one secretary");
                 var classModel = new ClassModel() { Name = source.Name };
-                int classId = unitOfWork.ClassRepository.Insert(classModel, true).ClassId;
+                Guid classId = unitOfWork.ClassRepository.Insert(classModel, true).ClassId;
                 if (source.StudentId.Length > 0)
                 {
                     var classStudent = new List<ClassStudent>();
                     for (int index = 0; index < source.StudentId.Length; index++)
                     {
                         int role = 0;
-                        int studentId = source.StudentId[index];
+                        Guid studentId = source.StudentId[index];
                         if (source.PersidentId == studentId) role = (int)Role.PRESIDENT;
                         if (source.SecretaryId == studentId) role = (int)Role.SECRETARY;
                         classStudent.Add(new ClassStudent()
@@ -143,7 +144,7 @@ namespace ServicesLayer.Implementation
         }
 
         // get information for editing class -> transfer to view
-        public ClassEditServicesModel GetClassEdit(int classId)
+        public ClassEditServicesModel GetClassEdit(Guid classId)
         {
             var model = new ClassEditServicesModel();
             try
@@ -154,8 +155,8 @@ namespace ServicesLayer.Implementation
                 // getting requre information to view
                 model.ClassId = classModel.ClassId;
                 model.Name = classModel.Name;
-                model.OldPresidentId = (president.Any()) ? president[0].StudentId : 0;
-                model.OldSecretaryId = (secreatary.Any()) ? secreatary[0].StudentId : 0;
+                model.OldPresidentId = (president.Any()) ? president[0].StudentId : Guid.Empty;
+                model.OldSecretaryId = (secreatary.Any()) ? secreatary[0].StudentId : Guid.Empty;
 
                 return model;
             }
@@ -168,7 +169,7 @@ namespace ServicesLayer.Implementation
         public async Task UpdateClass(ClassEditServicesModel source)
         {
             // one student has only one role and ID must != 0
-            if (source.NewPresidentId == source.NewSecretaryId && source.NewPresidentId != 0)
+            if (source.NewPresidentId == source.NewSecretaryId && source.NewPresidentId != Guid.Empty)
             {
                 throw new CustomeException("A class has only one president and one secretary");
             }
@@ -184,7 +185,7 @@ namespace ServicesLayer.Implementation
                     for (int index = 0; index < source.StudentId.Length; index++)
                     {
                         int role = 0;
-                        int studentId = source.StudentId[index];
+                        Guid studentId = source.StudentId[index];
                         if (source.NewPresidentId == studentId) role = (int)Role.PRESIDENT;
                         if (source.NewSecretaryId == studentId) role = (int)Role.SECRETARY;
                         classStudent.Add(new ClassStudent()

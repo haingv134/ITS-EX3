@@ -10148,11 +10148,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "D:\\ITS-EX3\\ServicesLayer\\ServicesLayer.csproj",
+      "projectUniqueName": "C:\\Users\\haiva\\Desktop\\ITS-EX3\\ServicesLayer\\ServicesLayer.csproj",
       "projectName": "ServicesLayer",
-      "projectPath": "D:\\ITS-EX3\\ServicesLayer\\ServicesLayer.csproj",
+      "projectPath": "C:\\Users\\haiva\\Desktop\\ITS-EX3\\ServicesLayer\\ServicesLayer.csproj",
       "packagesPath": "C:\\Users\\haiva\\.nuget\\packages\\",
-      "outputPath": "D:\\ITS-EX3\\ServicesLayer\\obj\\",
+      "outputPath": "C:\\Users\\haiva\\Desktop\\ITS-EX3\\ServicesLayer\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "C:\\Users\\haiva\\AppData\\Roaming\\NuGet\\NuGet.Config",
@@ -10169,8 +10169,8 @@
         "net5.0": {
           "targetAlias": "net5.0",
           "projectReferences": {
-            "D:\\ITS-EX3\\DatabaseLayer\\DatabaseLayer.csproj": {
-              "projectPath": "D:\\ITS-EX3\\DatabaseLayer\\DatabaseLayer.csproj"
+            "C:\\Users\\haiva\\Desktop\\ITS-EX3\\DatabaseLayer\\DatabaseLayer.csproj": {
+              "projectPath": "C:\\Users\\haiva\\Desktop\\ITS-EX3\\DatabaseLayer\\DatabaseLayer.csproj"
             }
           }
         }

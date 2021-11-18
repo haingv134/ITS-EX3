@@ -16,16 +16,23 @@ namespace DatabaseLayer.Entity.Map
             // PK
             builder.HasKey(c => c.ClassId);
 
-            // Setup property for ClassId
             builder.Property(c => c.ClassId)
-                    .UseIdentityColumn(1, 1)
-                    .HasColumnType("INT");
-            // Setup property for Class Name
+                    .HasColumnType("UUID")
+                    .HasDefaultValueSql("uuid_generate_v4()")
+                    .IsRequired(true);
             builder.Property(c => c.Name)
                     .HasColumnType("VARCHAR")
                     .HasMaxLength(50)
                     .IsRequired(true);
-            
+            builder.Property(c => c.MaxStudent)
+                    .IsRequired(true)
+                    .HasColumnType("INT")
+                    .HasDefaultValue(24);
+            builder.Property(c => c.IsAvaiable)                    
+                    .IsRequired(true)
+                    .HasDefaultValue(true)
+                    .HasColumnType("BOOLEAN");
+
         }
     }
 }

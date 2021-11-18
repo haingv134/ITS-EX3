@@ -9969,11 +9969,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "D:\\ITS-EX3\\databaselayer\\DatabaseLayer.csproj",
+      "projectUniqueName": "C:\\Users\\haiva\\Desktop\\ITS-EX3\\DatabaseLayer\\DatabaseLayer.csproj",
       "projectName": "DatabaseLayer",
-      "projectPath": "D:\\ITS-EX3\\databaselayer\\DatabaseLayer.csproj",
+      "projectPath": "C:\\Users\\haiva\\Desktop\\ITS-EX3\\DatabaseLayer\\DatabaseLayer.csproj",
       "packagesPath": "C:\\Users\\haiva\\.nuget\\packages\\",
-      "outputPath": "D:\\ITS-EX3\\databaselayer\\obj\\",
+      "outputPath": "C:\\Users\\haiva\\Desktop\\ITS-EX3\\DatabaseLayer\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "C:\\Users\\haiva\\AppData\\Roaming\\NuGet\\NuGet.Config",

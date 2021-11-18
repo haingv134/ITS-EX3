@@ -8,6 +8,6 @@ namespace DatabaseLayer.Repository.Interface
 {
     public interface IClassStudentRepository
     {
-        public ClassStudent GetClassStudent(int classId, int studentId);
+        public ClassStudent GetClassStudent(Guid classId, Guid studentId);
     }
 }

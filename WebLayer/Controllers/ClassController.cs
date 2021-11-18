@@ -18,7 +18,7 @@ using System;
 
 namespace WebLayer.Controllers
 {
-    [Authorize(policy: "StudentManagement")]
+    //[Authorize(policy: "StudentManagement")]
 
     [Route("lop/[action]")]
     public class ClassController : Controller
@@ -85,7 +85,7 @@ namespace WebLayer.Controllers
         }
 
         [HttpGet]
-        public IActionResult Edit(int classId)
+        public IActionResult Edit(Guid classId)
         {
             try
             {
@@ -139,7 +139,7 @@ namespace WebLayer.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Delete(int classId)
+        public async Task<IActionResult> Delete(Guid classId)
         {
             bool isSuccess = false;
             try
@@ -156,13 +156,12 @@ namespace WebLayer.Controllers
         [HttpPost]
         public async Task<IActionResult> DeleteRange(string args)
         {
-            List<int> classIdList = new List<int>();
+            List<Guid> classIdList = new List<Guid>();
             var spl = args.Split(",");
             var count = spl.Count();
             foreach (var classId in spl)
             {
-                var id = Convert.ToInt32(classId);
-                classIdList.Add(id);
+                classIdList.Add(Guid.Parse(classId));
             }
             if (classIdList.Count() == 0) return Content("No Class Selected");
 
@@ -183,11 +182,10 @@ namespace WebLayer.Controllers
         public IActionResult AddSubject(string args)
         {
 
-            List<int> classIdList = new List<int>();
+            List<Guid> classIdList = new List<Guid>();
             foreach (var classId in args.Split(","))
             {
-                var id = Convert.ToInt32(classId);
-                classIdList.Add(id);
+                classIdList.Add(Guid.Parse(classId));
             }
             if (classIdList.Count() == 0) return Content("No Class Selected");
             try

@@ -16,24 +16,38 @@ namespace DatabaseLayer.Entity.Map
         {
             // PK
             builder.HasKey(s => s.StudentId);
-                    builder.Property(s => s.StudentId)
-                            .UseIdentityColumn(1, 1);
-            //
+            builder.Property(s => s.StudentId)
+                .HasColumnType("UUID")
+                .HasDefaultValueSql("uuid_generate_v4()")
+                .IsRequired(true);
             builder.Property(s => s.Name)
-                    .HasMaxLength(50)
-                    .IsRequired(true)
-                    .HasColumnType("VARCHAR");
-            //
+                .HasMaxLength(50)
+                .IsRequired(true)
+                .HasColumnType("VARCHAR");
+            builder.Property(s => s.StudentCode)
+                .HasMaxLength(50)
+                .IsRequired(true)
+                .HasColumnType("VARCHAR");
             builder.Property(s => s.Gender)
-                    .IsRequired(true)
-                    .HasDefaultValue(true)
-                    .HasColumnType("BOOLEAN");
-            //
+                .IsRequired(true)
+                .HasDefaultValue(true)
+                .HasColumnType("BOOLEAN");
+            builder.Property(s => s.YearOfEnroll)
+                .IsRequired(true)
+                .HasDefaultValue(DateTime.Now.Year)
+                .HasColumnType("INT");
+            builder.Property(s => s.ExtraInfor)
+                .IsRequired(false)
+                .HasMaxLength(500)
+                .HasColumnType("VARCHAR");
             builder.Property(s => s.Birthday)
-                    .IsRequired(true)
-                    .HasDefaultValue(DateTime.Now)
-                    .HasColumnType("DATE");
-            
+                .IsRequired(true)
+                .HasDefaultValue(DateTime.Now)
+                .HasColumnType("DATE");
+            builder.Property(c => c.IsAvaiable)
+                .IsRequired(true)
+                .HasDefaultValue(true)
+                .HasColumnType("BOOLEAN");
         }
     }
 }

@@ -18,16 +18,22 @@ namespace DatabaseLayer.Entity.Map
             builder.HasOne(cs => cs.Class)
                     .WithMany(c => c.ClassSubject)
                     .HasForeignKey(cs => cs.ClassId)
-                    .OnDelete(DeleteBehavior.Cascade)
+                    .OnDelete(DeleteBehavior.NoAction)
                     .HasConstraintName("Fk_ClassSubject_Class");
             // 1 Subject - N ClassSubjecj
             builder.HasOne(cs => cs.Subject)
                     .WithMany(s => s.ClassSubject)
                     .HasForeignKey(cs => cs.SubjectId)
-                    .OnDelete(DeleteBehavior.Cascade)
+                    .OnDelete(DeleteBehavior.NoAction)
                     .HasConstraintName("Fk_ClassSubject_Subject");
             // make couple ClassId - SubjectId is unique
             builder.HasIndex(ClassSubject => new { ClassSubject.SubjectId, ClassSubject.ClassId }).IsUnique(true);
+
+
+            builder.Property(c => c.IsAvaiable)                    
+                    .IsRequired(true)
+                    .HasDefaultValue(true)
+                    .HasColumnType("BOOLEAN");
         }
     }
 }

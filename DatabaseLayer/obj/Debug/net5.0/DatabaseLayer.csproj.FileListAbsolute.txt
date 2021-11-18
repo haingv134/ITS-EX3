@@ -34,3 +34,15 @@ D:\ITS-EX3\DatabaseLayer\obj\Debug\net5.0\DatabaseLayer.dll
 D:\ITS-EX3\DatabaseLayer\obj\Debug\net5.0\ref\DatabaseLayer.dll
 D:\ITS-EX3\DatabaseLayer\obj\Debug\net5.0\DatabaseLayer.pdb
 D:\ITS-EX3\DatabaseLayer\obj\Debug\net5.0\DatabaseLayer.csproj.AssemblyReference.cache
+C:\Users\haiva\Desktop\ITS-EX3\DatabaseLayer\bin\Debug\net5.0\DatabaseLayer.deps.json
+C:\Users\haiva\Desktop\ITS-EX3\DatabaseLayer\bin\Debug\net5.0\DatabaseLayer.dll
+C:\Users\haiva\Desktop\ITS-EX3\DatabaseLayer\bin\Debug\net5.0\ref\DatabaseLayer.dll
+C:\Users\haiva\Desktop\ITS-EX3\DatabaseLayer\bin\Debug\net5.0\DatabaseLayer.pdb
+C:\Users\haiva\Desktop\ITS-EX3\DatabaseLayer\obj\Debug\net5.0\DatabaseLayer.csproj.AssemblyReference.cache
+C:\Users\haiva\Desktop\ITS-EX3\DatabaseLayer\obj\Debug\net5.0\DatabaseLayer.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\haiva\Desktop\ITS-EX3\DatabaseLayer\obj\Debug\net5.0\DatabaseLayer.AssemblyInfoInputs.cache
+C:\Users\haiva\Desktop\ITS-EX3\DatabaseLayer\obj\Debug\net5.0\DatabaseLayer.AssemblyInfo.cs
+C:\Users\haiva\Desktop\ITS-EX3\DatabaseLayer\obj\Debug\net5.0\DatabaseLayer.csproj.CoreCompileInputs.cache
+C:\Users\haiva\Desktop\ITS-EX3\DatabaseLayer\obj\Debug\net5.0\DatabaseLayer.dll
+C:\Users\haiva\Desktop\ITS-EX3\DatabaseLayer\obj\Debug\net5.0\ref\DatabaseLayer.dll
+C:\Users\haiva\Desktop\ITS-EX3\DatabaseLayer\obj\Debug\net5.0\DatabaseLayer.pdb

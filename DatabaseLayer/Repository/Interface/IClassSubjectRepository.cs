@@ -8,6 +8,6 @@ namespace DatabaseLayer.Repository.Interface
 {
     public interface IClassSubjectRepository
     {
-        public void DeleteSubjectInClass(int classid);
+        public void DeleteSubjectInClass(Guid classid);
     }
 }

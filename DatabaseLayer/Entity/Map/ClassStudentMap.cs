@@ -19,21 +19,26 @@ namespace DatabaseLayer.Entity.Map
                     .UseIdentityColumn(1, 1) // IDENTITY(1,1)                    
                     .HasColumnType("INT");
 
-
             // 1 ClassStudent - N Class
             builder.HasOne(cs => cs.Class)
                     .WithMany(c => c.ClassStudent)
                     .HasForeignKey(cs => cs.ClassId)
-                    .OnDelete(DeleteBehavior.Cascade)
+                    .OnDelete(DeleteBehavior.NoAction)
                     .HasConstraintName("Fk_ClassStudent_Class");                       
             // 1 ClassStudent - N Student
             builder.HasOne(cs => cs.Student)
                     .WithMany(s => s.ClassStudent)
                     .HasForeignKey(cs => cs.StudentId)
-                    .OnDelete(DeleteBehavior.Cascade)
+                    .OnDelete(DeleteBehavior.NoAction)
                     .HasConstraintName("Fk_ClassStudent_Student");
             // Make couple StudentId - ClassId is unique
             builder.HasIndex(ClassStudent => new { ClassStudent.ClassId, ClassStudent.StudentId }).IsUnique(true);
+
+
+            builder.Property(c => c.IsAvaiable)                    
+                    .IsRequired(true)
+                    .HasDefaultValue(true)
+                    .HasColumnType("BOOLEAN");
         }
     }
 }

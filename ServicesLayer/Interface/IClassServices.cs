@@ -13,14 +13,14 @@ namespace ServicesLayer.Interface
         public List<ClassModel> GetAll();
         public List<ClassModel> GetAllDetail(); // for generate json file
         public int GetCounting();
-        public ClassModel Get(int id);
-        public Task Delete(int id);
-        public Task DeleteRange(int[] id);
+        public ClassModel Get(Guid id);
+        public Task Delete(Guid id);
+        public Task DeleteRange(Guid[] id);
         public Task AddClass(ClassAddServicesModel _class);        
         public List<ClassDetailServicesModel> GetClassListDetail(string text, int skip, int take, int min, int max, string properties, out int recordFilterd);
         public List<ClassDetailServicesModel> GetClassMaxBoy();
-        public ClassEditServicesModel GetClassEdit(int classId);
+        public ClassEditServicesModel GetClassEdit(Guid classId);
         public Task UpdateClass(ClassEditServicesModel servicesModel);
-        public List<ClassModel> GetWithIDList(int[] idList);
+        public List<ClassModel> GetWithIDList(Guid[] idList);
     }
 }

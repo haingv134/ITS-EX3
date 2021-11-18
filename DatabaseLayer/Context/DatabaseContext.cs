@@ -12,7 +12,7 @@ using System.Threading.Tasks;
 
 namespace DatabaseLayer.Context
 {
-    public class DatabaseContext : IdentityDbContext<AppUser> 
+    public class DatabaseContext : IdentityDbContext<AppUser>
     {
 
         private IConfiguration _configuration { get; }
@@ -24,8 +24,8 @@ namespace DatabaseLayer.Context
         private readonly ILoggerFactory loggerFactory = LoggerFactory.Create(
             (ILoggingBuilder logger) =>
             {
-                logger.AddFilter(DbLoggerCategory.Query.Name, LogLevel.Information);     
-                logger.AddConsole();            
+                logger.AddFilter(DbLoggerCategory.Query.Name, LogLevel.Information);
+                logger.AddConsole();
             }
         );
 
@@ -40,12 +40,13 @@ namespace DatabaseLayer.Context
             optionsBuilder.UseLoggerFactory(loggerFactory);
             //optionsBuilder.UseSqlServer(_configuration.GetConnectionString("ITS-EX3"), b => b.MigrationsAssembly("WebLayer")).EnableSensitiveDataLogging();
             optionsBuilder.UseNpgsql(_configuration.GetConnectionString("ITS-EX3_psql"), b => b.MigrationsAssembly("WebLayer")).EnableSensitiveDataLogging();
-            
+
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
+            modelBuilder.HasPostgresExtension("uuid-ossp");
 
             foreach (var model in modelBuilder.Model.GetEntityTypes())
             {
@@ -59,7 +60,6 @@ namespace DatabaseLayer.Context
             modelBuilder.ApplyConfiguration(new SubjectMap());
             modelBuilder.ApplyConfiguration(new StudentMap());
 
-            
         }
     }
 }

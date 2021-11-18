@@ -11,26 +11,34 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace WebLayer.Migrations
 {
     [DbContext(typeof(DatabaseContext))]
-    [Migration("20211118080504_seedData")]
-    partial class seedData
+    [Migration("20211118123218_initdb")]
+    partial class initdb
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
+                .HasPostgresExtension("uuid-ossp")
                 .HasAnnotation("Relational:MaxIdentifierLength", 63)
                 .HasAnnotation("ProductVersion", "5.0.11")
                 .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
 
             modelBuilder.Entity("DatabaseLayer.Entity.ClassModel", b =>
                 {
-                    b.Property<int>("ClassId")
+                    b.Property<Guid>("ClassId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("UUID")
+                        .HasDefaultValueSql("uuid_generate_v4()");
+
+                    b.Property<bool>("IsAvaiable")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("BOOLEAN")
+                        .HasDefaultValue(true);
+
+                    b.Property<int>("MaxStudent")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INT")
-                        .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn)
-                        .HasAnnotation("SqlServer:IdentityIncrement", 1)
-                        .HasAnnotation("SqlServer:IdentitySeed", 1)
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasDefaultValue(24);
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -52,14 +60,19 @@ namespace WebLayer.Migrations
                         .HasAnnotation("SqlServer:IdentitySeed", 1)
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<int>("ClassId")
-                        .HasColumnType("INT");
+                    b.Property<Guid>("ClassId")
+                        .HasColumnType("UUID");
+
+                    b.Property<bool>("IsAvaiable")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("BOOLEAN")
+                        .HasDefaultValue(true);
 
                     b.Property<int>("Role")
                         .HasColumnType("integer");
 
-                    b.Property<int>("StudentId")
-                        .HasColumnType("integer");
+                    b.Property<Guid>("StudentId")
+                        .HasColumnType("UUID");
 
                     b.HasKey("ClassStudentId");
 
@@ -78,11 +91,16 @@ namespace WebLayer.Migrations
                         .HasColumnType("integer")
                         .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
 
-                    b.Property<int>("ClassId")
-                        .HasColumnType("INT");
+                    b.Property<Guid>("ClassId")
+                        .HasColumnType("UUID");
 
-                    b.Property<int>("SubjectId")
-                        .HasColumnType("INT");
+                    b.Property<bool>("IsAvaiable")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("BOOLEAN")
+                        .HasDefaultValue(true);
+
+                    b.Property<Guid>("SubjectId")
+                        .HasColumnType("UUID");
 
                     b.HasKey("ClassSubjectId");
 
@@ -179,23 +197,26 @@ namespace WebLayer.Migrations
 
             modelBuilder.Entity("DatabaseLayer.Entity.Student", b =>
                 {
-                    b.Property<int>("StudentId")
+                    b.Property<Guid>("StudentId")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("integer")
-                        .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn)
-                        .HasAnnotation("SqlServer:IdentityIncrement", 1)
-                        .HasAnnotation("SqlServer:IdentitySeed", 1)
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasColumnType("UUID")
+                        .HasDefaultValueSql("uuid_generate_v4()");
 
                     b.Property<DateTime>("Birthday")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("DATE")
-                        .HasDefaultValue(new DateTime(2021, 11, 18, 15, 5, 4, 106, DateTimeKind.Local).AddTicks(2191));
+                        .HasDefaultValue(new DateTime(2021, 11, 18, 19, 32, 17, 715, DateTimeKind.Local).AddTicks(3651));
 
                     b.Property<string>("ExtraInfor")
-                        .HasColumnType("text");
+                        .HasMaxLength(500)
+                        .HasColumnType("VARCHAR");
 
                     b.Property<bool>("Gender")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("BOOLEAN")
+                        .HasDefaultValue(true);
+
+                    b.Property<bool>("IsAvaiable")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("BOOLEAN")
                         .HasDefaultValue(true);
@@ -206,7 +227,14 @@ namespace WebLayer.Migrations
                         .HasColumnType("VARCHAR");
 
                     b.Property<string>("StudentCode")
-                        .HasColumnType("text");
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("VARCHAR");
+
+                    b.Property<int>("YearOfEnroll")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INT")
+                        .HasDefaultValue(2021);
 
                     b.HasKey("StudentId");
 
@@ -215,21 +243,33 @@ namespace WebLayer.Migrations
 
             modelBuilder.Entity("DatabaseLayer.Entity.Subject", b =>
                 {
-                    b.Property<int>("SubjectId")
+                    b.Property<Guid>("SubjectId")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("INT")
-                        .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn)
-                        .HasAnnotation("SqlServer:IdentityIncrement", 1)
-                        .HasAnnotation("SqlServer:IdentitySeed", 1)
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasColumnType("UUID")
+                        .HasDefaultValueSql("uuid_generate_v4()");
+
+                    b.Property<DateTime>("EndTime")
+                        .HasColumnType("DATE");
+
+                    b.Property<bool>("IsAvaiable")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("BOOLEAN")
+                        .HasDefaultValue(true);
 
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasMaxLength(50)
                         .HasColumnType("VARCHAR");
 
+                    b.Property<DateTime>("StartTime")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("DATE")
+                        .HasDefaultValue(new DateTime(2021, 11, 18, 19, 32, 17, 712, DateTimeKind.Local).AddTicks(1829));
+
                     b.Property<string>("SubjectCode")
-                        .HasColumnType("text");
+                        .IsRequired()
+                        .HasMaxLength(10)
+                        .HasColumnType("VARCHAR");
 
                     b.HasKey("SubjectId");
 
@@ -372,14 +412,14 @@ namespace WebLayer.Migrations
                         .WithMany("ClassStudent")
                         .HasForeignKey("ClassId")
                         .HasConstraintName("Fk_ClassStudent_Class")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.HasOne("DatabaseLayer.Entity.Student", "Student")
                         .WithMany("ClassStudent")
                         .HasForeignKey("StudentId")
                         .HasConstraintName("Fk_ClassStudent_Student")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.Navigation("Class");
@@ -393,14 +433,14 @@ namespace WebLayer.Migrations
                         .WithMany("ClassSubject")
                         .HasForeignKey("ClassId")
                         .HasConstraintName("Fk_ClassSubject_Class")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.HasOne("DatabaseLayer.Entity.Subject", "Subject")
                         .WithMany("ClassSubject")
                         .HasForeignKey("SubjectId")
                         .HasConstraintName("Fk_ClassSubject_Subject")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.Navigation("Class");

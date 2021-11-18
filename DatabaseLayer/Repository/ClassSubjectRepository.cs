@@ -16,8 +16,8 @@ namespace DatabaseLayer.Repository
         {
             _dbContext = dbContext;
         }
-       public IQueryable<ClassSubject> GetSubjectInClass(int classId) => _dbContext.ClassSubjects.Where(cs => cs.ClassId == classId);
-       public void DeleteSubjectInClass(int classid){
+       public IQueryable<ClassSubject> GetSubjectInClass(Guid classId) => _dbContext.ClassSubjects.Where(cs => cs.ClassId == classId);
+       public void DeleteSubjectInClass(Guid classid){
            _dbContext.ClassSubjects.RemoveRange(_dbContext.ClassSubjects.Where(cs => cs.ClassId == classid).ToArray());
        }
     }

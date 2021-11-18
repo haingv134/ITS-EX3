@@ -9,9 +9,9 @@ namespace ServicesLayer.ViewModel
 {
     public class StudentEditServicesModel
     {
-        public int OldClassId { get; set; }
-        public int NewClassId { get; set; }
-        public int StudentId { get; set; }
+        public Guid OldClassId { get; set; }
+        public Guid NewClassId { get; set; }
+        public Guid StudentId { get; set; }
         public string Name { get; set; }
         public string StudentCode { get; set; }
         public DateTime Birthday { get; set; }

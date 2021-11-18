@@ -16,7 +16,7 @@ using Microsoft.AspNetCore.Authorization;
 
 namespace WebLayer.Controllers
 {
-    [Authorize(policy: "StudentManagement")]
+    //[Authorize(policy: "StudentManagement")]
     public class SubjectController : Controller
     {
         private readonly ILogger<ClassController> logger;
@@ -66,7 +66,7 @@ namespace WebLayer.Controllers
             return Json(new { success = isSuccess, message = (isSuccess) ? "Add successfull" : errorMessages });
         }
         [HttpPost]
-        public async Task<IActionResult> Delete(int subjectId)
+        public async Task<IActionResult> Delete(Guid subjectId)
         {
             bool isSuccess = false;
             try
@@ -81,7 +81,7 @@ namespace WebLayer.Controllers
             return Json(new { success = isSuccess, message = (isSuccess) ? "Delete successfull" : errorMessages });
         }
         [HttpGet]
-        public IActionResult Edit(int subjectId)
+        public IActionResult Edit(Guid subjectId)
         {
             try
             {
