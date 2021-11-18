@@ -33,4 +33,3 @@ D:\ITS-EX3\DatabaseLayer\obj\Debug\net5.0\DatabaseLayer.csproj.CoreCompileInputs
 D:\ITS-EX3\DatabaseLayer\obj\Debug\net5.0\DatabaseLayer.dll
 D:\ITS-EX3\DatabaseLayer\obj\Debug\net5.0\ref\DatabaseLayer.dll
 D:\ITS-EX3\DatabaseLayer\obj\Debug\net5.0\DatabaseLayer.pdb
-D:\ITS-EX3\DatabaseLayer\obj\Debug\net5.0\DatabaseLayer.csproj.AssemblyReference.cache
