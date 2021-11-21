@@ -7,7 +7,7 @@ namespace WebLayer.ViewModel.Student
 {
     public class OldViewModel
     {
-        public int StudentId { get; set; }
+        public Guid StudentId { get; set; }
         public string Name { get; set; }
         public int Old { get; set; }
     }

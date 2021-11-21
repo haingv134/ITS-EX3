@@ -58,13 +58,8 @@
                 <a asp-controller="Home" asp-action="Index" class="navbar-brand text-decoration-none"
                     aria-current="page">
                     <span class="fw-bold text-secondary">Student Management</span>
-                    <span class="ms-2" id="internet-status"></span>
-                    <span class="ms-1" id="status-description"></span>
-                    <span class="ms-1 fs-6" id="ajax-time-execute"></span>
-                    @* loading *@
-                    <span class="ms-3" id="loading-1"></span>
-                    <span class="ms-1" id="loading-2"></span>
-                    <span class="ms-1" id="loading-3"></span>
+                    <span class="ms-2" id="internet-status" style="background-color: red; display: none;"> </span>
+                    <span class="ms-1" id="status-description"  style="color: red;display: none;">Your internet was disconnected </span>
                 </a>
                 <!-- toggle button for mobile nav -->
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#main-nav"

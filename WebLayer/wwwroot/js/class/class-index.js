@@ -104,7 +104,7 @@ $(document).ready(function () {
     },
     columnDefs: [
       { orderable: false, className: 'select-checkbox', targets: 0 },
-      { width: "10%", targets: [1, 2, 3, 4, 5, 6, 7] }
+      { width: "10%", targets: [1, 2, 3, 4] }
     ],
 
     select: {
@@ -114,12 +114,9 @@ $(document).ready(function () {
     columns: [
       { data: 'null', "defaultContent": "", width: '5%' },
       { data: 'className', name: 'ClassName', title: 'Class', render: renderClass },
-      { data: 'persidentName', name: 'PersidentName', title: 'Persident', render: renderPresidentStudent },
-      { data: 'secretaryName', name: 'SecretaryName', title: 'Secretary', render: renderSecretaryStudent },
       { data: 'quantity', name: 'Quantity', title: 'Quantity' },
       { data: 'boyQuantity', name: 'BoyQuantity', title: 'Boy Quantity' },
       { data: 'girlQuantity', name: 'GirlQuantity', title: 'Girl Quantity' },
-      { data: 'subjects', name: 'Subjects', title: 'Subjects', orderable: false },
       {
         data: 'classId', name: 'ClassId', title: 'Actions', render: renderAction,
         orderable: false,
@@ -128,7 +125,7 @@ $(document).ready(function () {
       }
     ],
 
-    order: [[1, 'asc'], [2, 'asc']],
+    order: [[1, 'asc']],
     language: {
       emptyTable: 'No record found, please <b> Add New Class </b> to show detail', // no data
       infoEmpty: 'No records avaiable',

@@ -23,7 +23,7 @@ namespace DatabaseLayer.Repository
             return _dbContext.Students.Include(st => st.ClassStudent)
                                     .Where(st => st.StudentId == studentId)
                                     .FirstOrDefault();
-        }
+        }        
         public IQueryable<Student> GetAllDetails()
         {
             return _dbContext.Students.Include(s => s.ClassStudent)

@@ -11,8 +11,15 @@ ajaxResponseStatus = new Proxy(subjectResponseStatus, {
 			type: 'POST',
 			url: urlListSubject(),
 			data: 'skip=' + skip + '&take=' + take,
-			success: function (response) {
-				loadList(response);
+			success: function (response) {				
+				if (response.totalRecords == 0) {
+					alertError(true);
+				}
+				else {
+					LoadTable(response);
+					setPagination(response);
+					alertError(false);
+				}
 			}
 		});
 	}
@@ -25,45 +32,38 @@ function callAjaxRequest(index) {
 	ajaxResponseStatus.change = 'start';
 }
 
-function loadList(response) {
-	var parentNode = document.querySelector('#parentNode');
-	parentNode.innerHTML = '';
+function LoadTable(response) {
+	let table = document.querySelector('#subject-index-list');
+	table.innerHTML = '';
+	for (let index = 0; index < response.data.length; index++) {
+		const res = response.data[index];
 
-	if (response.totalRecords == 0) {
-		alertError();
-	}
-	else {
-		// create subject information and action element
-		for (let index = 0; index < response.data.length; index++) {
-			const res = response.data[index];
+		let row = createHTMLElement('tr', '', '');
 
-			let rowLeft = createHTMLElement('div', '', 'list-group-item', 'col', 'col-10', 'border-0');
-			let checkBox = createHTMLElement('input', '', 'form-check-input');
-			let span = createHTMLElement('span', res.name, 'fw-2', 'ms-2');
-			let rowRight = createHTMLElement('div', '', 'list-group-item', 'col', 'col-2', 'border-0', 'text-end')
-			let deleteAction = createHTMLElement('span', 'Delete', 'badge', 'bg-danger', 'btn', 'rounded-pill');
-			let updateAction = createHTMLElement('span', 'Update', 'badge', 'bg-primary', 'btn', 'rounded-pill');
+		let checkBox = createHTMLElement('input', '', 'form-check-input');
+		checkBox.setAttribute('type', 'checkbox');
+		checkBox.setAttribute('value', String(index));
+		row.appendChild(checkBox);
 
-			checkBox.setAttribute('type', 'checkbox');
-			checkBox.setAttribute('value', String(index));
-			deleteAction.setAttribute('onclick', 'DoAction("' + urlDeleteSubject(res.subjectId) + '")');
-			updateAction.setAttribute('onclick', 'OpenPopup("' + urlEditSubject(res.subjectId) + '")');
+		let text = [res.name, res.subjectCode, res.startTime, res.endTime];
+		text.forEach(value => {
+			let col = createHTMLElement('td', value, '');
+			row.appendChild(col);
+		})
 
-			rowLeft.appendChild(checkBox);
-			rowLeft.appendChild(span);		
-			rowRight.appendChild(deleteAction);
-			rowRight.appendChild(updateAction);
-
-			parentNode.appendChild(rowLeft);
-			parentNode.appendChild(rowRight);
-		}
-		setPagination(response);
+		let action = document.createElement('td');
+		let deleteAction = createHTMLElement('span', 'Delete', 'badge', 'bg-danger', 'btn', 'rounded-pill');
+		let updateAction = createHTMLElement('span', 'Update', 'badge', 'bg-primary', 'btn', 'rounded-pill');
+		deleteAction.setAttribute('onclick', 'DoAction("' + urlDeleteSubject(res.subjectId) + '")');
+		updateAction.setAttribute('onclick', 'OpenPopup("' + urlEditSubject(res.subjectId) + '")');
+		action.appendChild(updateAction);
+		action.appendChild(deleteAction);
+		row.appendChild(action);		
+		table.appendChild(row);
 	}
 }
 
-// create pagination
 function setPagination(response) {
-
 	let pagination = document.querySelector('#subject-pagination');
 	pagination.innerHTML = '';
 
@@ -90,16 +90,32 @@ function setPagination(response) {
 	if (currentPage == totalPages) next.classList.add('disabled');
 	pagination.appendChild(next);
 }
-function alertError() {
-	let nontification = createHTMLElement('div', 'Currently no subject here!', 'alert', 'alert-danger')
-	document.querySelector('#subject-container').appendChild(nontification);
+function alertError(status) {
+	let noSubject = document.querySelector('#index-no-subject');
+	let table = document.querySelector('#table-subject-index-list');
+	let pagination = document.querySelector('#subject-pagination');
+	if (status) {
+		noSubject.classList.add('alert', 'alert-danger');
+		noSubject.innerText = "Currently, No subject here!";
+		noSubject.style.display = "block";
+		table.style.display = 'none';
+		pagination.innerHTML = '';
+	} else {
+		noSubject.style.display = "none";
+		table.style.display = '';
+
+	}
 }
+
 function createHTMLElement(tag, text, ...classes) {
 	let element = document.createElement(String(tag));
-	element.classList.add(...classes);
+	if (classes[0].length) {
+		element.classList.add(...classes);
+	}
 	element.innerText = text;
 	return element;
 }
+
 function createHTMLListItemElement(name, action, execute) {
 	let item = createHTMLElement('li', '', 'page-item');
 	let link = createHTMLElement('a', name, 'page-link');

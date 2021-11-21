@@ -203,7 +203,7 @@ namespace WebLayer.Migrations
                     b.Property<DateTime>("Birthday")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("DATE")
-                        .HasDefaultValue(new DateTime(2021, 11, 18, 19, 33, 55, 623, DateTimeKind.Local).AddTicks(3652));
+                        .HasDefaultValue(new DateTime(2021, 11, 18, 19, 55, 54, 413, DateTimeKind.Local).AddTicks(3304));
 
                     b.Property<string>("ExtraInfor")
                         .HasMaxLength(500)
@@ -262,7 +262,7 @@ namespace WebLayer.Migrations
                     b.Property<DateTime>("StartTime")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("DATE")
-                        .HasDefaultValue(new DateTime(2021, 11, 18, 19, 33, 55, 619, DateTimeKind.Local).AddTicks(6281));
+                        .HasDefaultValue(new DateTime(2021, 11, 18, 19, 55, 54, 410, DateTimeKind.Local).AddTicks(4076));
 
                     b.Property<string>("SubjectCode")
                         .IsRequired()

@@ -7,7 +7,6 @@ using ServicesLayer.Interface;
 using Microsoft.Extensions.Logging;
 using DatabaseLayer.Entity;
 using DatabaseLayer.UnitOfWork;
-using WebLayer.ViewModel.Subject;
 using WebLayer.EditModel.Subject;
 using AutoMapper;
 using DatabaseLayer.ExceptionHandling;
@@ -43,7 +42,7 @@ namespace WebLayer.Controllers
         [HttpGet]
         public IActionResult Add() => View();
         [HttpPost]
-        public IActionResult Add([Bind("Name")] AddEditModel source)
+        public IActionResult Add(AddEditModel source)
         {
             bool isSuccess = false;
             if (ModelState.IsValid)

@@ -12,9 +12,9 @@ namespace WebLayer.EditModel.Class
         [StringLength(20, MinimumLength = 3, ErrorMessage = "Length require from 3 - 20")]
         [Display(Name = "Ten lop")]
         public string Name { get; set; }
-        public int[] StudentId { get; set; }
-        public int[] SubjectId { get; set; }
-        public int PersidentId {get; set;}
-        public int SecretaryId {get; set;}
+        public Guid[] StudentId { get; set; }
+        public Guid[] SubjectId { get; set; }
+        public Guid PersidentId {get; set;}
+        public Guid SecretaryId {get; set;}
     }
 }

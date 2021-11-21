@@ -11,5 +11,7 @@ namespace DatabaseLayer.Repository.Interface
     {
         public IQueryable<Subject> GetAllDetails();
         public IQueryable<Subject> GetSubjectInClass(Guid classid);
+        public IQueryable<Subject> GetSubjectByStudent(Guid studentId);
+        
     }
 }

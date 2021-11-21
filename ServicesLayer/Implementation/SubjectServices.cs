@@ -22,10 +22,28 @@ namespace ServicesLayer.Implementation
         public Subject Get(Guid id) => unitOfWork.SubjectRepository.Get(id) ?? throw new CustomeException("Subject Null Object");
         public int GetCounting() => unitOfWork.SubjectRepository.GetCounting();
         public List<Subject> GetAll() => unitOfWork.SubjectRepository.GetAll().ToList();
-        public List<Subject> GetAll(int skip, int take) => unitOfWork.SubjectRepository.GetAll().Skip(skip).Take(take).ToList();
-        public List<Subject> GetAllDetail() => unitOfWork.SubjectRepository.GetAllDetails().ToList();
-        
+        public List<SubjectIndexServicesModel> GetAll(int skip, int take)
+        {
+            return unitOfWork.SubjectRepository.GetAll().Skip(skip).Take(take).Select(s => new SubjectIndexServicesModel()
+            {
+                SubjectId = s.SubjectId,
+                SubjectCode = s.SubjectCode,
+                Name = s.Name,
+                StartTime = s.StartTime.ToString("dd/MM/yyyy"),
+                EndTime = s.EndTime.ToString("dd/MM/yyyy"),
+                IsAvaiable = s.IsAvaiable
+            }).ToList();
+        }
+
         public List<Subject> GetSubjectListByClass(Guid classid) => unitOfWork.SubjectRepository.GetSubjectInClass(classid).ToList();
+        public List<Subject> GetSubjectListByStudent(Guid studentId)
+        {
+            var res = unitOfWork.SubjectRepository.GetSubjectByStudent(studentId);
+
+            if (res != null)
+                return res.ToList();
+            else return new List<Subject>();
+        }
         public void AddSubject(Subject subject)
         {
             try

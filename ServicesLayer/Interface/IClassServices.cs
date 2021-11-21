@@ -11,9 +11,9 @@ namespace ServicesLayer.Interface
     public interface IClassServices
     {
         public List<ClassModel> GetAll();
-        public List<ClassModel> GetAllDetail(); // for generate json file
         public int GetCounting();
         public ClassModel Get(Guid id);
+        public ClassModel GetClassByStudent(Guid studentId);
         public Task Delete(Guid id);
         public Task DeleteRange(Guid[] id);
         public Task AddClass(ClassAddServicesModel _class);        

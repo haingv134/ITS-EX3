@@ -11,9 +11,9 @@ namespace ServicesLayer.ViewModel
         public Guid StudentId { get; set; }
         public string Name { get; set; }
         public string StudentCode { get; set; }
-        public DateTime Birthday { get; set; }
+        public string Birthday { get; set; }
         public bool Gender { get; set; }
-        public string ClassName { get; set; }
-        public string Subjects { get; set; }
+        public int YearOfEnroll { get; set; }
+        public string ExtraInfor { get; set; }
     }
 }

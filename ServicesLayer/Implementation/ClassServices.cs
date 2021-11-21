@@ -24,9 +24,9 @@ namespace ServicesLayer.Implementation
 
         public List<ClassModel> GetWithIDList(Guid[] idList) => unitOfWork.ClassRepository.GetWithIDList(idList).ToList();
         public List<ClassModel> GetAll() => unitOfWork.ClassRepository.GetAll().ToList();
-        public List<ClassModel> GetAllDetail() => unitOfWork.ClassRepository.GetAllDetail().ToList(); // for greate json file
         public int GetCounting() => unitOfWork.ClassRepository.GetCounting();
         public ClassModel Get(Guid id) => unitOfWork.ClassRepository.Get(id) ?? throw new CustomeException("Null class object");
+        public ClassModel GetClassByStudent(Guid studentId) =>  unitOfWork.ClassRepository.GetClassByStudent(studentId);
         public async Task Delete(Guid id)
         {
             try
@@ -105,20 +105,16 @@ namespace ServicesLayer.Implementation
         {
             try
             {
-                var baseQuery = unitOfWork.ClassRepository.GetAllDetail();
+                var baseQuery = unitOfWork.ClassRepository.GetAll();
                 var query = unitOfWork.ClassRepository.FilterByText(baseQuery, text);
                 var result = query.Select(q => new ClassDetailServicesModel()
                 {
                     ClassId = q.ClassId,
                     ClassName = q.Name,
-                    PersidentId = q.ClassStudent.Where(cs => cs.Role == (int)Role.PRESIDENT).DefaultIfEmpty().First().StudentId,
-                    PersidentName = q.ClassStudent.Where(cs => cs.Role == (int)Role.PRESIDENT).DefaultIfEmpty().First().Student.Name ?? "",
-                    SecretaryId = q.ClassStudent.Where(cs => cs.Role == (int)Role.SECRETARY).DefaultIfEmpty().First().StudentId,
-                    SecretaryName = q.ClassStudent.Where(cs => cs.Role == (int)Role.SECRETARY).DefaultIfEmpty().First().Student.Name ?? "",
                     Quantity = q.ClassStudent.Count(),
                     GirlQuantity = q.ClassStudent.Count(cs => cs.Student.Gender == true),
                     BoyQuantity = q.ClassStudent.Count(cs => cs.Student.Gender == false),
-                    Subjects = string.Join("|", q.ClassSubject.Select(cs => cs.Subject.Name).ToArray())
+                    MaxStudent = q.MaxStudent
                 });
                 if (!string.IsNullOrEmpty(properties)) result = result.FilterWithRange(min, max, properties);
                 recordFilterd = result.Count();

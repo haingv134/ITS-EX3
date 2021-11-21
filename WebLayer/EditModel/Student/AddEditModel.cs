@@ -9,7 +9,7 @@ namespace WebLayer.EditModel.Student
     public class AddEditModel
     {
         //int classId, [Bind("Name", "Birthday", "Gender")] StudentModel student, int role
-        public int ClassId { get; set; }
+        public Guid ClassId { get; set; }
         [Required]
         [Display(Name = "Ten sinh vien")]
         [StringLength(50, MinimumLength = 2, ErrorMessage = "Ban phai nhap ten co do dai tu 2 -> 50")]

@@ -74,10 +74,11 @@ function SubmitForm(form) {
     }
     return false;
 }
+// convert url param to data
+function ArgHandler(url, ...args) {
+    let splits = String(url).split('?');
+    let dataTransfer;
 
-function DoAction(url, ...args) {
-    var splits = url.split('?');
-    var dataTransfer;
     if (args.length > 0) {
         dataTransfer = {
             'args': args
@@ -85,6 +86,13 @@ function DoAction(url, ...args) {
     } else {
         dataTransfer = splits.shift();
     }
+    alert(dataTransfer);
+    
+    return dataTransfer;
+}
+
+function DoAction(url, ...args) {
+    var dataTransfer = ArgHandler(url, args);
     $.ajax({
         type: 'POST',
         url: url,
@@ -99,12 +107,26 @@ function DoAction(url, ...args) {
     })
 }
 
+function AjaxRequest(url, callback, ...args) {
+    var dataTransfer = ArgHandler(args);
+    $.ajax({
+        type: 'POST',
+        url: url,
+        traditional: true,
+        data: dataTransfer,
+        success: function (response) {
+            callback(response);
+        },
+    })
+}
+
+
 function HanderAjaxResponse(data) {
     // Call reload ajax request in each page using this
     ajaxResponseStatus.change = data.success;
     if (data.success) {
         notify(data.message, 'success');
-    } else {
+    } else if (!data.success) {
         notify(data.message, 'error');
     }
     if ($('.modal').length) {
@@ -119,17 +141,12 @@ $(document).ready(function () {
         var description = document.querySelector('#status-description');
         var status = document.querySelector('#internet-status');
         if (window.navigator.onLine) {
-            status.style.backgroundColor = 'green';
-            status.setAttribute('title', 'Online');
-            description.innerText = 'Connnected';
-            description.style.color = 'green';
             showSwal = true;
-            //Swal.Close();
+            description.style.display = 'none';
+            status.style.display = 'none';
         } else if (showSwal) {
-            status.style.backgroundColor = 'red';
-            status.setAttribute('title', 'Offline');
-            description.innerText = 'Your internet was disconnected';
-            description.style.color = 'red';
+            description.style.display = '';
+            status.style.display = '';
             Swal.fire({
                 icon: 'error',
                 title: 'Opps',
@@ -158,23 +175,17 @@ $(document).ready(function () {
     });
 });
 
-var ajaxStartTime, ajaxEndTime;
+
 $(document).ready(function () {
-    var loadingStatus = true;
+    var ajaxStartTime, ajaxEndTime;
+
     $(document).ajaxStart(function () {
-        loadingStatus = true;
-        loadingInterval = setInterval(function () {
-            loadingAction();
-            if (!loadingStatus) clearInterval(loadingInterval);
-        }, 250);
         ajaxStartTime = new Date().getTime();
     });
 
     $(document).ajaxComplete(function () {
-        $('#loading-1, #loading-2, #loading-3').css('display', 'none');
-        loadingStatus = false;
         ajaxEndTime = new Date().getTime();
-        document.querySelector('#ajax-time-execute').innerText = 'request took ' + (ajaxEndTime - ajaxStartTime) + 'ms';
+        console.log("Ajax request take: " + (ajaxEndTime - ajaxStartTime) + 'ms');
     });
 })
 

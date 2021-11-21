@@ -19,18 +19,14 @@ namespace DatabaseLayer.Repository
         {
             _dbContext = dbContext;
         }
-        public IQueryable<ClassModel> GetAllDetail()
-        {
-            return _dbContext.Classes.Include(_class => _class.ClassStudent)
-                                            .ThenInclude(cs => cs.Student)
-                                        .Include(_class => _class.ClassSubject)
-                                            .ThenInclude(cs => cs.Subject);
-        }
+        
         public IQueryable<ClassModel> FilterByText(IQueryable<ClassModel> source, string text)
         {
             return source.Where(cl => cl.ClassStudent.Where(cs => cs.Student.Name.ToLower().Contains(text)).Any()
                                   && cl.ClassStudent.Where(cs => cs.Role == 1 || cs.Role == 2).Any() || cl.Name.ToLower().Contains(text));
         }
+        public ClassModel GetClassByStudent(Guid studentId) =>
+             _dbContext.Classes.Where(cl => _dbContext.ClassStudents.Any(cs => cs.StudentId == studentId && cl.ClassId == cs.ClassId)).SingleOrDefault();
     }
 }
 

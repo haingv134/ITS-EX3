@@ -167,7 +167,6 @@ namespace WebLayer
 
             app.UseAuthentication(); // use for login/logout
             app.UseAuthorization();
-
             app.UseEndpoints(endpoints =>
             {
                 // endpoints.MapMethods("/IdentityUserAvatar", new string[] { "POST" }, async context =>
@@ -186,7 +185,7 @@ namespace WebLayer
                     name: "default",
                     pattern: "{controller=Home}/{action=Index}/{id?}");
                 endpoints.MapRazorPages();
-            });
+            });            
 
         }
     }

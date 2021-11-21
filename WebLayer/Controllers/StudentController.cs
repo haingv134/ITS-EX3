@@ -24,16 +24,23 @@ namespace WebLayer.Controllers
     {
         private readonly ILogger<ClassController> logger;
         private readonly IStudentServices studentServices;
+        private readonly ISubjectServices subjectServices;
         private readonly IClassServices classServices;
         private readonly IStudentDtServices studentDtServices;
         private readonly IMapper mapper;
         private string errorMessages { get; set; }
-        public StudentController(IStudentServices studentServices, IClassServices classServices, IStudentDtServices studentDtServices, ILogger<ClassController> logger, IMapper mapper)
+        public StudentController(
+            IStudentServices studentServices,
+            IClassServices classServices,
+            IStudentDtServices studentDtServices,
+            ISubjectServices subjectServices,
+            ILogger<ClassController> logger, IMapper mapper)
         {
             this.logger = logger;
             this.studentServices = studentServices;
             this.classServices = classServices;
             this.studentDtServices = studentDtServices;
+            this.subjectServices = subjectServices;
             this.mapper = mapper;
         }
         public IActionResult Index(string keysearch)
@@ -51,9 +58,14 @@ namespace WebLayer.Controllers
             }
         }
         [HttpPost]
-        //public IActionResult Search(string keyword) => Json(studentDtServices.ResponseTable(keyword);
         public IActionResult Index(DtParameters dtParameters, string gender, Guid classid) => Json(studentDtServices.ResponseTable(dtParameters, gender, classid));
 
+        [HttpPost]
+        public IActionResult GetSubjectListByStudent(Guid studentId)
+        {
+            var res = subjectServices.GetSubjectListByStudent(studentId);
+            return Json(new { data = res });
+        }
         [HttpGet]
         public IActionResult Add()
         {

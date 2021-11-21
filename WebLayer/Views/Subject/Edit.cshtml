@@ -15,8 +15,14 @@
                 <div class="modal-body">
                     <div asp-validation-summary="All" style="color: red"></div>
                     <input asp-for="@Model.SubjectId" class="form-control" hidden>
-                    <label asp-for="@Model.Name"> Subject Name </label>
+                    <label asp-for="@Model.Name"></label>
                     <input asp-for="@Model.Name" class="form-control">
+                    <label asp-for="@Model.SubjectCode"></label>
+                    <input asp-for="@Model.SubjectCode" class="form-control">
+                    <label asp-for="@Model.StartTime"></label>
+                    <input asp-for="@Model.StartTime" type="date" class="form-control">
+                    <label asp-for="@Model.EndTime"></label>
+                    <input asp-for="@Model.EndTime" type="date" class="form-control">
                 </div>
                 <div class="modal-footer">
                     <button class="btn btn-danger" type="button" data-bs-dismiss="modal">Close</button>

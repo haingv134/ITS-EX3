@@ -46,7 +46,9 @@ namespace WebLayer.Controllers
         public IActionResult Index() => View();
         [HttpPost]
         public IActionResult Index(DtParameters dtParameters, int maxValue, int minValue, string quantityType) => Json(dataTableServices.ResponseTable(dtParameters, minValue, maxValue, quantityType));
-
+        [HttpPost]
+        public IActionResult GetClassByStudent(Guid studentId) => Json(new {data = classServices.GetClassByStudent(studentId)});
+        
         [HttpGet("/themlop")]
         public IActionResult Add()
         {
@@ -156,6 +158,7 @@ namespace WebLayer.Controllers
         [HttpPost]
         public async Task<IActionResult> DeleteRange(string args)
         {
+            logger.LogInformation(args);
             List<Guid> classIdList = new List<Guid>();
             var spl = args.Split(",");
             var count = spl.Count();

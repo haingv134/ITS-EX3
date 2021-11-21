@@ -2,19 +2,28 @@
     <button class="btn btn-primary mb-3" id="btnAddSubject"> Add Subject </button>
     <button class="btn btn-primary mb-3" id="btnDeleteSubject"> Delete Multiple Subjects </button>
 
-    <div class="list-group list-group-flush">
-        <div class="overflow-auto row border-0" id="parentNode" style="max-height: 50vh;">
-            @* new element will added here *@
-        </div>
-    </div>
+    <div id="index-no-subject" style="display: none;"></div>
+    <table class="table table-striped table-hover" id="table-subject-index-list">
+        <thead class="w-100">
+            <th> Choose </th>
+            <th> Name </th>
+            <th> Code </th>
+            <th> Start Time </th>
+            <th> End Time </th>
+            <th> Action </th>
+        </thead>
+        <tbody id="subject-index-list">
+
+        </tbody>
+    </table>
     <div class="d-flex flex-row justify-content-end pt-2 ">
-        <div class="pagination" id="subject-pagination">
+        <div class="pagination" id="subject-pagination">            
         </div>
     </div>
 </div>
 @section Scripts {
 <script>
-    
+
     function urlListSubject() {
         return '@Url.Action("SubjectList", "Subject")';
     }

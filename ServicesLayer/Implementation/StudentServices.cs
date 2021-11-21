@@ -161,12 +161,12 @@ namespace ServicesLayer.Implementation
                new StudentDetailServicesModel()
                {
                    StudentId = res.StudentId,
-                   Birthday = res.Birthday,
+                   Birthday = res.Birthday.ToString("dd/MM/yyyy"),
                    Name = res.Name,
                    StudentCode = res.StudentCode,
                    Gender = res.Gender,
-                   ClassName = res.ClassStudent.FirstOrDefault().Class.Name,
-                   Subjects = string.Join(" ", res.ClassStudent.FirstOrDefault().Class.ClassSubject.Select(cs => cs.Subject.Name).ToArray())
+                   ExtraInfor = res.ExtraInfor,
+                   YearOfEnroll = res.YearOfEnroll                                   
                }
             );
             return result.ToList();

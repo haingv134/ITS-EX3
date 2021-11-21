@@ -1,4 +1,5 @@
 var datatable;
+
 $(document).ready(function () {
     window.addEventListener('resize', function (e) {
         datatable.draw();
@@ -27,18 +28,6 @@ $('#Gender').on('change', function () {
 
 $(document).ready(function () {
 
-    function renderGender(data, type, row, meta) {
-        if (data === true) return 'Male';
-        else return 'Female';
-    }
-    function renderDate(data, type, row, meta) {
-        let date = new Date(data);
-        return date.toDateString('dd/MM/yyyy');
-    }
-    function renderAction(data, type, row, meta) {
-        return '<a class="btn btn-success btn-sm" onclick=OpenPopup(' + urlEditStudent(data) + ')> <i class="ti-pencil"></i>  Edit </a> | <a class="btn btn-danger btn-sm" onclick=DoAction(' + urlDeleteStudent(data) + ')> <i class="ti-trash"></i> Delete </a> ';
-    }
-
     // reload datatable after ajax request completed
     let datatableAjaxResponse = {};
     ajaxResponseStatus = new Proxy(datatableAjaxResponse, {
@@ -47,6 +36,56 @@ $(document).ready(function () {
         }
     })
 
+    function renderGender(data, type, row, meta) {
+        if (data === true) return 'Male';
+        else return 'Female';
+    }
+    function renderUpdate(data, type, row, meta) {
+        return '<a class="text-decoration-none" href="#" onclick=OpenPopup(' + urlEditStudent(row.studentId) + ')>' + data + ' </a>';
+    }
+    function renderDelete(data, type, row, meta) {
+        return '<a  href="#" onclick=DoAction(' + urlDeleteStudent(data) + ')> <i class="ti-trash"></i></a>';
+    }
+    function renderSubject(response) {
+        let res = '';
+        if (response.data) {
+            for (let index = 0; index < response.data.length; index++) {
+                const element = response.data[index];
+                res += '<a href="#" onclick=OpenPopup("' + urlEditSubject(element.subjectId) + '")>' + element.name + '</a> ';
+            }
+        }
+        document.querySelector('#subject-list-td').innerHTML = res;
+    }
+    function renderClass(response) {
+        if (response.data) {
+            document.querySelector('#class-td').innerHTML = '<a href="#" onclick=OpenPopup("' + urlEditClass(response.data.classId) + '")>' + response.data.name + '</a> ';;
+        }
+    }
+
+    /* Formatting function for row details - modify as you need */
+    function format(d) {
+        AjaxRequest(urlSubjectListByStudent(d.studentId), renderSubject);
+        AjaxRequest(urlGetClassByStudent(d.studentId), renderClass);
+
+        // `d` is the original data object for the row
+        return '<table cellpadding="5" cellspacing="0" border="0" style="padding-left:50px;">' +
+            '<td> Year old:</td>' +
+            '<td>' + (new Date().getFullYear() - parseInt(d.birthday.split('/')[2])) + ' years old</td>' +
+            '</tr>' +
+            '<tr>' +
+            '<td> Subject Assigned: </td>' +
+            '<td id="subject-list-td"> </td>' +
+            '</tr>' +
+            '<tr>' +
+            '<td> Class </td>' +
+            '<td  id="class-td"></td>' +
+            '</tr>' +
+            '<tr>' +
+            '<td>Extra info:</td>' +
+            '<td>' + d.extraInfor + '</td>' +
+            '</tr>' +
+            '</table>';
+    }
     // default option for datatables
     $.extend(true, $.fn.dataTable.defaults, {
         processing: false, // showing 'processing' message while ajax is executing
@@ -79,29 +118,54 @@ $(document).ready(function () {
             }
         },
         columnDefs: [
-            { orderable: false, targets: [3, 5] },
-            { width: "14%", targets: [0, 1, 2, 3, 4, 5] }
+            { orderable: false, width: '5%', targets: [0] },
+            { orderable: false, targets: [6] },
+            { autoWidth: true, targets: [1, 2, 3, 4, 5] }
         ],
+        order: [[1, 'asc'], [2, 'asc']],
         columns: [
-            { data: 'name', name: 'Name', title: 'Student Name' },
-            { data: 'studentCode', name: 'StudentCode', title: 'Student Code' },
-            { data: 'birthday', name: 'Birthday', title: 'Birthday', render: renderDate },
+            { "className": 'dt-control', "orderable": false, "data": null, "defaultContent": '' },
+            { data: 'name', name: 'Name', title: 'Name', render: renderUpdate },
+            { data: 'studentCode', name: 'StudentCode', title: 'Code' },
+            { data: 'birthday', name: 'Birthday', title: 'Birthday' },
             { data: 'gender', name: 'Gender', title: 'Gender ', render: renderGender },
-            { data: 'className', name: 'ClassName', title: 'Class Name' },
-            { data: 'subjects', name: 'Subjects', title: 'Subjects' },
-            {
-                data: 'studentId', name: 'StudentId', title: 'Actions', render: renderAction,
-                orderable: false,
-                visiable: false,
-                width: '15%'
-            }
+            { data: 'yearOfEnroll', name: 'YearOfEnroll', title: 'Year Of Enroll' },
+            { data: 'studentId', name: 'StudentId', defaultContent: '', render: renderDelete, orderable: false, width: "8%" }
         ],
 
-        order: [[0, 'asc'], [1, 'asc']],
+
         language: {
             emptyTable: 'No student found, please <b> Add Student </b> to show detail', // no data
             infoEmpty: 'No records avaiable',
             zeroRecords: 'Humm.... No result founded'
         }
+    });
+
+    // Add event listener for opening and closing details
+    $('#StudentTable tbody').on('click', 'td.dt-control', function () {
+
+        var tr = $(this).closest('tr');
+        var row = datatable.row(tr);
+
+        if (row.child.isShown()) {
+            // This row is already open - close it
+            row.child.hide();
+            tr.removeClass('shown');
+        }
+        else {
+            // Open this row
+            row.child(format(row.data())).show();
+            tr.addClass('shown');
+        }
+    });
+
+    $('#StudentTable tbody').on('click', 'tr', function () {
+        $(this).toggleClass('selected');
+    });
+
+    $('#StudentTable tbody').on('mouseover', 'tr', function () {
+        var tr = $(this);
+        var row = datatable.row(tr).data();
+        if (row) tr.attr('title', row.extraInfor);
     });
 })

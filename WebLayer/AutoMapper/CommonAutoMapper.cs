@@ -5,7 +5,6 @@ using System.Threading.Tasks;
 using AutoMapper;
 using DatabaseLayer.Entity;
 using WebLayer.EditModel.Class;
-using WebLayer.ViewModel.Subject;
 using WebLayer.EditModel.Subject;
 using WebLayer.ViewModel.Student;
 using WebLayer.EditModel.Student;

@@ -47,7 +47,7 @@
         <div class="row mb-2">
             <div class="col col-lg-12 col-sm-12 lead text-secondary fs-6">
                 <div class="table-responsive w-100">
-                    <table id="StudentTable" class="table table-hover table-striped table-bordered ">
+                    <table id="StudentTable" class="table table-hover table-striped ">
                         <caption>Student Detail</caption>
                     </table>
             </div>
@@ -68,11 +68,24 @@
     function urlAddStudent() {
         return '@Url.Action("Add", "Student")';
     }
+
+    function urlSubjectListByStudent(studentId) {
+        return '@Url.Action("GetSubjectListByStudent", "Student")?studentId=' + studentId;
+    }
     function urlEditStudent(studentId) {
         return '\'@Url.Action("Edit", "Student")?studentId=' + studentId + '\'';
     }
     function urlDeleteStudent(studentId) {
         return '\'@Url.Action("Delete", "Student")?studentId=' + studentId + '\'';
+    }
+    function urlEditSubject(subjectId) {
+        return '@Url.Action("Edit", "Subject")?subjectId=' + subjectId;
+    }
+    function urlGetClassByStudent(studentId) {
+        return '@Url.Action("GetClassByStudent", "Class")?studentId=' + studentId;
+    }
+    function urlEditClass(classId) {
+        return '@Url.Action("Edit", "Class")?classId=' + classId;
     }
 </script>
 <script src="~/js/student/student-index.js"></script>

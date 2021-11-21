@@ -33,7 +33,7 @@ namespace WebLayer.Controllers
         {
             var allData = new AllData()
             {
-                Classes = classServices.GetAllDetail().ToList(),
+                Classes = classServices.GetAll().ToList(),
             };
             ViewBag.jsonstring = JsonConvert.SerializeObject(allData, Formatting.Indented, new JsonSerializerSettings() {
                 PreserveReferencesHandling = PreserveReferencesHandling.Objects

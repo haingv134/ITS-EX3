@@ -20,5 +20,17 @@ namespace DatabaseLayer.Repository
         public IQueryable<Subject> GetAllDetails() => _dbContext.Subjects.Include(subject => subject.ClassSubject);
         public IQueryable<Subject> GetSubjectInClass(Guid classid) => _dbContext.Subjects.Include(s => s.ClassSubject)
                                                                                             .Where(s => s.ClassSubject.Any());
+        public IQueryable<Subject> GetSubjectByStudent(Guid studentId)
+        {
+            var classid = _dbContext.ClassStudents.Where(cs => cs.StudentId == studentId).SingleOrDefault();
+
+            if (classid != null)
+            {
+
+                return _dbContext.ClassSubjects.Include(cs => cs.Subject).Where(cs => cs.ClassId == classid.ClassId)
+                                                .Select(cs => cs.Subject);
+            }
+            else return null;
+        }
     }
 }

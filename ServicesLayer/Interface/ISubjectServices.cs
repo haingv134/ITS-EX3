@@ -13,9 +13,10 @@ namespace ServicesLayer.Interface
         public Subject Get(Guid id);
         public int GetCounting();
         public List<Subject> GetAll();
-        public List<Subject> GetAll(int skip, int take);
-         public List<Subject> GetSubjectListByClass(Guid classid);
-        public List<Subject> GetAllDetail(); // for greate json file
+        public List<SubjectIndexServicesModel> GetAll(int skip, int take);
+        public List<Subject> GetSubjectListByClass(Guid classid);
+        public List<Subject> GetSubjectListByStudent(Guid studentId);
+        
         public void AddSubject(Subject subject);
         public Task AddClassSubject(ClassAddSubjectServicesModel csModel);
         public Task Delete(Guid id);

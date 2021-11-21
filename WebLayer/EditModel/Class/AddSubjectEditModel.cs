@@ -8,8 +8,8 @@ namespace WebLayer.EditModel.Class
 {
     public class AddSubjectEditModel
     {
-        public int[] ClassId { get; set; }
+        public Guid[] ClassId { get; set; }
         public List<SelectListItem> ClassList {get; set;}
-        public int[] SubjectId { get; set; }
+        public Guid[] SubjectId { get; set; }
     }
 }

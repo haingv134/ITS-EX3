@@ -8,9 +8,9 @@ namespace WebLayer.EditModel.Student
 {
     public class EditEditModel
     {
-        public int OldClassId { get; set; }
-        public int NewClassId { get; set; }
-        public int StudentId { get; set; }
+        public Guid OldClassId { get; set; }
+        public Guid NewClassId { get; set; }
+        public Guid StudentId { get; set; }
         [Required]
         [Display(Name = "Tên sinh viên")]
         [StringLength(50, MinimumLength = 2, ErrorMessage = "Chiều dài phải nhập là từ 2 -> 50")]
